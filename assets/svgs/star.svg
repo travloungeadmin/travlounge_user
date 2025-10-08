@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="45.599" height="44.507" viewBox="0 0 45.599 44.507">
+  <defs>
+    <filter id="star" x="0" y="0" width="45.599" height="44.507" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#253d8f" flood-opacity="0.29"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#star)">
+    <path id="star-2" data-name="star" d="M25.982,12.578A1.9,1.9,0,0,0,24.926,9.33L18.5,8.4a.84.84,0,0,1-.633-.46L14.987,2.109a1.9,1.9,0,0,0-3.416,0L8.7,7.936a.841.841,0,0,1-.633.46L1.632,9.33A1.9,1.9,0,0,0,.576,12.579l4.653,4.535a.842.842,0,0,1,.243.745l-1.1,6.4a1.865,1.865,0,0,0,.415,1.544,1.925,1.925,0,0,0,2.348.463l5.751-3.024a.861.861,0,0,1,.783,0l5.752,3.024a1.885,1.885,0,0,0,.886.222,1.91,1.91,0,0,0,1.461-.685,1.864,1.864,0,0,0,.415-1.544l-1.1-6.4a.842.842,0,0,1,.243-.745Z" transform="translate(9.52 5.45)" fill="#253d8f" stroke="#dee2ee" stroke-width="1"/>
+  </g>
+</svg>

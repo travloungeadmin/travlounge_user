@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "6223147524",
+    "project_id": "travlounge-ddebc",
+    "storage_bucket": "travlounge-ddebc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6223147524:android:0f721e58d25e2477c5bb51",
+        "android_client_info": {
+          "package_name": "com.travcustomer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhEqkI1acK5zmJtHXbfym4pczLj9FOZl0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

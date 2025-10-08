@@ -1,0 +1,126 @@
+{
+  // EDITOR SETTINGS
+  "editor.formatOnSave": true,
+  "editor.detectIndentation": false,
+  "editor.trimAutoWhitespace": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit",
+    "source.sortMembers": "always"
+  },
+  "editor.tabCompletion": "on",
+  "editor.foldingImportsByDefault": false,
+  "editor.experimental.asyncTokenization": true,
+  "editor.experimental.asyncTokenizationVerification": true,
+  "application.experimental.rendererProfiling": true,
+
+  "material-icon-theme.folders.theme": "specific",
+
+  // ESLINT
+  "eslint.enable": true,
+  "eslint.workingDirectories": [{ "mode": "auto" }], // infer working directory based on .eslintrc/package.json location
+
+  // DENO
+  // "deno.enable": true,
+  // "deno.lint": true,
+
+  // FILES
+  "files.trimTrailingWhitespace": true,
+  "files.associations": {
+    "**/package.json.hbs": "json",
+    "**/*.json.hbs": "jsonc",
+    "**/README.md.hbs": "markdown"
+  },
+  "files.insertFinalNewline": false,
+  "files.readonlyInclude": {
+    // "**/node_modules/**/*.*": true,
+    // "**/yarn.lock": true
+  },
+  "files.exclude": {
+    // "**/lib-amd": true,
+    // "**/lib-commonjs": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true
+    // "**/.hg/store/**": true,
+    // "**/lib": true,
+    // "**/lib-commonjs": true,
+    // "**/lib-amd": true
+  },
+
+  // JAVASCRIPT
+  "javascript.preferences.quoteStyle": "single",
+
+  // JSON
+  "json.format.enable": false,
+
+  // TYPESCRIPT
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // SEARCH EXCLUDE
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    ".yarn/**": true
+  },
+
+  // EDITOR SETTINGS
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[handlebars]": {
+    "editor.formatOnSave": false
+  },
+
+  // SONAR LINT
+  "sonarlint.focusOnNewCode": true,
+  "sonarlint.output.showAnalyzerLogs": true,
+  "sonarlint.output.showVerboseLogs": true,
+
+  // FILE DIRECTORY
+  "explorer.fileNesting.enabled": true,
+
+  // PACKAGE MANAGER
+  "npm.packageManager": "yarn",
+
+  // GIT SETTINGS
+  "githubPullRequests.assignCreated": "${user}",
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.advanced": {
+    "enabled": true
+  },
+  "git.ignoreLimitWarning": true,
+  // "git.branchProtection": [
+  // 	"main",
+  // 	"distro",
+  // 	"release/*"
+  // ],
+  // "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
+  "git.pullBeforeCheckout": true,
+  "git.mergeEditor": true,
+  "git.branchRandomName.enable": true,
+  "git.defaultBranchName": "main",
+
+  "typespec.tsp-server.path": "${workspaceFolder}/node_modules/@typespec/compiler"
+}

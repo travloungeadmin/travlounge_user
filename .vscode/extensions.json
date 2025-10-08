@@ -1,0 +1,30 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint", // ESLint
+    "esbenp.prettier-vscode", // Prettier
+    "stkb.rewrap", // Rewrap
+    // "denoland.vscode-deno", // Deno
+    "arcanis.vscode-zipfs", // ZipFS
+    "GitHub.copilot", // GitHub Copilot
+    "GitHub.copilot-chat", // GitHub Copilot Chat
+    "GitHub.vscode-pull-request-github", // GitHub Pull Request
+    "GitHub.vscode-github-actions", // GitHub Actions
+    "PKief.material-icon-theme", // Material Icon Theme
+    "drKnoxy.eslint-disable-snippets", //  ESLint Disable Snippets
+    "swmansion.react-native-ide", // React Native IDE
+    // "editorconfig.editorconfig", // EditorConfig for VS Code
+    "expo.vscode-expo-tools", // Expo Tools
+    "eamodio.gitlens", // GitLens
+    "SimonSiefke.svg-preview", // SVG Preview
+    "jasonnutter.search-node-modules", // Search Node Modules
+    "naumovs.color-highlight", // Color Highlight
+    "SonarSource.sonarlint-vscode", // SonarLint
+    "Codecov.codecov", // Codecov
+    "streetsidesoftware.code-spell-checker", // Code Spell Checker
+    "bierner.markdown-preview-github-styles",
+    "msjsdiag.vscode-react-native",
+    "RushStack.rushstack", // Rush Stack
+    "typespec.typespec-vscode", // TypeSpec
+    "million.million-lint" // Million Lint
+  ]
+}
