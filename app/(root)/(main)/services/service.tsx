@@ -17,6 +17,7 @@ import LocationPermissionView from '@/old/components/common/location-permission-
 import { getServiceListQuery } from '@/services/query/service';
 import { colors } from '@/theme';
 import { convertTimeTo12Hour, formatDateToDMY } from '@/utils/string';
+import analytics from '@react-native-firebase/analytics';
 
 const Toloo = () => {
   const { service, name, sleepingPodData, is_travlounge } = useLocalSearchParams();
@@ -24,6 +25,15 @@ const Toloo = () => {
   const { latitude, longitude, isLocationPermissionGranted, place: currentPlace } = useUserStore();
   const { place, date, time, duration } = useSleepingPodCart();
   const [isPartner, setIsPartner] = React.useState(false);
+
+  const getData = async () => {
+    const id = await analytics().getAppInstanceId();
+    console.log('App Instance ID: ', id);
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
 
   const isAvailable =
     name === 'Hygeinic Washrooms' ||
@@ -136,6 +146,7 @@ const Toloo = () => {
           data={listData ?? data}
           renderItem={({ item, index }) => (
             <ServiceItem
+              offerPercentage={item.offer_percentage}
               service={service}
               isSleepingPod={!!sleepingPodData}
               item={item}

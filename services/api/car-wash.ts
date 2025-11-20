@@ -55,10 +55,25 @@ export const carWashTimeSlotsApi = async (
  * @returns Promise with booking confirmation data
  */
 export const carWashBookingApi = async (params: CarWashBookingRequest) => {
+  const { paymentOptions, ...rest } = params;
+  const option = () => {
+    switch (paymentOptions) {
+      case 'pay_at_service_center':
+        return 'direct';
+      case 'subscription':
+        return 'subscriptions';
+      case 'online_payment':
+        return 'online';
+      default:
+        return 'direct';
+    }
+  };
+  const payment_method = option();
+  const data = rest;
   const response = await apiClient({
     method: 'post',
-    url: ENDPOINTS.CAR_WASH_BOOKING,
-    data: params,
+    url: `${ENDPOINTS.CAR_WASH_BOOKING}?payment_method=${payment_method}`,
+    data: data,
   });
 
   return response.data;
@@ -70,5 +85,14 @@ export const carWashBookingVerifyApi = async (params: CarWashBookingVerifyReques
     data: params,
   });
 
+  return response.data;
+};
+
+export const carWashPaymentOptionsApi = async ({ listing_id }: { listing_id: number }) => {
+  const response = await apiClient({
+    method: 'get',
+    url: ENDPOINTS.CAR_WASH_PAYMENT_OPTIONS,
+    params: { listing_id },
+  });
   return response.data;
 };

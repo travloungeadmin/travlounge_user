@@ -34,6 +34,7 @@ export default function MainLayout() {
           service_type_name: data?.service_type_name,
           amount: data?.amount || 0,
           event_payload: JSON.stringify(data?.event_payload),
+          list: JSON.stringify(data?.items || []),
         },
       });
     }

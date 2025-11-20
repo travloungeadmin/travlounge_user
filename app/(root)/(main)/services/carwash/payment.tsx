@@ -28,6 +28,7 @@ const Payment = () => {
     place,
     service,
     image,
+    paymentOptions,
   } = useLocalSearchParams();
 
   const handleRazorpay = async ({ id, amount }) => {
@@ -98,6 +99,7 @@ const Payment = () => {
       });
   };
   const selectedService = service ? JSON.parse(service) : null;
+
   return (
     <View style={{ flex: 1 }}>
       <CarwashDetailCard
@@ -133,7 +135,7 @@ const Payment = () => {
             {selectedService?.name}
           </Text>
           <Text preset="POP_14_R" color="#333333">
-            {selectedService?.price}
+            {selectedService?.price_without_tax}
           </Text>
         </View>
         <View
@@ -145,9 +147,23 @@ const Payment = () => {
             Discount
           </Text>
           <Text preset="POP_14_R" color="#333333">
-            {Number(selectedService?.price) - selectedService?.discounted_price}
+            {(Number(selectedService?.price) - selectedService?.discounted_price)?.toFixed(2)}
           </Text>
         </View>
+        {selectedService?.tax_amount && (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text preset="POP_14_R" color="#333333">
+              Gst ({selectedService?.tax_rate * 100}%)
+            </Text>
+            <Text preset="POP_14_R" color="#333333">
+              {selectedService?.tax_amount}
+            </Text>
+          </View>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -161,6 +177,7 @@ const Payment = () => {
           </Text>
         </View>
         <Pressable
+          disabled={isPending}
           style={{
             height: 44,
             backgroundColor: '#253D8F',
@@ -172,6 +189,10 @@ const Payment = () => {
           onPress={() => {
             bookCarWash(
               {
+                paymentOptions: paymentOptions as
+                  | 'subscription'
+                  | 'online_payment'
+                  | 'pay_at_service_center',
                 service_id: selectedService.id as string,
                 listing_id: id as string,
                 vehicle_number: vehicle_number as string,
@@ -185,10 +206,50 @@ const Payment = () => {
               {
                 onSuccess: (result) => {
                   if (result?.is_profile_completed) {
-                    handleRazorpay({
-                      id: result?.order_id,
-                      amount: result?.original_request?.final_amount,
-                    });
+                    if (paymentOptions === 'online_payment') {
+                      if (result?.is_subscription) {
+                        router.push({
+                          pathname: '/(root)/(main)/services/carwash/payment-result',
+                          params: {
+                            id,
+                            vehicleTypeId,
+                            vehicleType,
+                            listing_id,
+                            time_slot_id,
+                            date,
+                            vehicle_number,
+                            header,
+                            place,
+                            service: JSON.stringify(selectedService),
+                            image,
+                            result: 'success',
+                          },
+                        });
+                      } else {
+                        handleRazorpay({
+                          id: result?.order_id,
+                          amount: result?.original_request?.final_amount,
+                        });
+                      }
+                    } else {
+                      router.push({
+                        pathname: '/(root)/(main)/services/carwash/payment-result',
+                        params: {
+                          id,
+                          vehicleTypeId,
+                          vehicleType,
+                          listing_id,
+                          time_slot_id,
+                          date,
+                          vehicle_number,
+                          header,
+                          place,
+                          service: JSON.stringify(selectedService),
+                          image,
+                          result: 'success',
+                        },
+                      });
+                    }
                   } else {
                     Alert.alert(
                       'Profile Incomplete',

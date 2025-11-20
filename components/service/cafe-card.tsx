@@ -29,7 +29,11 @@ const CafeCard = (props: props) => {
           shadow,
         ]}>
         <Image
-          source={require('@/assets/images/cafeCofee.png')}
+          source={
+            serviceName === 'buffets'
+              ? require('@/assets/images/buffetImage.png')
+              : require('@/assets/images/cafeCofee.png')
+          }
           style={{ width: 54, height: 54, marginRight: 16 }}
         />
         <Text

@@ -64,17 +64,7 @@ const PackageCard = ({ item }) => {
     const data = { package: item.id };
     mutate(data, {
       onSuccess: (data) => {
-        if (data?.order_id?.includes('TRV')) {
-          showSuccess('Success', 'Welcome bonus applied successfully');
-          queryClient.invalidateQueries({
-            queryKey: [QUERIES_KEY.PACKAGES_LIST],
-          });
-          router.back();
-          return;
-        }
-        if (data?.is_profile_completed) {
-          handleRazorpay(data?.order_id, data?.subscription_id);
-        } else {
+        if (!data?.is_profile_completed) {
           Alert.alert(
             'Profile Incomplete',
             'Please complete your profile before proceeding to payment.',
@@ -94,6 +84,15 @@ const PackageCard = ({ item }) => {
               },
             ]
           );
+        } else if (data?.order_id?.includes('TRV')) {
+          showSuccess('Success', 'Welcome bonus applied successfully');
+          queryClient.invalidateQueries({
+            queryKey: [QUERIES_KEY.PACKAGES_LIST],
+          });
+          router.back();
+          return;
+        } else {
+          handleRazorpay(data?.order_id, data?.subscription_id);
         }
       },
       onError: (err) => {
@@ -165,14 +164,25 @@ const PackageCard = ({ item }) => {
           marginVertical: 10,
           marginTop: Math.ceil(item?.amount) === 0 ? 0 : 40,
         }}>
-        <Text
-          style={{
-            color: '#00205B',
-            fontFamily: constants.fontRobB,
-            fontSize: 20,
-          }}>
-          ₹ {item?.amount}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <Text
+            style={{
+              color: '#00205B',
+              fontFamily: constants.fontRobB,
+              fontSize: 20,
+            }}>
+            ₹ {Number(item?.amount).toFixed(0)}
+          </Text>
+          <Text
+            style={{
+              color: '#888',
+              fontFamily: constants.fontPopR,
+              fontSize: 11,
+              marginBottom: 2,
+            }}>
+            + GST
+          </Text>
+        </View>
 
         <TouchableOpacity
           onPress={handleBuy}
