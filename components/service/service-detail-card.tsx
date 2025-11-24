@@ -7,7 +7,6 @@ import Carousel, { Pagination } from 'react-native-reanimated-carousel';
 import { shadow } from '@/constants';
 import { colors } from '@/theme';
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 
 type propsType = {
   description: string;
@@ -15,11 +14,10 @@ type propsType = {
   name: string;
   rating: number;
   images: string[];
-  offerPercentage?: number;
 };
 
 const ServiceDetailCard = (props: propsType) => {
-  const { description, location, name, rating = 5, images, offerPercentage } = props;
+  const { description, location, name, rating = 5, images } = props;
   const scrollOffsetValue = useSharedValue(0);
   const progress = useSharedValue<number>(0);
 
@@ -142,31 +140,6 @@ const ServiceDetailCard = (props: propsType) => {
         <Text preset="POP_12_R" color={colors.textPrimaryDescription} style={{ paddingTop: 16 }}>
           {description}
         </Text>
-
-        {!!offerPercentage ? (
-          <LinearGradient
-            colors={['#2D60E3', '#253D8F']}
-            style={{
-              marginTop: 14,
-              borderRadius: 4,
-              padding: 10,
-              flexDirection: 'row',
-              gap: 8,
-              alignItems: 'center',
-            }}>
-            <View style={{ gap: 8, flex: 1 }}>
-              <Text preset="POP_14_SB" color="#FFFFFF">
-                Get up to {offerPercentage}% OFF
-              </Text>
-              <Text preset="POP_12_R" color="#FFFFFF">
-                Exclusive car wash offers available for you. Limited-time offer!
-              </Text>
-            </View>
-            <Text preset="POP_32_SB" color="#FFCC02">
-              {offerPercentage}%
-            </Text>
-          </LinearGradient>
-        ) : null}
       </Box>
     </Box>
   );

@@ -1,0 +1,77 @@
+import React, { useCallback, useMemo } from 'react';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from 'react-native';
+import { IMessage } from 'react-native-gifted-chat';
+
+const styles = StyleSheet.create({
+  container: {
+    height: 44,
+    width: 44,
+    borderRadius: 8,
+    marginHorizontal: 8,
+    alignItems: 'center',
+    marginVertical: 'auto',
+    backgroundColor: 'green',
+    justifyContent: 'flex-end',
+  },
+});
+
+export interface SendProps<TMessage extends IMessage> {
+  text?: string;
+  label?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+  children?: React.ReactNode;
+  alwaysShowSend?: boolean;
+  disabled?: boolean;
+  sendButtonProps?: Partial<TouchableOpacityProps>;
+  onSend?(
+    messages: Partial<TMessage> | Partial<TMessage>[],
+    shouldResetInputToolbar: boolean
+  ): void;
+}
+
+export const Send = <TMessage extends IMessage = IMessage>({
+  text,
+  containerStyle,
+  children,
+  textStyle,
+  label = 'Send',
+  alwaysShowSend = false,
+  disabled = false,
+  sendButtonProps,
+  onSend,
+}: SendProps<TMessage>) => {
+  const handleOnPress = useCallback(() => {
+    if (text && onSend) onSend({ text: text.trim() } as Partial<TMessage>, true);
+  }, [text, onSend]);
+
+  const showSend = useMemo(
+    () => alwaysShowSend || (text && text.trim().length > 0),
+    [alwaysShowSend, text]
+  );
+
+  // if (!showSend) return null;
+
+  return (
+    <TouchableOpacity
+      testID={'TEST_ID.SEND_TOUCHABLE'}
+      accessible
+      accessibilityLabel="send"
+      style={[styles.container, containerStyle]}
+      onPress={handleOnPress}
+      accessibilityRole="button"
+      disabled={disabled}
+      {...sendButtonProps}>
+      <View>{children || <Text style={[styles.text, textStyle]}>{label}</Text>}</View>
+    </TouchableOpacity>
+  );
+};

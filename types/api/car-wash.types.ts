@@ -84,7 +84,6 @@ export interface CarWashBookingRequest {
   amount: number; //
   final_amount: number; //
   travlounge_percentage: number; //
-  paymentOptions: 'subscription' | 'online_payment' | 'pay_at_service_center';
 }
 export interface CarWashBookingVerifyRequest {
   razorpay_order_id: string;

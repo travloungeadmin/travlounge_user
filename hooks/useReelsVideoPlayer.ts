@@ -24,7 +24,6 @@ export const useReelsVideoPlayer = ({
 
   const player = useVideoPlayer(videoSource, (player) => {
     setIsPlayerReady(true);
-    player.muted = true;
   });
 
   const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });

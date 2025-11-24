@@ -21,64 +21,23 @@ const ActivePlanItem: React.FC<{
   packageName: string;
   onPress?: () => void;
   width?: number;
-  isExpired?: boolean;
-  expiryDate?: string;
-}> = ({ packageName, onPress = () => {}, width, isExpired, expiryDate }) => (
+}> = ({ packageName, onPress = () => {}, width }) => (
   <Pressable onPress={onPress}>
     <LinearGradient
-      colors={isExpired ? ['#BF1A1A', '#E8505B'] : GRADIENT_COLORS}
-      style={[
-        shadow,
-        styles.subscriptionBox,
-        width ? { width } : undefined,
-        isExpired ? { borderWidth: 2, borderColor: '#FE6607' } : undefined,
-      ]}
+      colors={GRADIENT_COLORS}
+      style={[shadow, styles.subscriptionBox, width ? { width } : undefined]}
       start={GRADIENT_START}
       end={GRADIENT_END}>
       <View style={styles.rowContainer}>
         <Box style={styles.textContainer}>
-          {isExpired ? (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <View
-                style={{
-                  flex: 1,
-                  height: '100%',
-                  justifyContent: 'space-evenly',
-                }}>
-                <Text color="#fff" preset="POP_14_B" style={{ marginBottom: 2 }}>
-                  Your current plan expired!
-                </Text>
-                <Text color="#fff" preset="POP_12_R" style={{ marginBottom: 2 }}>
-                  Subscribe this plan now
-                </Text>
-              </View>
-              <Text
-                style={{
-                  alignSelf: 'flex-end',
-                }}
-                color="#fff"
-                preset="ROB_16_B">
-                ₹ {width}
-              </Text>
-            </View>
-          ) : (
-            <>
-              <Text color="#fff" preset="POP_12_R">
-                Welcome to Exclusive. Enjoy your benefits!
-              </Text>
-              <Text color="#fff" preset="POP_14_SB">
-                {packageName}
-              </Text>
-              {/* <AntDesign name="arrowright" size={24} color="#fff" /> */}
-            </>
-          )}
+          <Text color="#fff" preset="POP_12_R">
+            Welcome to Exclusive. Enjoy your benefits!
+          </Text>
+          <Text color="#fff" preset="POP_14_SB">
+            {packageName}
+          </Text>
         </Box>
-        {!isExpired && <AntDesign name="arrowright" size={24} color="#fff" />}
+        <AntDesign name="arrowright" size={24} color="#fff" />
       </View>
     </LinearGradient>
   </Pressable>
@@ -138,21 +97,11 @@ const PackagesList: React.FC<PackagesListProps> = ({ packages, subscription_data
 
   // Single active plan view
   if (hasActiveNonBonusSubscription && activePlanName) {
-    // Find the package object from packages array matching the activePlanName
-    const activePackageObj = packages?.find((pkg) => pkg.package_name === activePlanName);
     return (
       <View>
         <Box style={styles.singlePlanContainer}>
           <ActivePlanItem
-            isExpired={subscription_data?.is_expired}
-            expiryDate={subscription_data?.expiry_date || ''}
-            onPress={
-              !subscription_data?.is_expired
-                ? activePackageObj
-                  ? () => handlePackagePress(activePackageObj)
-                  : () => router.navigate({ pathname: '/old/packge', params: { isPlans: 'true' } })
-                : () => router.navigate('/profile')
-            }
+            onPress={() => router.navigate('/profile')}
             packageName={activePlanName}
             width={Device.width - 32}
           />
