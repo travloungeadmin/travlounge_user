@@ -1,7 +1,7 @@
 import { useFocusEffect } from 'expo-router';
 import * as Sharing from 'expo-sharing';
 import React, { useCallback } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 // import {
 //   CustomHeader,
@@ -142,7 +142,7 @@ const QR = () => {
             </Box>
           )}
         </Box>
-        <Pressable
+        {/* <Pressable
           onPress={captureAndShareScreenshot}
           style={{
             backgroundColor: '#FFFFFF',
@@ -156,8 +156,8 @@ const QR = () => {
           <Text preset="POP_16_SB" color="#253D8F">
             Share QR Code
           </Text>
-        </Pressable>
-        <Text
+        </Pressable> */}
+        {/* <Text
           style={{
             textAlign: 'center',
             marginBottom: 40,
@@ -168,7 +168,7 @@ const QR = () => {
           <Text preset="POP_14_SB" color="#333333">
             30 minutes.
           </Text>
-        </Text>
+        </Text> */}
       </ScrollView>
       {!isLocationPermissionGranted && <LocationPermissionView />}
     </View>
