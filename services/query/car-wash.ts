@@ -3,7 +3,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   carWashBookingApi,
   carWashBookingVerifyApi,
-  carWashPaymentOptionsApi,
   carWashServicesApi,
   carWashTimeSlotsApi,
 } from '../api/car-wash';
@@ -33,11 +32,4 @@ export const useCarWashBooking = () =>
 export const useCarWashBookingVerify = () =>
   useMutation({
     mutationFn: carWashBookingVerifyApi,
-  });
-
-export const useGetCarWashPaymentOptions = (listing_id: number) =>
-  useQuery({
-    enabled: !!listing_id,
-    queryFn: () => carWashPaymentOptionsApi({ listing_id }),
-    queryKey: [QUERIES_KEY.CAR_WASH_PAYMENT_OPTIONS, listing_id],
   });

@@ -146,7 +146,6 @@ const Toloo = () => {
           data={listData ?? data}
           renderItem={({ item, index }) => (
             <ServiceItem
-              offerPercentage={item.offer_percentage}
               service={service}
               isSleepingPod={!!sleepingPodData}
               item={item}

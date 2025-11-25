@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { ActivityIndicator, Alert, Linking, Pressable, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView } from 'react-native';
 
 import Header from '@/components/header';
 import { shadow } from '@/constants';
@@ -425,23 +425,6 @@ const CarwashHistoryDetails = () => {
           /> */}
 
           <StatusCard paymentStatus={payment_status} bookingStatus={booking_status} />
-
-          {
-            <Pressable
-              style={{
-                margin: 16,
-                height: 44,
-                backgroundColor: '#253D8F',
-                borderRadius: 8,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() => Linking.openURL(`tel:${7272000555}`)}>
-              <Text color="#fff" preset="POP_16_SB">
-                Support
-              </Text>
-            </Pressable>
-          }
 
           {canCancel && booking_status !== 'CANCELLED' && (
             <CancellationTerms

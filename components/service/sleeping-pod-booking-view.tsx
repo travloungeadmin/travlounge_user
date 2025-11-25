@@ -227,11 +227,7 @@ const SleepingPodBookingView = (props: PropsType) => {
             const selectedDuration = durationList.find((item) => item.name === name)?.value;
             updateDuration(selectedDuration as number);
             if (selectedDuration === 3) {
-              const updatedPods = list_of_pods.map((pod) => ({
-                ...pod,
-                is_bath: false,
-              }));
-              updatePods(updatedPods);
+              updatePods([]);
             }
             durationRef?.current?.dismiss();
           }}
