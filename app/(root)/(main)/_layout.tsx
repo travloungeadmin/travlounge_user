@@ -10,7 +10,7 @@ export default function MainLayout() {
   const { session, isRegistered, user } = useUserStore();
   const notificationListener = React.useRef<Notifications.Subscription | null>(null);
   const { header } = useGlobalSearchParams();
-  const handlePaymentResult = (data) => {
+  const handlePaymentResult = (data: any) => {
     if (data?.is_popup) {
       router.navigate({
         pathname: '/payment-result',
@@ -50,7 +50,7 @@ export default function MainLayout() {
     });
     return () => {
       if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(notificationListener.current);
+        notificationListener.current.remove();
       }
     };
   }, []);
@@ -84,21 +84,21 @@ export default function MainLayout() {
         name="services/reel"
         options={{
           headerShown: true,
-          header: () => <Header back title={header} />,
+          header: () => <Header back title={Array.isArray(header) ? header[0] : header} />,
         }}
       />
       <Stack.Screen
         name="services/car-wash"
         options={{
           headerShown: true,
-          header: () => <Header back location title={header} />,
+          header: () => <Header back location title={Array.isArray(header) ? header[0] : header} />,
         }}
       />
       <Stack.Screen
         name="services/carwash/payment"
         options={{
           headerShown: true,
-          header: () => <Header back location title={header} />,
+          header: () => <Header back location title={Array.isArray(header) ? header[0] : header} />,
         }}
       />
 
@@ -121,6 +121,20 @@ export default function MainLayout() {
         options={{
           headerShown: true,
           header: () => <Header back profileIcon wallet title="Your QR Code" />,
+        }}
+      />
+      <Stack.Screen
+        name="service-listings"
+        options={{
+          headerShown: true,
+          header: () => <Header back profileIcon wallet title="Your QR Code" />,
+        }}
+      />
+      <Stack.Screen
+        name="user-cars-listings"
+        options={{
+          headerShown: true,
+          header: () => <Header back profileIcon wallet title="Cars" />,
         }}
       />
     </Stack>

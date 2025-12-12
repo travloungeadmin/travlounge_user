@@ -8,10 +8,9 @@ import LoginContainer from '@/components/auth/login-container';
 import VerifyContainer from '@/components/auth/verify-container';
 import { Device, useSafeAreaInsets } from '@/core';
 import { DismissKeyboardView, KeyboardAwareView } from '@/lib/keyboard';
-import { moderateScale } from '@/old/lib/responsive-dimensions';
+import { moderateScale } from '@/lib/responsive-dimensions';
 import { colors } from '@/theme';
 import { AuthScreenProps } from '@/types/screens/auth/auth.types';
-
 /**
  * Authentication screen component that handles user login and verification.
  * Implements a sliding animation between login and verification views.

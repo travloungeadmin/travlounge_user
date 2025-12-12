@@ -11,12 +11,14 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 
+import { LocationProvider } from '@/context/location';
 import { Box, Text } from '@/core';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useVersionCheck } from '@/hooks/useVersionCheck';
 import queryClient from '@/services/query';
 import { colors } from '@/theme';
 
+import { ThemeProvider } from '@/newTheme';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClientProvider } from '@tanstack/react-query';
 
@@ -82,21 +84,25 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <KeyboardProvider>
-        <GestureHandlerRootView style={styles.container}>
-          <BottomSheetModalProvider>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Slot />
-            </ErrorBoundary>
-            <StatusBar style="dark" />
-            {/* <UpdateModal
+        <ThemeProvider>
+          <LocationProvider>
+            <GestureHandlerRootView style={styles.container}>
+              <BottomSheetModalProvider>
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                  <Slot />
+                </ErrorBoundary>
+                <StatusBar style="dark" />
+                {/* <UpdateModal
             visible={!isChecking && (forceUpdate || (needsUpdate && !updateModalDismissed))}
             isForceUpdate={forceUpdate}
             onUpdate={openStore}
             onLater={forceUpdate ? undefined : () => setUpdateModalDismissed(true)}
           /> */}
-          </BottomSheetModalProvider>
-          <Toast />
-        </GestureHandlerRootView>
+              </BottomSheetModalProvider>
+              <Toast />
+            </GestureHandlerRootView>
+          </LocationProvider>
+        </ThemeProvider>
       </KeyboardProvider>
     </QueryClientProvider>
   );

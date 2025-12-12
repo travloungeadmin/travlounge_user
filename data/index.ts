@@ -49,4 +49,9 @@ export const services = [
     icon: 'Buffet',
     mapIcon: 'MechanicMap',
   },
+  {
+    title: 'Cars',
+    icon: 'SellCar',
+    mapIcon: 'MechanicMap',
+  },
 ];

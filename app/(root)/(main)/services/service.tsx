@@ -6,7 +6,7 @@ import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import Header from '@/components/header';
 import PartnerTab from '@/components/service/partner-tab';
-import ServiceItem from '@/components/service/service-item';
+import ServiceListingItemCard from '@/components/service/ServiceListingItemCard';
 import Icon from '@/components/ui/icon';
 import { shadow } from '@/constants';
 import { Box, Device, Row, Text, useSafeAreaInsets } from '@/core';
@@ -110,6 +110,19 @@ const Toloo = () => {
     }
   };
 
+  const handlePress = (item: any) =>
+    router.navigate({
+      pathname: '/services/service-details',
+      params: {
+        isPartner: item?.is_partner,
+        serviceName: name,
+        service: service,
+        id: item.id,
+        name: item.display_name,
+        ...(!!sleepingPodData ? { isSleepingPod: true } : {}),
+      },
+    });
+
   return (
     <View style={styles.container}>
       <Header location title={name as string} back />
@@ -144,16 +157,30 @@ const Toloo = () => {
       {isAvailable ? (
         <FlatList
           data={listData ?? data}
-          renderItem={({ item, index }) => (
-            <ServiceItem
-              offerPercentage={item.offer_percentage}
-              service={service}
-              isSleepingPod={!!sleepingPodData}
-              item={item}
-              index={index}
-              serviceName={name as string}
-            />
-          )}
+          renderItem={({ item, index }) => {
+            console.log(item);
+
+            return (
+              <ServiceListingItemCard
+                images={item?.images}
+                name={item.display_name}
+                place={item.place}
+                onPress={() => handlePress(item)}
+                rating={item.average_rating || 5}
+                distance={item.distance}
+                isPartner={item.is_partner}
+                offerPercentage={item.offer_percentage}
+              />
+              // <ServiceItem
+              //   offerPercentage={item.offer_percentage}
+              //   service={service}
+              //   isSleepingPod={!!sleepingPodData}
+              //   item={item}
+              //   index={index}
+              //   serviceName={name as string}
+              // />
+            );
+          }}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
           contentContainerStyle={styles.flatListContent}
@@ -231,10 +258,10 @@ const styles = StyleSheet.create({
     width: Device.width / 2,
     height: Device.width / 2,
   },
-  itemSeparator: {
-    height: 30,
-  },
+
   flatListContent: {
+    gap: 16,
+    paddingHorizontal: 16,
     paddingVertical: 16,
   },
   sleepingPodRow: {

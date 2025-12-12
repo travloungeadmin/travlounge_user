@@ -26,6 +26,11 @@ const ServiceView = (props: propsType) => {
       router.navigate('/services/sleeping-pod');
       return;
     }
+    if (service.title === 'Cars') {
+      resetState();
+      router.navigate('/listings/[id]');
+      return;
+    }
     router.navigate({
       pathname: '/services/service',
       params: {

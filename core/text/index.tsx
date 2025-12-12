@@ -1,9 +1,8 @@
 import { presets as preset_list } from '@/theme';
 import React from 'react';
-import { TextProps as RNTextProps, StyleProp, TextStyle } from 'react-native';
+import { Text as NativeText, TextProps as RNTextProps, StyleProp, TextStyle } from 'react-native';
 import { scaleFont } from './mixins';
 import { typography } from './typography';
-const NativeText = require('react-native/Libraries/Text/TextNativeComponent').NativeText;
 type Sizes = keyof typeof sizeStyles;
 type Weights = keyof typeof typography.fonts;
 type Presets = keyof typeof presets;

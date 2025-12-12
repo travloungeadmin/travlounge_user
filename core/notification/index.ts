@@ -61,11 +61,6 @@ export const registerForPushNotificationsAsync = async (): Promise<string | unde
       });
     }
 
-    Notifications.setNotificationCategoryAsync('default', [], {
-      showTitle: true,
-      showSubtitle: true,
-    });
-
     Notifications.getPresentedNotificationsAsync();
 
     try {
@@ -91,6 +86,8 @@ export const usePushNotifications = (): PushNotificationState => {
       shouldPlaySound: false,
       shouldSetBadge: true,
       shouldShowAlert: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
     }),
   });
 
@@ -100,8 +97,8 @@ export const usePushNotifications = (): PushNotificationState => {
 
   const [notification, setNotification] = React.useState<Notifications.Notification | undefined>();
   const [channels, setChannels] = React.useState<Notifications.NotificationChannel[]>([]);
-  const notificationListener = React.useRef<Notifications.EventSubscription>();
-  const responseListener = React.useRef<Notifications.EventSubscription>();
+  const notificationListener = React.useRef<Notifications.EventSubscription | undefined>(undefined);
+  const responseListener = React.useRef<Notifications.EventSubscription | undefined>(undefined);
 
   React.useEffect(() => {
     registerForPushNotificationsAsync().then((token: any) => setExpoPushToken(token));
@@ -119,10 +116,8 @@ export const usePushNotifications = (): PushNotificationState => {
     });
 
     return () => {
-      notificationListener.current &&
-        Notifications.removeNotificationSubscription(notificationListener.current);
-      responseListener.current &&
-        Notifications.removeNotificationSubscription(responseListener.current);
+      notificationListener.current && notificationListener.current.remove();
+      responseListener.current && responseListener.current.remove();
     };
   }, []);
 

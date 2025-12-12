@@ -2,11 +2,12 @@ import { router } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
-import BannerContainer from '@/components/banner-container';
+import ScreenWrapper from '@/components/common/ScreenWrapper';
 import AssociationList from '@/components/dashboard/association-list';
 import PackagesList from '@/components/dashboard/packages-list';
 import ServiceView from '@/components/dashboard/service-view';
 import TravloungeCard from '@/components/dashboard/travlounge-card';
+import HomeBannerContainer from '@/components/screens/home/home-banner-container';
 import { Box, Text } from '@/core';
 import { getCurrentLocation } from '@/modules/location';
 import useUserStore, { setLocationPermissionGranted } from '@/modules/user';
@@ -78,9 +79,9 @@ const Home = () => {
   }
 
   return (
-    <Box style={{ flex: 1 }}>
+    <ScreenWrapper>
       <ScrollView style={styles.container}>
-        <BannerContainer banners={data?.banners || []} />
+        <HomeBannerContainer banners={data?.banners || []} />
 
         {data?.subscription_data && packages && (
           <PackagesList subscription_data={data?.subscription_data} packages={packages} />
@@ -101,7 +102,7 @@ const Home = () => {
         {!!data?.assocition_banner && <AssociationList data={data?.assocition_banner} />}
       </ScrollView>
       {!isLocationPermissionGranted && <LocationPermissionView />}
-    </Box>
+    </ScreenWrapper>
   );
 };
 
@@ -109,7 +110,7 @@ export default Home;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.backgroundPrimary,
+    // backgroundColor: colors.backgroundPrimary,
   },
   servicesContainer: {
     paddingHorizontal: 16,

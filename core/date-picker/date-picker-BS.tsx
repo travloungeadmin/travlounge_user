@@ -3,8 +3,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Box } from '../box';
-import { moderateScale } from '../responsive-dimensions';
+
 import { useSafeAreaInsets } from '../safe-area';
+import { moderateScale } from '@/lib/responsive-dimensions';
 
 type propsType = {
   initialDate: Date;

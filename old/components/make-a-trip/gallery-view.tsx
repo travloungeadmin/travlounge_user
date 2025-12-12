@@ -1,9 +1,9 @@
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { moderateScale, scale } from "@/old/lib/responsive-dimensions";
-import { Image } from "expo-image";
-import ImageViewer from "react-native-image-zoom-viewer";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from 'react';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { moderateScale } from '@/lib/responsive-dimensions';
+import { Image } from 'expo-image';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 interface PropsType {
   images: string[];
@@ -18,20 +18,19 @@ const GalleryView = (props: PropsType) => {
       url: item,
     };
   });
-  console.log("viewList", imagesList);
+  console.log('viewList', imagesList);
 
   return (
     <View
       style={{
-        display: "flex",
-        flexWrap: "wrap",
-        height: scale(235),
+        display: 'flex',
+        flexWrap: 'wrap',
+        height: moderateScale(235),
 
-        margin: scale(7),
-        justifyContent: "space-between",
-        alignContent: "space-between",
-      }}
-    >
+        margin: moderateScale(7),
+        justifyContent: 'space-between',
+        alignContent: 'space-between',
+      }}>
       {images?.map(
         (item, index) =>
           index < 3 && (
@@ -43,34 +42,31 @@ const GalleryView = (props: PropsType) => {
                   uri: item,
                 }}
                 style={{
-                  borderRadius: scale(2),
+                  borderRadius: moderateScale(2),
                   width:
                     images.length > 1
                       ? index === 0
-                        ? scale(216)
-                        : scale(93)
-                      : "100%",
-                  height: index === 0 ? "100%" : scale(115),
-                }}
-              >
+                        ? moderateScale(216)
+                        : moderateScale(93)
+                      : '100%',
+                  height: index === 0 ? '100%' : moderateScale(115),
+                }}>
                 {images.length > 3 && index === 2 && (
                   <View
                     style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "100%",
-                      width: "100%",
-                      backgroundColor: "rgba(0, 0, 0, 0.58)",
-                    }}
-                  >
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      width: '100%',
+                      backgroundColor: 'rgba(0, 0, 0, 0.58)',
+                    }}>
                     <Text
                       style={{
-                        color: "white",
+                        color: 'white',
                         fontSize: moderateScale(33),
-                        fontFamily: "Poppins",
-                        fontWeight: "medium",
-                      }}
-                    >
+                        fontFamily: 'Poppins',
+                        fontWeight: 'medium',
+                      }}>
                       +{images.length - 3}
                     </Text>
                   </View>
@@ -80,11 +76,7 @@ const GalleryView = (props: PropsType) => {
           )
       )}
 
-      <Modal
-        onRequestClose={() => setShowModal(false)}
-        visible={showModal}
-        transparent={true}
-      >
+      <Modal onRequestClose={() => setShowModal(false)} visible={showModal} transparent={true}>
         <ImageViewer
           // index={}
           enableSwipeDown

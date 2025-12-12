@@ -78,7 +78,7 @@ const ActivePlanItem: React.FC<{
             </>
           )}
         </Box>
-        {!isExpired && <AntDesign name="arrowright" size={24} color="#fff" />}
+        {!isExpired && <AntDesign name="arrow-right" size={24} color="#fff" />}
       </View>
     </LinearGradient>
   </Pressable>

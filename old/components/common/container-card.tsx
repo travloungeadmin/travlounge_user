@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
-import React from "react";
-import { LinearGradient } from "expo-linear-gradient";
-import { scale } from "@/old/lib/responsive-dimensions";
-import { StyleProp } from "react-native";
-import { Shadow } from "react-native-shadow-2";
+import { moderateScale } from '@/lib/responsive-dimensions';
+import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
+import { StyleSheet, View, ViewStyle } from 'react-native';
+
+import { StyleProp } from 'react-native';
+import { Shadow } from 'react-native-shadow-2';
 
 interface Props {
   children: React.ReactNode;
@@ -21,18 +22,17 @@ const ContainerCard = (props: Props) => {
     children,
     style,
     enableGradient = false,
-    gradientColors = ["#F3F7FA", "#DDE0E5"],
+    gradientColors = ['#F3F7FA', '#DDE0E5'],
   } = props;
   return (
-    <Shadow style={{ width: "100%" }}>
+    <Shadow style={{ width: '100%' }}>
       <View style={[styles.container, style]}>
         {enableGradient && (
           <LinearGradient
             end={gradientEnd}
             start={gradientStart}
             colors={gradientColors}
-            style={StyleSheet.absoluteFill}
-          ></LinearGradient>
+            style={StyleSheet.absoluteFill}></LinearGradient>
         )}
         {children}
       </View>
@@ -44,9 +44,9 @@ export default ContainerCard;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: scale(6),
-    overflow: "hidden",
-    borderWidth: scale(1),
-    borderColor: "#7070701C",
+    borderRadius: moderateScale(6),
+    overflow: 'hidden',
+    borderWidth: moderateScale(1),
+    borderColor: '#7070701C',
   },
 });

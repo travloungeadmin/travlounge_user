@@ -40,6 +40,8 @@ import Resort from '@/assets/svgs/icons/resort.svg';
 import RoundMinus from '@/assets/svgs/icons/round-minus.svg';
 import RoundPlus from '@/assets/svgs/icons/round-plus.svg';
 import Search from '@/assets/svgs/icons/search.svg';
+import SellCar from '@/assets/svgs/icons/sell-car.svg';
+import SendIcon from '@/assets/svgs/icons/send-icon.svg';
 import Send from '@/assets/svgs/icons/send.svg';
 import ShowerKit from '@/assets/svgs/icons/shower_kit.svg';
 import SinglePod from '@/assets/svgs/icons/single-pod.svg';
@@ -57,6 +59,8 @@ import RestaurantMap from '@/assets/svgs/map/restorent.svg';
 import SleepingPodMap from '@/assets/svgs/map/sleeping-pod.svg';
 import TolooMap from '@/assets/svgs/map/toloo.svg';
 const icons = {
+  SendIcon,
+  SellCar,
   Support,
   EditProfile,
   RoundPlus,

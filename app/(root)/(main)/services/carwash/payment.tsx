@@ -58,7 +58,7 @@ const Payment = () => {
           {
             onSuccess({ data }) {
               router.push({
-                pathname: '/(root)/(main)/services/carwash/payment-result',
+                pathname: '/(root)/(main)/services/carwash/car-wash-payment-result',
                 params: {
                   id,
                   vehicleTypeId,
@@ -80,7 +80,7 @@ const Payment = () => {
       })
       .catch(() => {
         router.push({
-          pathname: '/(root)/(main)/services/carwash/payment-result',
+          pathname: '/(root)/(main)/services/carwash/car-wash-payment-result',
           params: {
             result: 'failed',
             id,
@@ -147,7 +147,7 @@ const Payment = () => {
             Discount
           </Text>
           <Text preset="POP_14_R" color="#333333">
-            {(Number(selectedService?.price) - selectedService?.discounted_price)?.toFixed(2)}
+            -{selectedService?.discount}
           </Text>
         </View>
         {selectedService?.tax_amount && (
@@ -209,7 +209,7 @@ const Payment = () => {
                     if (paymentOptions === 'online_payment') {
                       if (result?.is_subscription) {
                         router.push({
-                          pathname: '/(root)/(main)/services/carwash/payment-result',
+                          pathname: '/(root)/(main)/services/carwash/car-wash-payment-result',
                           params: {
                             id,
                             vehicleTypeId,
@@ -233,7 +233,7 @@ const Payment = () => {
                       }
                     } else {
                       router.push({
-                        pathname: '/(root)/(main)/services/carwash/payment-result',
+                        pathname: '/(root)/(main)/services/carwash/car-wash-payment-result',
                         params: {
                           id,
                           vehicleTypeId,
@@ -271,7 +271,7 @@ const Payment = () => {
                 },
                 onError: (error) => {
                   router.push({
-                    pathname: '/(root)/(main)/services/carwash/payment-result',
+                    pathname: '/(root)/(main)/services/carwash/car-wash-payment-result',
                     params: {
                       result: 'failed',
                       id,
