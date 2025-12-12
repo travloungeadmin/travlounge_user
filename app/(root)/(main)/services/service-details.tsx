@@ -27,8 +27,6 @@ const ServiceDetails = () => {
   const params = useLocalSearchParams<ServiceDetailsParams>();
   const { user } = useUserStore();
 
-  console.log('/////////', user);
-
   const { id, name, isSleepingPod, serviceName, isPartner } = params;
   const isTravloungePartner = isPartner === 'true';
   const isCarwash = serviceName === 'Car Wash';
@@ -141,7 +139,6 @@ const ServiceDetails = () => {
       },
     });
   };
-
   return (
     <Box style={{ flex: 1, backgroundColor: colors.backgroundPrimary }}>
       <Header title={name} back style={{ zIndex: 1, top: 0, right: 0, left: 0 }} />
@@ -156,6 +153,7 @@ const ServiceDetails = () => {
             name={data?.display_name}
             location={data?.place}
             rating={data?.average_rating || 5}
+            offerPercentage={data?.offer_percentage}
           />
           {isSleepingPod && duration >= 6 && <FacilitiesCard />}
           <AssociationList data={associationList} />

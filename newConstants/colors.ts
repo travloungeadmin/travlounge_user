@@ -48,6 +48,7 @@ export const THEME_COLORS = {
     secondary50: '#FEFCE8',
     secondary400: '#FFCC02',
     secondary300: '#FFE343',
+    error: '#FF0000',
   },
   dark: {
     backgroundTop: '#F2F4F7',
@@ -98,6 +99,7 @@ export const THEME_COLORS = {
     secondary50: '#FEFCE8',
     secondary400: '#FFCC02',
     secondary300: '#FFE343',
+    error: '#FF0000',
   },
 } as const;
 

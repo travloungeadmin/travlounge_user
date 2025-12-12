@@ -10,16 +10,15 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { moderateScale } from '@/lib/responsive-dimensions';
 import useUserStore from '@/modules/user';
 import { constants } from '@/old/constants';
-import { moderateScale } from '@/old/lib/responsive-dimensions';
 import { useTheme } from '@/old/lib/theme';
 import { colors } from '@/theme';
 import { Entypo, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from '../ui/icon';
-
 type propsType = {
   isHome?: boolean;
   title?: string;

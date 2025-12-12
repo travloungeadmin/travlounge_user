@@ -46,9 +46,13 @@ const ENDPOINTS = {
   REFRESH: 'customer/refresh-token-access/',
   CAR_WASH_SERVICES: 'car_wash/services/',
   CAR_WASH_BOOKING: 'car_wash/booking-payment/',
+  CAR_WASH_BOOKING_OFFLINE: 'car_wash/bookings/',
   CAR_WASH_TIME_SLOTS: 'car_wash/timeslot/',
   MAKE_A_TRIP_CHAT: 'travel-agent/chat/',
   MAKE_A_TRIP_CHAT_SUGGESTIONS: 'travel-agent/suggestions/',
+  CAR_WASH_PAYMENT_OPTIONS: 'car_wash/payment-options/',
+  USED_CARS_LIST: 'used-cars/customers/cars/',
+  USED_CAR_DETAILS: 'used-cars/customers/cars/',
 };
 
 export default ENDPOINTS;

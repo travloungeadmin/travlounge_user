@@ -1,7 +1,7 @@
 import React from 'react';
 import { ViewProps } from 'react-native';
 
-const NativeView = require('react-native/Libraries/Components/View/ViewNativeComponent').default;
+import { View as NativeView } from 'react-native';
 
 /**
  * Props for the Box component.
@@ -36,7 +36,7 @@ export type BoxProps = ViewProps & {
  * @returns {JSX.Element} The rendered Box component.
  */
 export const Box = (props: BoxProps): JSX.Element => {
-  const { backgroundColor,gap, style, ...otherProps } = props;
+  const { backgroundColor, gap, style, ...otherProps } = props;
 
-  return <NativeView style={[{ backgroundColor,gap }, style]} {...otherProps} />;
+  return <NativeView style={[{ backgroundColor, gap }, style]} {...otherProps} />;
 };

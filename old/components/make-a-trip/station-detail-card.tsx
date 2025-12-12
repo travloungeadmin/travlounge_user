@@ -2,8 +2,9 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import ContainerCard from "../common/container-card";
 import GalleryView from "./gallery-view";
-import { moderateScale, scale } from "../../lib/responsive-dimensions";
+
 import { distanceAway } from "@/modules/location";
+import { moderateScale } from "@/lib/responsive-dimensions";
 
 interface PropsType {
   images: string[];
@@ -19,7 +20,7 @@ const StationDetailCard = (props: PropsType) => {
   return (
     <ContainerCard style={{ width: "100%" }}>
       {images?.length > 0 && <GalleryView images={images} />}
-      <View style={{ padding: scale(20), gap: scale(20) }}>
+      <View style={{ padding: moderateScale(20), gap: moderateScale(20) }}>
         <View>
           <Text
             style={{
@@ -57,13 +58,13 @@ const StationDetailCard = (props: PropsType) => {
         </View>
 
         {offers.map((item, index) => (
-          <View style={{ flexDirection: "row", gap: scale(10) }}>
+          <View style={{ flexDirection: "row", gap: moderateScale(10) }}>
             <View
               style={{
-                marginTop: scale(5),
-                height: scale(9),
-                width: scale(9),
-                borderRadius: scale(9),
+                marginTop: moderateScale(5),
+                height: moderateScale(9),
+                width: moderateScale(9),
+                borderRadius: moderateScale(9),
                 backgroundColor: "rgba(58, 83, 128, 1)",
               }}
             />

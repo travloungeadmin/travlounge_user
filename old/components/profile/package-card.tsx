@@ -164,14 +164,25 @@ const PackageCard = ({ item }) => {
           marginVertical: 10,
           marginTop: Math.ceil(item?.amount) === 0 ? 0 : 40,
         }}>
-        <Text
-          style={{
-            color: '#00205B',
-            fontFamily: constants.fontRobB,
-            fontSize: 20,
-          }}>
-          ₹ {item?.amount}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <Text
+            style={{
+              color: '#00205B',
+              fontFamily: constants.fontRobB,
+              fontSize: 20,
+            }}>
+            ₹ {Number(item?.amount).toFixed(0)}
+          </Text>
+          <Text
+            style={{
+              color: '#888',
+              fontFamily: constants.fontPopR,
+              fontSize: 11,
+              marginBottom: 2,
+            }}>
+            + GST
+          </Text>
+        </View>
 
         <TouchableOpacity
           onPress={handleBuy}

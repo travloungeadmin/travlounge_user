@@ -13,23 +13,34 @@ import { vehicleOptions } from '@/constants/data';
 import { Device, Text, TextInput, useSafeAreaInsets } from '@/core';
 import BottomSheet from '@/core/bottom-sheet';
 import { showError } from '@/lib/toast';
-import { useGetCarWashServices, useGetCarWashTimeSlots } from '@/services/query/car-wash';
+import {
+  useGetCarWashPaymentOptions,
+  useGetCarWashServices,
+  useGetCarWashTimeSlots,
+} from '@/services/query/car-wash';
 
 const CarWash = () => {
   const featuresRef = React.useRef<BottomSheetModal>(null);
   const { bottomHeight } = useSafeAreaInsets();
   const { id, header, place, image } = useLocalSearchParams();
-  const [carTypeId, setCarTypeId] = React.useState<number | null>(null);
+  const [carTypeId, setCarTypeId] = React.useState<number | null>(
+    vehicleOptions.length > 0 ? vehicleOptions[0].id : null
+  );
   const [featuresId, setFeaturesId] = React.useState<number | null>(null);
   const [vehicleNumber, setVehicleNumber] = React.useState('');
-  const [selectedDate, setSelectedDate] = React.useState(null);
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [selectedTime, setSelectedTime] = React.useState('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<
+    'subscription' | 'online_payment' | 'pay_at_service_center' | null
+  >(null);
 
   const [showDatePicker, setShowDatePicker] = React.useState(false);
   const { data: services } = useGetCarWashServices({
     car_id: carTypeId,
     listing_id: id,
   });
+  const { data: paymentOptions } = useGetCarWashPaymentOptions(Number(id));
+
   const { data: timeSlots } = useGetCarWashTimeSlots({
     date: selectedDate ? selectedDate.toISOString().slice(0, 10) : undefined,
     listing_id: id as string,
@@ -105,10 +116,10 @@ const CarWash = () => {
               }}>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Icon name="Stars" />
-                <Text color="#22313F" preset="POP_14_M">
+                <Text color={featuresId ? '#22313F' : '#B0B0B0'} preset="POP_14_M">
                   {featuresId
                     ? reqServices?.find((s) => s.id === featuresId)?.name
-                    : 'Select Features'}
+                    : 'Select Service'}
                 </Text>
               </View>
               <Ionicons name="chevron-down" size={24} color="#22313F" />
@@ -294,10 +305,96 @@ const CarWash = () => {
             </View>
           )}
         </View>
+        <View style={{ gap: 16, marginTop: 10, paddingHorizontal: 16, marginBottom: 20 }}>
+          <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+            Payment Method
+          </Text>
+
+          <Pressable
+            disabled={!paymentOptions?.is_payment}
+            onPress={() => setSelectedPaymentMethod('online_payment')}
+            style={[
+              {
+                height: 44,
+                backgroundColor: selectedPaymentMethod === 'online_payment' ? '#EFF3FF' : '#fff',
+                borderRadius: 44,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: selectedPaymentMethod === 'online_payment' ? 1 : 0,
+                borderColor: '#253D8F',
+                paddingHorizontal: 16,
+                opacity: paymentOptions?.is_payment ? 1 : 0.5,
+              },
+              shadow,
+              {
+                shadowOffset: {
+                  width: 0,
+                  height: 4,
+                },
+                elevation: 4,
+              },
+            ]}>
+            <Text preset="POP_14_M">Pay via Online Payment (Credit/Debit/UPI)</Text>
+          </Pressable>
+
+          <Pressable
+            disabled={!paymentOptions?.is_subscription}
+            onPress={() => setSelectedPaymentMethod('subscription')}
+            style={[
+              {
+                height: 44,
+                backgroundColor: selectedPaymentMethod === 'subscription' ? '#EFF3FF' : '#fff',
+                borderRadius: 44,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: selectedPaymentMethod === 'subscription' ? 1 : 0,
+                borderColor: '#253D8F',
+                paddingHorizontal: 16,
+                opacity: paymentOptions?.is_subscription ? 1 : 0.5,
+              },
+              shadow,
+              {
+                shadowOffset: {
+                  width: 0,
+                  height: 4,
+                },
+                elevation: 4,
+              },
+            ]}>
+            <Text preset="POP_14_M">Pay via Subscription (Available Plans)</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => setSelectedPaymentMethod('pay_at_service_center')}
+            style={[
+              {
+                height: 44,
+                backgroundColor:
+                  selectedPaymentMethod === 'pay_at_service_center' ? '#EFF3FF' : '#fff',
+                borderRadius: 44,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: selectedPaymentMethod === 'pay_at_service_center' ? 1 : 0,
+                borderColor: '#253D8F',
+                paddingHorizontal: 16,
+              },
+              shadow,
+              {
+                shadowOffset: {
+                  width: 0,
+                  height: 4,
+                },
+                elevation: 4,
+              },
+            ]}>
+            <Text preset="POP_14_M">Pay at Service Center</Text>
+          </Pressable>
+        </View>
+
         <BottomSheet ref={featuresRef} enableDynamicSizing>
           <SingleSelectList
             data={reqServices || []}
-            headerTitle="Select Features"
+            headerTitle="Select Service"
             selectedId={featuresId}
             onSelect={(val, index, id) => {
               setFeaturesId(id);
@@ -330,13 +427,21 @@ const CarWash = () => {
             justifyContent: 'center',
           }}
           onPress={() => {
-            if (!carTypeId || !featuresId || !vehicleNumber || !selectedTime || !selectedDate) {
+            if (
+              !carTypeId ||
+              !featuresId ||
+              !vehicleNumber ||
+              !selectedTime ||
+              !selectedDate ||
+              !selectedPaymentMethod
+            ) {
               showError('Error', 'Please select all fields before booking.');
               return;
             }
             router.navigate({
               pathname: '/services/carwash/payment',
               params: {
+                paymentOptions: selectedPaymentMethod,
                 vehicleTypeId: carTypeId,
                 vehicleType: vehicleOptions.find((v) => v.id === carTypeId)?.type,
                 listing_id: id,

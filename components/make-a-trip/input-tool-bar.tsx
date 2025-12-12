@@ -1,4 +1,4 @@
-import { moderateScale } from '@/core/responsive-dimensions';
+import { moderateScale } from '@/lib/responsive-dimensions';
 import { useTheme } from '@/newTheme';
 
 import React, { useMemo } from 'react';

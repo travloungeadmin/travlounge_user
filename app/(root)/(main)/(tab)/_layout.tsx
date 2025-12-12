@@ -7,8 +7,6 @@ import { getCurrentLocation } from '@/modules/location';
 import useUserStore from '@/modules/user';
 import { useTheme } from '@/newTheme';
 import TabBar from '@/old/components/layout/TabBar';
-import { Entypo, Ionicons } from '@expo/vector-icons';
-import { Pressable } from 'react-native';
 
 export default function TabLayout() {
   const { theme } = useTheme();
@@ -54,40 +52,40 @@ export default function TabLayout() {
       <Tabs.Screen
         name="make-a-trip"
         options={{
-          headerRight: () => (
-            <Pressable
-              style={{
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() => {}}>
-              <Entypo
-                name="new-message"
-                size={24}
-                color={theme.primary}
-                style={{ marginRight: 16 }}
-              />
-            </Pressable>
-          ),
-          headerLeft: () => (
-            <Pressable
-              style={{
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() => {}}>
-              <Ionicons name="menu" size={24} color={theme.primary} style={{ marginLeft: 16 }} />
-            </Pressable>
-          ),
-          headerTitleAlign: 'left',
-          headerTitleStyle: {
-            color: theme.primary,
-          },
+          // headerRight: () => (
+          //   <Pressable
+          //     style={{
+          //       height: '100%',
+          //       alignItems: 'center',
+          //       justifyContent: 'center',
+          //     }}
+          //     onPress={() => {}}>
+          //     <Entypo
+          //       name="new-message"
+          //       size={24}
+          //       color={theme.primary}
+          //       style={{ marginRight: 16 }}
+          //     />
+          //   </Pressable>
+          // ),
+          // headerLeft: () => (
+          //   <Pressable
+          //     style={{
+          //       height: '100%',
+          //       alignItems: 'center',
+          //       justifyContent: 'center',
+          //     }}
+          //     onPress={() => {}}>
+          //     <Ionicons name="menu" size={24} color={theme.primary} style={{ marginLeft: 16 }} />
+          //   </Pressable>
+          // ),
+          // headerTitleAlign: 'left',
+          // headerTitleStyle: {
+          //   color: theme.primary,
+          // },
 
-          title: 'Make a trip',
-          headerShown: true,
+          // title: 'Make a trip',
+          headerShown: false,
           // header: () => <Header profileIcon title="Make a trip" />,
         }}
       />

@@ -1,10 +1,7 @@
-import { moderateScale } from '@/core/responsive-dimensions';
+import { moderateScale } from '@/lib/responsive-dimensions';
 import { colors } from '@/theme';
 import React from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
-
-
-
 
 type PropsType = {
   title: string;
@@ -14,7 +11,7 @@ type PropsType = {
 };
 
 const Header = (props: PropsType) => {
-  const {  headerRight, onPressClear, style, title, } = props;
+  const { headerRight, onPressClear, style, title } = props;
 
   return (
     <View style={[styles.container, style]}>

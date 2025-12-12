@@ -11,6 +11,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 
+import { LocationProvider } from '@/context/location';
 import { Box, Text } from '@/core';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useVersionCheck } from '@/hooks/useVersionCheck';
@@ -84,21 +85,23 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <KeyboardProvider>
         <ThemeProvider>
-          <GestureHandlerRootView style={styles.container}>
-            <BottomSheetModalProvider>
-              <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <Slot />
-              </ErrorBoundary>
-              <StatusBar style="dark" />
-              {/* <UpdateModal
+          <LocationProvider>
+            <GestureHandlerRootView style={styles.container}>
+              <BottomSheetModalProvider>
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                  <Slot />
+                </ErrorBoundary>
+                <StatusBar style="dark" />
+                {/* <UpdateModal
             visible={!isChecking && (forceUpdate || (needsUpdate && !updateModalDismissed))}
             isForceUpdate={forceUpdate}
             onUpdate={openStore}
             onLater={forceUpdate ? undefined : () => setUpdateModalDismissed(true)}
           /> */}
-            </BottomSheetModalProvider>
-            <Toast />
-          </GestureHandlerRootView>
+              </BottomSheetModalProvider>
+              <Toast />
+            </GestureHandlerRootView>
+          </LocationProvider>
         </ThemeProvider>
       </KeyboardProvider>
     </QueryClientProvider>

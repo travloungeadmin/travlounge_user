@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { getHomeServices } from '@/home';
+import { setServices } from '@/store/service';
 import {
   getActiveSubscriptionsApi,
   getCategoryApi,
@@ -32,6 +34,11 @@ const useGetCategoryQuery = () =>
   useQuery({
     queryFn: () => getCategoryApi(),
     queryKey: [QUERIES_KEY.CATEGORY_LIST],
+    select: (data) => {
+      const services = getHomeServices(data);
+      setServices(services);
+      return data;
+    },
   });
 
 /**

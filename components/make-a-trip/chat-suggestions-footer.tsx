@@ -1,5 +1,5 @@
 import { Image, Pressable } from '@/core';
-import { moderateScale } from '@/core/responsive-dimensions';
+import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
 import { useTheme } from '@/newTheme';
 import { ThemedView } from '@/old/components/ThemedView';

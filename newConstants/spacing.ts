@@ -1,4 +1,4 @@
-import { moderateScale } from '@/core/responsive-dimensions';
+import { moderateScale } from '@/lib/responsive-dimensions';
 import { Dimensions } from 'react-native';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 

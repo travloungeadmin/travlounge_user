@@ -1,4 +1,4 @@
-import { moderateScale } from '@/core/responsive-dimensions';
+import { moderateScale } from '@/lib/responsive-dimensions';
 
 export const createTypography = () => ({
   labelSmall: {
