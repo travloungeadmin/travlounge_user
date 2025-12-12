@@ -2,20 +2,21 @@
   "expo": {
     "name": "Travlounge",
     "slug": "travlounge",
-    "version": "4.1.44",
-    "runtimeVersion": "4.1.44",
+    "version": "4.1.47",
+    "runtimeVersion": "4.1.47",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "light",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "ios": {
-      "buildNumber": "4001044",
+      "buildNumber": "4001047",
       "config": {
         "googleMapsApiKey": "AIzaSyAfaCR43T4eEiSNhrAs6XgeeYkM49ZwhlA"
       },
       "supportsTablet": true,
       "bundleIdentifier": "com.travlounge.app",
+      "googleServicesFile": "./google-services.plist",
       "appleTeamId": "PKN3Y7KT68",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
@@ -25,7 +26,7 @@
       }
     },
     "android": {
-      "versionCode": 4001044,
+      "versionCode": 4001047,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAfaCR43T4eEiSNhrAs6XgeeYkM49ZwhlA"
@@ -48,20 +49,8 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "compileSdkVersion": 35,
-            "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0",
-            "kotlinVersion": "1.9.25"
-          },
-          "ios": {
-            "deploymentTarget": "15.1"
-          }
-        }
-      ],
+      "@react-native-firebase/app",
+      "./plugins/withModularHeaders",
       [
         "expo-video",
         {
@@ -100,7 +89,8 @@
           "backgroundColor": "#FFFFFF"
         }
       ],
-      "expo-build-properties"
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

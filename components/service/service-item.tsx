@@ -22,6 +22,7 @@ interface ServiceItemProps {
   isSleepingPod?: boolean;
   service: string;
   serviceName?: string;
+  offerPercentage?: number;
 }
 
 const ServiceItem: React.FC<ServiceItemProps> = ({
@@ -30,6 +31,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
   isSleepingPod,
   service,
   serviceName,
+  offerPercentage,
 }) => {
   const scrollOffsetValue = useSharedValue(0);
   const progress = useSharedValue<number>(0);
@@ -123,6 +125,30 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
           onConfigurePanGesture={onConfigurePanGesture}
           renderItem={renderItem}
         /> */}
+        {!!offerPercentage && (
+          <View
+            style={{
+              position: 'absolute',
+              top: 62,
+              right: 0,
+              backgroundColor: '#FFCC02',
+              height: 26,
+              zIndex: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+              paddingHorizontal: 12,
+              borderTopLeftRadius: 30,
+              borderBottomLeftRadius: 30,
+            }}>
+            <Text preset="POP_12_M" color="#253D8F">
+              <Text style={{ fontWeight: '600' }} preset="POP_12_SB" color="#253D8F">
+                {offerPercentage}%
+              </Text>{' '}
+              Off for you
+            </Text>
+          </View>
+        )}
         <Image source={{ uri: item?.images?.[0]?.image }} style={styles.image} />
         <LinearGradient style={styles.linearGradient} colors={['transparent', '#000']}>
           <Row style={styles.row}>

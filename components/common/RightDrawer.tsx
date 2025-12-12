@@ -141,8 +141,8 @@ const RightDrawer: React.FC<RightDrawerProps> = ({ visible, onClose, items = def
             borderBottomLeftRadius: 8,
           },
         ]}
-        entering={SlideInRight.duration(300).springify().damping(15)}
-        exiting={SlideOutRight.duration(250).springify().damping(15)}>
+        entering={SlideInRight.duration(300).damping(15)}
+        exiting={SlideOutRight.duration(250).damping(15)}>
         {/* Header */}
         <View style={styles.drawerHeader}>
           <Text style={styles.drawerTitle}>Menu</Text>

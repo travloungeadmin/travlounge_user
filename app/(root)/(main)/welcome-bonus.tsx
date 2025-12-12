@@ -77,18 +77,7 @@ const WelcomeBonus: React.FC = () => {
 
     subscribe(data, {
       onSuccess: (data: SubscribeResponse) => {
-        if (data?.order_id?.includes('TRV')) {
-          queryClient.invalidateQueries({
-            queryKey: [QUERIES_KEY.PACKAGES_LIST],
-          });
-          showSuccess('Success', 'Welcome bonus applied successfully');
-          router.back();
-          return;
-        }
-
-        if (data?.is_profile_completed) {
-          handleRazorpay(data.order_id, amount, data?.subscription_id);
-        } else {
+        if (!data?.is_profile_completed) {
           Alert.alert(
             'Profile Incomplete',
             'Please complete your profile before proceeding to payment.',
@@ -105,6 +94,15 @@ const WelcomeBonus: React.FC = () => {
               },
             ]
           );
+        } else if (data?.order_id?.includes('TRV')) {
+          queryClient.invalidateQueries({
+            queryKey: [QUERIES_KEY.PACKAGES_LIST],
+          });
+          showSuccess('Success', 'Welcome bonus applied successfully');
+          router.back();
+          return;
+        } else {
+          handleRazorpay(data.order_id, amount, data?.subscription_id);
         }
       },
       onError: (err: any) => {

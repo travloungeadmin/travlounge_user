@@ -1,5 +1,6 @@
 import apiClient from '.';
 import ENDPOINTS from '../end-points';
+import { GetCategoryApiResponce } from './types';
 
 const getHomeApi = async () => {
   const response = await apiClient({
@@ -24,12 +25,12 @@ const getPackagesListApi = async () => {
   });
   return response.data;
 };
-const getCategoryApi = async () => {
+
+const getCategoryApi = async (): Promise<GetCategoryApiResponce> => {
   const response = await apiClient({
     method: 'get',
     url: ENDPOINTS.CATEGORY_LIST,
   });
-
   return response.data;
 };
 

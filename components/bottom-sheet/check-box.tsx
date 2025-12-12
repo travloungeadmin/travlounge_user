@@ -1,16 +1,11 @@
-
-import { moderateScale } from '@/core/responsive-dimensions';
+import { moderateScale } from '@/lib/responsive-dimensions';
+import { colors } from '@/theme';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from '../ui/icon';
-import { colors } from '@/theme';
-
-
 
 const capitalizeFirstLetter = (string: string) =>
   string?.charAt(0)?.toUpperCase() + string?.slice(1);
-
-
 
 type PropsType = {
   label: string | number;
@@ -64,9 +59,7 @@ const CheckBox = (props: PropsType) => {
         )}
       </View>
       <View style={[styles.viewWithBorder, borderWidth]}>
-        <Text style={[styles.text, description ]}>
-          {capitalizeFirstLetter(label)}
-        </Text>
+        <Text style={[styles.text, description]}>{capitalizeFirstLetter(label)}</Text>
         {description && <Text style={styles.description}>{description}</Text>}
       </View>
     </TouchableOpacity>

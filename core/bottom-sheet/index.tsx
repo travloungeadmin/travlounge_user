@@ -8,8 +8,8 @@ import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/typ
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { moderateScale } from '@/core/responsive-dimensions';
 import { useSafeAreaInsets } from '@/core/safe-area-context';
+import { moderateScale } from '@/lib/responsive-dimensions';
 import { colors } from '@/theme';
 
 type PropsType = {

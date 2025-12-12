@@ -2,11 +2,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 
 import PaymentFailed from '@/assets/svgs/payment-failed.svg';
 import PaymentSuccess from '@/assets/svgs/payment-success.svg';
+import CafeResultView from '@/components/payment/cafe-result-view';
 import SleepingPodPaymentTopCard from '@/components/service/sleeping-pod-payment-top-card';
 import { shadow } from '@/constants';
 import { Box, Device, Row, Text, useSafeAreaInsets } from '@/core';
@@ -96,7 +97,9 @@ const PaymentResult = () => {
   const isSuccess = paymentParams.status === 'success';
   const isPopUp = paymentParams.is_popup === 'true';
   const isTolooORCafe =
-    paymentParams.service_name === 'toloo' || paymentParams.service_name === 'bean_wagon';
+    paymentParams.service_name === 'toloo' ||
+    paymentParams.service_name === 'bean_wagon' ||
+    paymentParams.service_name === 'cafe';
 
   const handleGoHome = () => {
     resetState();
@@ -242,6 +245,18 @@ const PaymentResult = () => {
               </Box>
             )}
           />
+        ) : params?.service_name === 'buffet' || params?.service_name === 'cafe' ? (
+          <View
+            style={{
+              alignItems: 'center',
+            }}>
+            <CafeResultView
+              data={params?.list ? JSON.parse(params.list as string) : []}
+              image={params?.image as string}
+              name={params?.name as string}
+              location={params?.location as string}
+            />
+          </View>
         ) : (
           <SleepingPodPaymentTopCard
             service_name={params.service_name as string}

@@ -236,54 +236,68 @@ const SleepingPodPayment = () => {
   };
 
   const handlePayment = () => {
-    mutate(
+    Alert.alert('Confirm Payment', 'Do you want to proceed with the payment?', [
       {
-        user_id: user?.id as string,
-        listing_id: id as string,
-        amount: JSON.parse(priceData).payable_amount,
-        date: date as string,
-        time: time as string,
-        pod_info: JSON.parse(priceData).available_pods,
-        duration,
-        discount_amount: JSON.parse(priceData).discount_amount,
-        subtotal: JSON.parse(priceData).subtotal,
-        tax: JSON.parse(priceData).tax,
-        total_add_ons_price: JSON.parse(priceData).total_add_ons_price,
-        payable_amount: JSON.parse(priceData).payable_amount,
-        add_ons: JSON.parse(priceData).add_ons,
+        text: 'Cancel',
+        style: 'cancel',
       },
       {
-        onSuccess: (data) => {
-          if (data?.is_profile_completed) {
-            handleRazorpay({
-              id: data.order_id,
+        text: 'Proceed',
+        onPress: () => {
+          mutate(
+            {
+              user_id: user?.id as string,
+              listing_id: id as string,
               amount: JSON.parse(priceData).payable_amount,
-            });
-          } else {
-            Alert.alert(
-              'Profile Incomplete',
-              'Please complete your profile before proceeding to payment.',
-              [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Go to Profile',
-                  onPress: () => {
-                    router.navigate({
-                      pathname: '/(root)/(main)/old/edit-profile',
-                      params: { type: 'edit' },
-                    });
-                  },
-                },
-              ]
-            );
-          }
-        },
+              date: date as string,
+              time: time as string,
+              pod_info: JSON.parse(priceData).available_pods,
+              duration,
+              discount_amount: JSON.parse(priceData).discount_amount,
+              subtotal: JSON.parse(priceData).subtotal,
+              tax: JSON.parse(priceData).tax,
+              total_add_ons_price: JSON.parse(priceData).total_add_ons_price,
+              payable_amount: JSON.parse(priceData).payable_amount,
+              add_ons: JSON.parse(priceData).add_ons,
+            },
+            {
+              onSuccess: (data) => {
+                if (data?.is_profile_completed) {
+                  handleRazorpay({
+                    id: data.order_id,
+                    amount: JSON.parse(priceData).payable_amount,
+                  });
+                } else {
+                  Alert.alert(
+                    'Profile Incomplete',
+                    'Please complete your profile before proceeding to payment.',
+                    [
+                      { text: 'Cancel', style: 'cancel' },
+                      {
+                        text: 'Go to Profile',
+                        onPress: () => {
+                          router.navigate({
+                            pathname: '/(root)/(main)/old/edit-profile',
+                            params: { type: 'edit' },
+                          });
+                        },
+                      },
+                    ]
+                  );
+                }
+              },
 
-        onError: (error) => {
-          showError('Error', error?.message || 'Something went wrong. Please try again later.');
+              onError: (error) => {
+                showError(
+                  'Error',
+                  error?.message || 'Something went wrong. Please try again later.'
+                );
+              },
+            }
+          );
         },
-      }
-    );
+      },
+    ]);
   };
 
   return (

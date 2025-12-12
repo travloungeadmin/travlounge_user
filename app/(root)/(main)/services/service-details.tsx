@@ -1,5 +1,5 @@
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import AssociationList from '@/components/dashboard/association-list';
@@ -21,9 +21,12 @@ import Loading from '@/old/components/common/Loading';
 import { getAvailabilitySleepingPod, getServiceDetailsQuery } from '@/services/query/service';
 import { colors } from '@/theme';
 import type { ServiceDetailsParams } from '@/types/screens/services/service-details.types';
+import analytics from '@react-native-firebase/analytics';
 
 const ServiceDetails = () => {
   const params = useLocalSearchParams<ServiceDetailsParams>();
+  const { user } = useUserStore();
+
   const { id, name, isSleepingPod, serviceName, isPartner } = params;
   const isTravloungePartner = isPartner === 'true';
   const isCarwash = serviceName === 'Car Wash';
@@ -80,6 +83,18 @@ const ServiceDetails = () => {
     }
   }, [priceData]);
 
+  useEffect(() => {
+    analytics().logEvent('visited_listing', {
+      user_id: String(user?.id || ''),
+      user_name: user?.name || '',
+      user_phone: user?.mobile_number || '',
+      listing_id: id,
+      listing_name: name,
+      listing_type: serviceName || '',
+      is_partner: isTravloungePartner || false,
+    });
+  }, [id, name, serviceName, isTravloungePartner]);
+
   useFocusEffect(
     React.useCallback(() => {
       if (!isSleepingPod && data) {
@@ -124,7 +139,6 @@ const ServiceDetails = () => {
       },
     });
   };
-
   return (
     <Box style={{ flex: 1, backgroundColor: colors.backgroundPrimary }}>
       <Header title={name} back style={{ zIndex: 1, top: 0, right: 0, left: 0 }} />
@@ -139,6 +153,7 @@ const ServiceDetails = () => {
             name={data?.display_name}
             location={data?.place}
             rating={data?.average_rating || 5}
+            offerPercentage={data?.offer_percentage}
           />
           {isSleepingPod && duration >= 6 && <FacilitiesCard />}
           <AssociationList data={associationList} />
