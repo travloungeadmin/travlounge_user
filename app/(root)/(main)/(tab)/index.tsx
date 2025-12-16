@@ -20,7 +20,7 @@ import * as Location from 'expo-location';
 const Home = () => {
   const { data, isLoading } = getHomeListQuery();
   const { data: packages, isLoading: packagesListLoading } = getPackagesListQuery();
-  const { data: category } = useGetCategoryQuery();
+  useGetCategoryQuery();
 
   const {
     isLocationPermissionGranted,
@@ -92,7 +92,7 @@ const Home = () => {
           <Text style={styles.sectionTitle} color={colors.textPrimary} preset="POP_16_M">
             Our Services
           </Text>
-          <ServiceView category={category} />
+          <ServiceView />
           {!!data?.assocition_banner && (
             <Text style={styles.associationTitle} color={colors.textPrimary} preset="POP_16_M">
               View our offering
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     // backgroundColor: colors.backgroundPrimary,
   },
   servicesContainer: {
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
     paddingVertical: 0,
     width: '100%',
   },

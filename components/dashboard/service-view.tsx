@@ -2,73 +2,50 @@ import React from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { shadow } from '@/constants';
-import { Device, Text } from '@/core';
-import useSleepingPodCart from '@/modules/sleeping-pod';
-import { colors } from '@/theme';
-import { getHomeServices } from '@/utils/home';
-import { router } from 'expo-router';
-import Icon from '../ui/icon';
+import { moderateScale } from '@/lib/responsive-dimensions';
+import { SPACING } from '@/newConstants/spacing';
+import { useTheme } from '@/newTheme';
+import useServiceStore from '@/store/service';
+import { useRouter } from 'expo-router';
+import { ThemedText } from '../common/ThemedText';
+import Icon, { IconName } from '../ui/icon';
 
-type propsType = {
-  category: any;
-};
+const ServiceView = () => {
+  const { services } = useServiceStore();
+  const { theme } = useTheme();
+  const router = useRouter();
 
-const ServiceView = (props: propsType) => {
-  const { category } = props;
-  const width = (Device.width - 72.1) / 3;
-  const { resetState } = useSleepingPodCart();
-
-  const updatedServices = getHomeServices(category);
-
-  const handlePress = (service: { title: any; icon?: string; mapIcon?: string; id: any }) => () => {
-    if (service.title === 'Sleeping Pod') {
-      resetState();
-      router.navigate('/services/sleeping-pod');
-      return;
-    }
-    if (service.title === 'Cars') {
-      resetState();
-      router.navigate('/listings/[id]');
-      return;
-    }
-    router.navigate({
-      pathname: '/services/service',
-      params: {
-        service: service.id,
-        name: service.title,
-      },
-    });
-  };
   return (
     <View style={styles.container}>
-      {updatedServices?.map((service) => (
+      {services?.map((service) => (
         <Pressable
           style={[
             styles.shadowView,
             shadow,
             {
-              width: width,
-              height: 1.1 * width,
-              backgroundColor: colors.cardBackgroundPrimary,
+              width: (SPACING.contentWidth - moderateScale(24)) / 3,
+              height: moderateScale(140),
+              backgroundColor: theme.backgroundCard,
             },
           ]}
           key={service.id}
-          onPress={handlePress(service)}>
+          onPress={() => router.push(`/listings/${service.id}`)}>
           <Icon
             size={
               Platform.OS === 'ios'
                 ? service.icon === 'Toloo'
-                  ? 50
-                  : 40
+                  ? moderateScale(50)
+                  : moderateScale(40)
                 : service.icon === 'Toloo'
-                  ? 55
-                  : 45
+                  ? moderateScale(55)
+                  : moderateScale(45)
             }
-            name={service.icon}
+            name={service.icon as IconName}
           />
-          <Text style={{ textAlign: 'center' }} preset="POP_12_SB" color={colors.textPrimary}>
+
+          <ThemedText style={{ textAlign: 'center' }} variant="label" color="gray900">
             {service.title}
-          </Text>
+          </ThemedText>
         </Pressable>
       ))}
     </View>
@@ -79,16 +56,19 @@ export default ServiceView;
 
 const styles = StyleSheet.create({
   container: {
+    rowGap: moderateScale(12),
     flexDirection: 'row',
     display: 'flex',
     flexWrap: 'wrap',
-    gap: 20,
+    paddingHorizontal: SPACING.screenPadding,
+    gap: moderateScale(11.9),
+    alignContent: 'center',
   },
   shadowView: {
-    padding: 10,
-    borderRadius: 10,
+    padding: moderateScale(10),
+    borderRadius: moderateScale(10),
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    gap: moderateScale(10),
   },
 });

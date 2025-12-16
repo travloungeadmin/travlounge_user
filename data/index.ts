@@ -2,56 +2,56 @@ export const services = [
   {
     title: 'Hygeinic Washrooms',
     icon: 'Toloo',
-    mapIcon: 'TolooMap',
+    service: 'toloo',
   },
   {
     title: 'Sleeping Pod',
     icon: 'SleepingPod',
-    mapIcon: 'SleepingPodMap',
+    service: 'sleeping-pod',
   },
   {
     title: 'Cafe',
     icon: 'Cafe',
-    mapIcon: 'CafeMap',
+    service: 'cafe',
   },
   {
     title: 'Restaurant',
     icon: 'Restaurant',
-    mapIcon: 'RestaurantMap',
+    service: 'restaurant',
   },
   {
     title: 'Petrol Pump',
     icon: 'PetrolPump',
-    mapIcon: 'PetrolPumpMap',
+    service: 'petrol-pump',
   },
   {
     title: 'Car Wash',
     icon: 'CarWash',
-    mapIcon: 'CarWashMap',
+    service: 'car-wash',
   },
   {
     title: 'Travelmart',
     icon: 'Fillomart',
-    mapIcon: 'FillomartMap',
+    service: 'fillomart',
   },
   {
     title: 'Resort',
     icon: 'Resort',
-    mapIcon: 'ResortMap',
+    service: 'resort',
   },
   {
     title: 'Mechanic',
     icon: 'Mechanic',
-    mapIcon: 'MechanicMap',
+    service: 'mechanic',
   },
   {
     title: 'Buffet',
     icon: 'Buffet',
-    mapIcon: 'MechanicMap',
+    service: 'buffet',
   },
   {
     title: 'Cars',
     icon: 'SellCar',
-    mapIcon: 'MechanicMap',
+    service: 'user-car',
   },
-];
+] as const;

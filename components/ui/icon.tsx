@@ -120,8 +120,10 @@ const icons = {
   Logout,
 };
 
+export type IconName = keyof typeof icons;
+
 interface PropsType {
-  name: keyof typeof icons;
+  name: IconName;
   size?: number;
   stroke?: string;
   fill?: string;

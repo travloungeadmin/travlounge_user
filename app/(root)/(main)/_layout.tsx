@@ -4,10 +4,15 @@ import React from 'react';
 
 import Header from '@/components/header';
 import { useNotificationObserver } from '@/core/notification';
-import useUserStore from '@/modules/user';
+import { useTheme } from '@/newTheme';
+import useServiceStore from '@/store/service';
 
 export default function MainLayout() {
-  const { session, isRegistered, user } = useUserStore();
+  const { theme } = useTheme();
+  const { id } = useGlobalSearchParams();
+  const { services } = useServiceStore();
+  const serviceName = services.find((service) => service.id === Number(id))?.title;
+
   const notificationListener = React.useRef<Notifications.Subscription | null>(null);
   const { header } = useGlobalSearchParams();
   const handlePaymentResult = (data: any) => {
@@ -65,7 +70,7 @@ export default function MainLayout() {
   });
 
   return (
-    <Stack screenOptions={{ headerShown: false, animation: 'none' }} initialRouteName="(tab)">
+    <Stack screenOptions={{ headerShown: false, animation: 'none' }}>
       <Stack.Screen
         name="search"
         options={{
@@ -135,6 +140,15 @@ export default function MainLayout() {
         options={{
           headerShown: true,
           header: () => <Header back profileIcon wallet title="Cars" />,
+        }}
+      />
+      <Stack.Screen
+        name="listings/[id]"
+        options={{
+          headerBackButtonDisplayMode: 'minimal',
+          headerTintColor: theme.gray900,
+          headerShown: true,
+          headerTitle: serviceName,
         }}
       />
     </Stack>

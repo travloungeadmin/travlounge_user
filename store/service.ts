@@ -3,11 +3,15 @@ import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+import { services } from '../data';
+
+export type Service = (typeof services)[number]['service'];
+
 type serviceType = {
   id: number;
   title: string;
   icon: string;
-  mapIcon: string;
+  service: Service;
 };
 
 type State = {

@@ -6,7 +6,6 @@ import {
   getAvailabilitySleepingPodApi,
   getCouponApi,
   getServiceDetailApi,
-  getServiceListApi,
   getSleepingPodDetailApi,
   getSleepingPodListsApi,
   verifySleepingPodOrderApi,
@@ -19,37 +18,31 @@ export const getServiceListQuery = ({
   category,
   is_travlounge,
   isPartner,
-  isAvailable,
 }) => {
-  return useInfiniteQuery({
-    enabled: !!latitude && !!longitude && isAvailable,
-    getNextPageParam: (lastPage: any, pages) => {
-      if (lastPage.next) {
-        return lastPage.count + 1;
-      }
-    },
-    initialPageParam: 1,
-    queryFn: ({ pageParam }) =>
-      getServiceListApi({
-        latitude,
-        longitude,
-        category,
-        page: pageParam,
-        is_travlounge,
-        isPartner,
-      }),
-    queryKey: [
-      QUERIES_KEY.SERVICE_LIST,
-      { latitude, longitude, category, is_travlounge, isPartner },
-    ],
-    select: (data) => data?.pages.flatMap((page) => page.results),
-  });
+  // return useInfiniteQuery({
+  //   enabled: !!latitude && !!longitude
+  //   getNextPageParam: (lastPage: any, pages) => {
+  //     if (lastPage.next) {
+  //       return lastPage.count + 1;
+  //     }
+  //   },
+  //   initialPageParam: 1,
+  //   queryFn: ({ pageParam }) =>
+  //     getServiceListApi({
+  //       latitude,
+  //       longitude,
+  //       category,
+  //       page: pageParam,
+  //       is_travlounge,
+  //       isPartner,
+  //     }),
+  //   queryKey: [
+  //     QUERIES_KEY.SERVICE_LIST,
+  //     { latitude, longitude, category, is_travlounge, isPartner },
+  //   ],
+  //   select: (data) => data?.pages.flatMap((page) => page.results),
+  // });
 };
-// useQuery({
-//   enabled: !!latitude && !!longitude && !!category,
-//   queryFn: () => getServiceListApi({ latitude, longitude, category }),
-//   queryKey: [QUERIES_KEY.SERVICE_LIST, { latitude, longitude, category }],
-// });
 
 export const getServiceDetailsQuery = ({ id, longitude, latitude }) =>
   useQuery({
