@@ -1,6 +1,7 @@
 import CarSellingListingCard from '@/components/service/CarSellingListingCard';
 import { colors } from '@/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import analytics from '@react-native-firebase/analytics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Header from '@/components/header';
+import useUserStore from '@/modules/user';
 import {
   useToggleUsedCarsFavoriteMutation,
   useUsedCarDetailsQuery,
@@ -23,6 +25,7 @@ const dummyImages = [
 ];
 
 const ListingDetails = () => {
+  const { user } = useUserStore();
   const router = useRouter();
   const params = useLocalSearchParams();
   const { id } = params;
@@ -81,6 +84,18 @@ const ListingDetails = () => {
 
   const images = carData?.images || dummyImages;
   const packages = carData?.packages || [];
+
+  useEffect(() => {
+    analytics().logEvent('visited_listing', {
+      user_id: String(user?.id || ''),
+      user_name: user?.name || '',
+      user_phone: user?.mobile_number || '',
+      listing_id: id,
+      listing_name: carData?.agent_details?.agency_name || '',
+      listing_type: 'Cars',
+      is_partner: false,
+    });
+  }, [id, carData?.agent_details?.agency_name]);
 
   return (
     <View style={styles.container}>

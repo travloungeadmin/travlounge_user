@@ -137,7 +137,8 @@ const ServiceListings = () => {
         ListEmptyComponent={ListEmptyComponent}
         renderItem={({ item }) => (
           <CarSellingListingCard
-            variant={''}
+            subscriptionPrice={item?.packages[0]?.amount}
+            variant={item?.variant}
             fuel={item?.fuel}
             year={item?.year_of_manufacture}
             make={item?.name}

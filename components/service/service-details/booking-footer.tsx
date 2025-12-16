@@ -22,6 +22,8 @@ export const BookingFooter: React.FC<BookingFooterProps> = ({
   bottomHeight,
   onBook,
 }) => {
+  console.log({ price });
+
   return (
     <Row
       style={[
@@ -33,9 +35,7 @@ export const BookingFooter: React.FC<BookingFooterProps> = ({
       ]}>
       {isUnavailable ? (
         <Text style={styles.unavailable} preset="POP_14_SB" color="#333333">
-          {!price
-            ? 'Please select a date and pod for booking'
-            : 'This sleeping Pod is not available on this date'}
+          {'This sleeping Pod is not available on this date'}
         </Text>
       ) : (
         <Box gap={8}>

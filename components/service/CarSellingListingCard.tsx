@@ -47,6 +47,7 @@ const CarSellingListingCard = ({
   onPress,
   onComparePress,
   onPressFavorite,
+  subscriptionPrice,
   isCompareSelected = false,
 }: CarSellingListingCardProps) => {
   const { theme } = useTheme();
@@ -66,11 +67,13 @@ const CarSellingListingCard = ({
               </BlurView>
             </Pressable>
 
-            {/* <View style={[styles.subscriptionBadge, { backgroundColor: theme.primary }]}>
-              <ThemedText variant="titleSmall" color="white">
-                ₹12999 worth Travlounge subscription
-              </ThemedText>
-            </View> */}
+            {subscriptionPrice && (
+              <View style={[styles.subscriptionBadge, { backgroundColor: theme.primary }]}>
+                <ThemedText variant="titleSmall" color="white">
+                  ₹{subscriptionPrice} worth Travlounge subscription
+                </ThemedText>
+              </View>
+            )}
           </Image>
         </View>
 

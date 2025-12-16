@@ -29,6 +29,7 @@ import DurationIcon from '@/assets/svgs/icons/duration-icon.svg';
 import EditProfile from '@/assets/svgs/icons/edit-profile.svg';
 import Fillomart from '@/assets/svgs/icons/fillomart.svg';
 import TravloungeIcon from '@/assets/svgs/icons/icon.svg';
+import Insurance from '@/assets/svgs/icons/insurance.svg';
 import LocationPermission from '@/assets/svgs/icons/location_permission.svg';
 import Logout from '@/assets/svgs/icons/logout.svg';
 import Mechanic from '@/assets/svgs/icons/mechanic.svg';
@@ -66,6 +67,7 @@ const icons = {
   RoundPlus,
   RoundMinus,
   Delete,
+  Insurance,
   LocationPermission,
   DurationIcon,
   SleepingPodMap,
