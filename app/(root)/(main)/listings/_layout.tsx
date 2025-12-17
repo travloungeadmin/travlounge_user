@@ -10,7 +10,7 @@ export default function ListingsLayout() {
         name="[id]"
         options={{
           headerShown: true,
-          header: () => <Header back profileIcon wallet title="Cars" />,
+          header: () => <Header back profileIcon location title="Cars" />,
         }}
       />
       <Stack.Screen

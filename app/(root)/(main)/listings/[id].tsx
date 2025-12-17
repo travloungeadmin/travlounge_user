@@ -140,14 +140,14 @@ const ServiceListings = () => {
             subscriptionPrice={item?.packages[0]?.amount}
             variant={item?.variant}
             fuel={item?.fuel}
-            year={item?.year_of_manufacture}
+            year={item?.registration_year}
             make={item?.name}
             model={item?.car_model || ''}
             price={item?.price}
             kilometers={item?.kms}
             transmission={item?.transmission}
             ownerCount={item?.ownership}
-            registrationPlace="Delhi"
+            registrationPlace={item?.registration_place}
             sellerName={item?.agent_details?.agency_name}
             sellerPlace={item?.place}
             images={item?.images}

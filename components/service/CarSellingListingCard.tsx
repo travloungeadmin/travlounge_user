@@ -2,8 +2,7 @@ import { Image } from '@/lib/Image';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
 import { useTheme } from '@/newTheme';
-import { EvilIcons, FontAwesome } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
+import { EvilIcons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ThemedText } from '../common/ThemedText';
 import { ThemedView } from '../common/ThemedView';
@@ -57,7 +56,7 @@ const CarSellingListingCard = ({
       <ThemedView style={styles.container} backgroundColor="white">
         <View>
           <Image style={styles.image} source={{ uri: images?.[0]?.image_url || '' }}>
-            <Pressable onPress={onPressFavorite}>
+            {/* <Pressable onPress={onPressFavorite}>
               <BlurView style={styles.favoriteButton}>
                 <FontAwesome
                   name={isFavorite ? 'heart' : 'heart-o'}
@@ -65,15 +64,15 @@ const CarSellingListingCard = ({
                   color={isFavorite ? theme.error : theme.white}
                 />
               </BlurView>
-            </Pressable>
+            </Pressable> */}
 
-            {subscriptionPrice && (
+            {/* {subscriptionPrice && (
               <View style={[styles.subscriptionBadge, { backgroundColor: theme.primary }]}>
                 <ThemedText variant="titleSmall" color="white">
                   ₹{subscriptionPrice} worth Travlounge subscription
                 </ThemedText>
               </View>
-            )}
+            )} */}
           </Image>
         </View>
 
