@@ -15,7 +15,6 @@
 import CommonListings from '@/components/screens/listing/common-listings';
 import useServiceStore from '@/store/service';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
-import { Text, View } from 'react-native';
 
 // const DATA = [
 //   {
@@ -210,11 +209,7 @@ const ServiceListings = () => {
     // case 'carwash-history':
     //   return <CarWashHistory />;
     default:
-      return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Service not found</Text>
-        </View>
-      );
+      return <CommonListings />;
   }
 };
 

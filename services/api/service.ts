@@ -1,32 +1,21 @@
 import apiClient from '.';
 import ENDPOINTS from '../end-points';
+import { GetServiceListApiProps, ServiceListResponse } from './types';
 
-export const getServiceListApi = async (props) => {
-  const { latitude, longitude, category, page, is_travlounge, isPartner } = props;
-  console.log({
-    category,
-    longitude,
-    latitude,
-    page,
-    is_travlounge,
-    is_partner: isPartner,
-  });
+export const getServiceListApi = async (
+  props: GetServiceListApiProps
+): Promise<ServiceListResponse> => {
+  console.log({ props });
 
   const response = await apiClient({
     method: 'get',
     url: `${ENDPOINTS.SERVICE_LIST}`,
-    params: {
-      category,
-      longitude,
-      latitude,
-      page,
-      is_travlounge,
-      is_partner: isPartner,
-    },
+    params: props,
   });
 
   return response.data;
 };
+
 export const getServiceDetailApi = async (props) => {
   const { id, longitude, latitude } = props;
   const response = await apiClient({

@@ -6,6 +6,7 @@ const AUTH = {
 };
 const ENDPOINTS = {
   AUTH,
+  SERVICE_LIST: 'customer/home_listing/',
   MAKE_A_TRIP: 'listing/listing-filter/',
   HOME: 'customer/dashboard/',
   SERVICES: 'customer/service_type/',
@@ -23,7 +24,6 @@ const ENDPOINTS = {
   USER_DETAILS: 'customer/update-profile/',
   ROUTE_STATION_LIST: 'listing/elastic-search-filter/',
   PACKAGES_LIST: 'customer/packages-subscrition/',
-  SERVICE_LIST: 'customer/home_listing/',
   SERVICE_DETAIL: 'customer/fetch_listing/',
   ADD_REVIEW: 'customer/rating_create/',
   SLEEPING_POD_LIST: 'sleeping_pod/sleeping-pods/search/',

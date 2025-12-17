@@ -82,7 +82,6 @@ const Home = () => {
     <ScreenWrapper>
       <ScrollView style={styles.container}>
         <HomeBannerContainer banners={data?.banners || []} />
-
         {data?.subscription_data && packages && (
           <PackagesList subscription_data={data?.subscription_data} packages={packages} />
         )}

@@ -95,3 +95,11 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>;
 };
+
+export const useLocation = () => {
+  const context = React.useContext(LocationContext);
+  if (context === undefined) {
+    throw new Error('useLocation must be used within a LocationProvider');
+  }
+  return context;
+};

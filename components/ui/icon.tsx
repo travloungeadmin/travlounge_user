@@ -27,6 +27,8 @@ import DentalKit from '@/assets/svgs/icons/dental_kit.svg';
 import DoublePod from '@/assets/svgs/icons/double-pod.svg';
 import DurationIcon from '@/assets/svgs/icons/duration-icon.svg';
 import EditProfile from '@/assets/svgs/icons/edit-profile.svg';
+import Empty from '@/assets/svgs/icons/empty.svg';
+import Error from '@/assets/svgs/icons/error.svg';
 import Fillomart from '@/assets/svgs/icons/fillomart.svg';
 import TravloungeIcon from '@/assets/svgs/icons/icon.svg';
 import LocationPermission from '@/assets/svgs/icons/location_permission.svg';
@@ -58,9 +60,12 @@ import ResortMap from '@/assets/svgs/map/resort.svg';
 import RestaurantMap from '@/assets/svgs/map/restorent.svg';
 import SleepingPodMap from '@/assets/svgs/map/sleeping-pod.svg';
 import TolooMap from '@/assets/svgs/map/toloo.svg';
+
 const icons = {
   SendIcon,
   SellCar,
+  Empty,
+  Error,
   Support,
   EditProfile,
   RoundPlus,

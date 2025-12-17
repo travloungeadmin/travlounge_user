@@ -4,7 +4,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 const Index = () => {
-  const { session, isRegistered, user } = useUserStore();
+  const { session } = useUserStore();
   if (!session) {
     return <Redirect href="/auth" />;
   }

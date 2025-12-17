@@ -30,16 +30,23 @@ const getPackagesListQuery = () =>
     queryKey: [QUERIES_KEY.PACKAGES_LIST],
   });
 
-const useGetCategoryQuery = () =>
-  useQuery({
+import { useEffect } from 'react';
+
+const useGetCategoryQuery = () => {
+  const query = useQuery({
     queryFn: () => getCategoryApi(),
     queryKey: [QUERIES_KEY.CATEGORY_LIST],
-    select: (data) => {
-      const services = getHomeServices(data);
-      setServices(services);
-      return data;
-    },
   });
+
+  useEffect(() => {
+    if (query.data) {
+      const services = getHomeServices(query.data);
+      setServices(services);
+    }
+  }, [query.data]);
+
+  return query;
+};
 
 /**
  * Hook to fetch the customer's active subscriptions

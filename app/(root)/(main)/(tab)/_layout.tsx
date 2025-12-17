@@ -3,6 +3,8 @@ import React from 'react';
 
 import Header from '@/components/header';
 import { useSafeAreaInsets } from '@/core';
+
+import { useLocation } from '@/context/location';
 import { getCurrentLocation } from '@/modules/location';
 import useUserStore from '@/modules/user';
 import { useTheme } from '@/newTheme';
@@ -10,6 +12,12 @@ import TabBar from '@/old/components/layout/TabBar';
 
 export default function TabLayout() {
   const { theme } = useTheme();
+  const { fetchLocation } = useLocation();
+
+  React.useEffect(() => {
+    fetchLocation();
+  }, []);
+
   const { user, isLocationPermissionGranted, isAutoFetchLocation } = useUserStore();
 
   const { bottomHeight } = useSafeAreaInsets();

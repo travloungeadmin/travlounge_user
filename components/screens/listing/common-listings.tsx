@@ -1,96 +1,54 @@
-import { Image } from 'expo-image';
-import { router, useLocalSearchParams } from 'expo-router';
-import LottieView from 'lottie-react-native';
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import PartnerTab from '@/components/service/partner-tab';
 import ServiceListingItemCard from '@/components/service/ServiceListingItemCard';
-import { Box, Device, Text, useSafeAreaInsets } from '@/core';
-import { getCurrentLocation } from '@/modules/location';
-import useSleepingPodCart from '@/modules/sleeping-pod';
-import useUserStore from '@/modules/user';
+import ServiceListingItemCardSkeleton from '@/components/service/ServiceListingItemCardSkeleton';
+import Icon from '@/components/ui/icon';
+import { useLocation } from '@/context/location';
+import { Device, useSafeAreaInsets } from '@/core';
+import { moderateScale } from '@/lib/responsive-dimensions';
+import { SPACING } from '@/newConstants/spacing';
+import { useTheme } from '@/newTheme';
 import { getServiceListQuery } from '@/services/query/service';
 import useServiceStore from '@/store/service';
 import { colors } from '@/theme';
-import analytics from '@react-native-firebase/analytics';
 
 const CommonListings = () => {
+  const { theme } = useTheme();
   const { id, is_travlounge } = useLocalSearchParams();
   const { topHeight, bottomHeight } = useSafeAreaInsets();
-  const { latitude, longitude, isLocationPermissionGranted, place: currentPlace } = useUserStore();
-  const { place, date, time, duration } = useSleepingPodCart();
   const [isPartner, setIsPartner] = React.useState(false);
   const { services } = useServiceStore();
   const service = services.find((item) => item.id === Number(id))?.title;
+  const { coords, place } = useLocation();
 
-  const getData = async () => {
-    const id = await analytics().getAppInstanceId();
-    console.log('App Instance ID: ', id);
-  };
+  const { data, isFetching, hasNextPage, fetchNextPage, isFetchingNextPage } = getServiceListQuery({
+    latitude: coords?.latitude ?? 0,
+    longitude: coords?.longitude ?? 0,
+    category: String(id) || '',
+    is_travlounge: is_travlounge === 'true',
+    is_partner: isPartner,
+  });
 
-  React.useEffect(() => {
-    getData();
-  }, []);
-
-  // const { data, isFetching } = getServiceListQuery({
-  //   latitude,
-  //   longitude,
-  //   category: service,
-  //   is_travlounge,
-  //   isPartner,
-  //   isAvailable,
-  // });
-
-  React.useEffect(() => {
-    if (isLocationPermissionGranted && !currentPlace) {
-      getCurrentLocation();
+  const ListEmptyComponent = () => {
+    if (isFetching) {
+      return <ServiceListingItemCardSkeleton />;
     }
-  }, [isLocationPermissionGranted, currentPlace]);
-
-  const ListEmptyComponent = () => (
-    <View
-      style={[
-        styles.emptyComponent,
-        { height: Device.height - topHeight - 50 - bottomHeight || 20 },
-      ]}>
-      {isFetching ? (
-        <LottieView
-          source={require('@/old/assets/animation/loading.json')}
-          style={styles.loadingAnimation}
-          autoPlay
-          loop
-        />
-      ) : (
-        <Box style={styles.notFoundBox}>
-          <Image
-            contentFit="contain"
-            source={require('@/assets/images/not-found.png')}
-            style={styles.notFoundImage}
-          />
-          <Text preset="POP_14_M">
-            No {name}
-            {name === 'Hygeinic Washrooms' ? '' : 's'} found
-          </Text>
-        </Box>
-      )}
-    </View>
-  );
-
-  const listData = sleepingPodData ? JSON.parse(sleepingPodData) : null;
-
-  const handlePress = (item: any) =>
-    router.navigate({
-      pathname: '/services/service-details',
-      params: {
-        isPartner: item?.is_partner,
-        serviceName: name,
-        service: service,
-        id: item.id,
-        name: item.display_name,
-        ...(!!sleepingPodData ? { isSleepingPod: true } : {}),
-      },
-    });
+    return (
+      <View style={styles.emptyComponent}>
+        <Icon size={Device.width / 2} name="Empty" />
+        <ThemedText
+          style={{ width: Device.width / 2, textAlign: 'center' }}
+          variant="bodyLargeEmphasized"
+          color="gray900">
+          No {service}s found
+        </ThemedText>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -107,14 +65,15 @@ const CommonListings = () => {
       )}
 
       <FlatList
-        data={listData ?? data}
+        data={data}
         renderItem={({ item, index }) => {
           return (
             <ServiceListingItemCard
               images={item?.images}
               name={item.display_name}
               place={item.place}
-              onPress={() => handlePress(item)}
+              onPress={() => {}}
+              // onPress={() => handlePress(item)}
               rating={item.average_rating || 5}
               distance={item.distance}
               isPartner={item.is_partner}
@@ -123,9 +82,15 @@ const CommonListings = () => {
           );
         }}
         keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+        onEndReached={() => hasNextPage && fetchNextPage()}
+        onEndReachedThreshold={0.5}
         contentContainerStyle={styles.flatListContent}
-        ListFooterComponent={() => <View style={{ height: bottomHeight || 20 }} />}
+        ListFooterComponent={
+          <View
+            style={{ paddingVertical: SPACING.screenPadding, paddingBottom: SPACING.screenBottom }}>
+            {isFetchingNextPage && <ActivityIndicator size="small" color={theme.gray900} />}
+          </View>
+        }
         ListEmptyComponent={ListEmptyComponent}
       />
     </View>
@@ -140,9 +105,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   emptyComponent: {
+    flex: 1,
+    gap: SPACING.screenPadding,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 50,
   },
   loadingAnimation: {
     width: '40%',
@@ -157,18 +123,19 @@ const styles = StyleSheet.create({
   },
 
   flatListContent: {
-    gap: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    flexGrow: 1,
+    gap: moderateScale(16),
+    paddingHorizontal: moderateScale(16),
+    paddingVertical: moderateScale(16),
   },
   sleepingPodRow: {
     justifyContent: 'space-between',
-    padding: 16,
-    paddingVertical: 8,
+    padding: moderateScale(16),
+    paddingVertical: moderateScale(8),
     backgroundColor: colors.cardBackgroundPrimary,
     alignItems: 'center',
-    margin: 16,
-    borderRadius: 8,
+    margin: moderateScale(16),
+    borderRadius: moderateScale(8),
   },
 });
 // import { Image } from 'expo-image';
