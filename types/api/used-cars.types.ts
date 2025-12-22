@@ -42,3 +42,28 @@ export interface GetUsedCarsResponse {
   total_pages: number;
   results: UsedCarItem[];
 }
+
+export interface FilterOptionsResponse {
+  fuel_types: string[];
+  transmission_types: string[];
+  ownership_types: string[];
+  places: string[];
+  colours: string[];
+  seats: number[];
+  car_makes: {
+    make: string;
+    count: number;
+  }[];
+  year_range: {
+    min: number;
+    max: number;
+  };
+  price_range: {
+    min: number;
+    max: number;
+  };
+  kms_range: {
+    min: number;
+    max: number;
+  };
+}

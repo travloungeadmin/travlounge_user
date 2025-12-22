@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
+  getFilterOptionsApi,
   getUsedCarDetailsApi,
   getUsedCarsListApi,
   GetUsedCarsParams,
@@ -37,4 +38,15 @@ const useUsedCarDetailsQuery = (id: number | string) =>
     enabled: !!id,
   });
 
-export { useToggleUsedCarsFavoriteMutation, useUsedCarDetailsQuery, useUsedCarsListQuery };
+const useFilterOptionsQuery = () =>
+  useQuery({
+    queryFn: getFilterOptionsApi,
+    queryKey: [QUERIES_KEY.USED_CARS_FILTER_OPTIONS],
+  });
+
+export {
+  useFilterOptionsQuery,
+  useToggleUsedCarsFavoriteMutation,
+  useUsedCarDetailsQuery,
+  useUsedCarsListQuery,
+};

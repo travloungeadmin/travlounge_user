@@ -1,6 +1,6 @@
 import CarSellingListingCard from '@/components/service/CarSellingListingCard';
 import { colors } from '@/theme';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import analytics from '@react-native-firebase/analytics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -91,9 +91,12 @@ const ListingDetails = () => {
       user_name: user?.name || '',
       user_phone: user?.mobile_number || '',
       listing_id: id,
-      listing_name: carData?.agent_details?.agency_name || '',
+      listing_name: carData?.name,
       listing_type: 'Cars',
       is_partner: false,
+      model: carData?.car_model || '',
+      year: carData?.year_of_manufacture || '',
+      seller_name: carData?.agent_details?.agency_name || '',
     });
   }, [id, carData?.agent_details?.agency_name]);
 
@@ -108,7 +111,7 @@ const ListingDetails = () => {
             year={carData?.year_of_manufacture || ''}
             make={carData?.name || ''}
             model={carData?.car_model || ''}
-            variant={''}
+            variant={carData?.variant || ''}
             price={carData?.price || ''}
             kilometers={carData?.kms || ''}
             fuel={carData?.fuel || ''}
@@ -158,7 +161,7 @@ const ListingDetails = () => {
         </View>
 
         {/* Features */}
-        {/* {featuresData.length > 0 && (
+        {featuresData.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Features</Text>
             <View style={styles.featuresGrid}>
@@ -170,10 +173,10 @@ const ListingDetails = () => {
               ))}
             </View>
           </View>
-        )} */}
+        )}
 
         {/* Specs */}
-        {/* {specsData.length > 0 && (
+        {specsData.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Specifications</Text>
             <View style={{ gap: 12, marginTop: 10 }}>
@@ -185,7 +188,7 @@ const ListingDetails = () => {
               ))}
             </View>
           </View>
-        )} */}
+        )}
 
         <View style={{ height: 40 }} />
       </ScrollView>

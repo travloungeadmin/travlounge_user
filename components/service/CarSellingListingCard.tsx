@@ -66,13 +66,13 @@ const CarSellingListingCard = ({
               </BlurView>
             </Pressable> */}
 
-            {/* {subscriptionPrice && (
+            {subscriptionPrice && (
               <View style={[styles.subscriptionBadge, { backgroundColor: theme.primary }]}>
                 <ThemedText variant="titleSmall" color="white">
                   ₹{subscriptionPrice} worth Travlounge subscription
                 </ThemedText>
               </View>
-            )} */}
+            )}
           </Image>
         </View>
 

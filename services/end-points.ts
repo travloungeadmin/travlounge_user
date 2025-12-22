@@ -53,6 +53,7 @@ const ENDPOINTS = {
   CAR_WASH_PAYMENT_OPTIONS: 'car_wash/payment-options/',
   USED_CARS_LIST: 'used-cars/customers/cars/',
   USED_CAR_DETAILS: 'used-cars/customers/cars/',
+  USED_CARS_FILTER_OPTIONS: 'used-cars/customers/cars/filter-options/',
 };
 
 export default ENDPOINTS;
