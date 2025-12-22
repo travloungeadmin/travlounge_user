@@ -80,7 +80,7 @@ const ServiceListings = () => {
         ListEmptyComponent={ListEmptyComponent}
         renderItem={({ item }) => (
           <CarSellingListingCard
-            variant={item?.car_model || ''} // Corrected mapping - assuming car_model is variant? Or name is make?
+            variant={item?.variant || ''} // Corrected mapping - assuming car_model is variant? Or name is make?
             fuel={item?.fuel}
             year={item?.year_of_manufacture}
             make={item?.name}
