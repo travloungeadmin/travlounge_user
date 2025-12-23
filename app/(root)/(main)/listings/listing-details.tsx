@@ -90,13 +90,13 @@ const ListingDetails = () => {
       user_id: String(user?.id || ''),
       user_name: user?.name || '',
       user_phone: user?.mobile_number || '',
-      listing_id: id,
-      listing_name: carData?.name,
+      listing_id: carData?.agent_details?.id,
+      listing_name: carData?.agent_details?.agency_name,
       listing_type: 'Cars',
       is_partner: false,
       model: carData?.car_model || '',
       year: carData?.year_of_manufacture || '',
-      seller_name: carData?.agent_details?.agency_name || '',
+      car_name: carData?.name + ' ' + carData?.car_model || '',
     });
   }, [id, carData?.agent_details?.agency_name]);
 
