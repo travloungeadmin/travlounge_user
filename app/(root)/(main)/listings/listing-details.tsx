@@ -97,6 +97,7 @@ const ListingDetails = () => {
       model: carData?.car_model || '',
       year: carData?.year_of_manufacture || '',
       car_name: carData?.name + ' ' + carData?.car_model || '',
+      car_id: carData?.id,
     });
   }, [id, carData?.agent_details?.agency_name]);
 
