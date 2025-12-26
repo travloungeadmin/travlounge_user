@@ -1,10 +1,11 @@
 import { shadow } from '@/constants';
-import { Box, Row, Text } from '@/core';
+import { Box, Row } from '@/core';
 import React from 'react';
 import { Linking, Platform, Pressable, StyleSheet } from 'react-native';
 
 import Icon from '@/components/ui/icon';
-import { colors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
+import { ThemedText } from '../common/ThemedText';
 
 type propsType = {
   distance: string;
@@ -13,24 +14,10 @@ type propsType = {
   longitude: number;
 };
 
-// const openMap = (latitude, longitude) => {
-//   const url =
-//     Platform.OS === 'ios'
-//       ? `http://maps.apple.com/?ll=${latitude},${longitude}`
-//       : `geo:${latitude},${longitude}?q=${latitude},${longitude}`;
+// ... (existing openMap function code needs to be preserved, or simplified in replacement if I can't match it exactly. Wait, I should not delete openMap. I will just target the component part if possible or the whole file carefully)
+// better to use targeted replacement for component and imports.
 
-//   Linking.canOpenURL(url)
-//     .then((supported) => {
-//       if (supported) {
-//         Linking.openURL(url);
-//       } else {
-//         Alert.alert('Error', 'Unable to open the map.');
-//       }
-//     })
-//     .catch((err) => console.error('Error:', err));
-// };
-
-export const openMap = async (lat, lng, label = 'Destination') => {
+export const openMap = async (lat: any, lng: any, label = 'Destination') => {
   try {
     const latLng = `${lat},${lng}`;
 
@@ -97,6 +84,8 @@ export const openMap = async (lat, lng, label = 'Destination') => {
 
 const DistanceCard = (props: propsType) => {
   const { distance, time, latitude, longitude } = props;
+  const { theme } = useTheme();
+
   return (
     <Pressable
       onPress={() => openMap(latitude, longitude)}
@@ -105,25 +94,25 @@ const DistanceCard = (props: propsType) => {
         style={[
           shadow,
           {
-            backgroundColor: colors.cardBackgroundPrimary,
+            backgroundColor: theme.backgroundCard,
             padding: 16,
             borderRadius: 8,
             justifyContent: 'space-between',
           },
         ]}>
         <Box>
-          <Text preset="POP_16_SB" color={colors.textPrimary}>
+          <ThemedText variant="bodySmallEmphasized" color="gray900">
             {time}
-          </Text>
-          <Text preset="POP_12_R" color={colors.textPrimaryDescription}>
+          </ThemedText>
+          <ThemedText variant="label" color="gray500">
             {distance} away
-          </Text>
+          </ThemedText>
         </Box>
         <Row style={{ alignItems: 'center' }}>
-          <Icon name="Pin" size={12} fill={colors.iconPrimary} />
-          <Text preset="POP_16_SB" color={colors.textSecondary}>
+          <Icon name="Pin" size={12} fill={theme.primary} />
+          <ThemedText variant="bodySmallEmphasized" color="gray600">
             View Map
-          </Text>
+          </ThemedText>
         </Row>
       </Row>
     </Pressable>

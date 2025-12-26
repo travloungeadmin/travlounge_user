@@ -1,15 +1,5 @@
-import { Feather, Octicons } from '@expo/vector-icons';
-import React from 'react';
-import { Pressable, StyleSheet, ViewStyle } from 'react-native';
-
-interface VideoControlsProps {
-  isPlaying: boolean;
-  isMuted: boolean;
-  isPlayerReady: boolean;
-  onPlayPress: () => void;
-  onMutePress: () => void;
-}
-
+import { useTheme } from '@/hooks/useTheme';
+// ...
 export const VideoControls: React.FC<VideoControlsProps> = ({
   isPlaying,
   isMuted,
@@ -17,6 +7,7 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
   onPlayPress,
   onMutePress,
 }) => {
+  const { theme } = useTheme();
   return (
     <>
       <Pressable
@@ -26,7 +17,7 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
         accessibilityRole="button"
         accessibilityLabel={isPlaying ? 'Pause video' : 'Play video'}
         accessibilityHint={isPlaying ? 'Double tap to pause' : 'Double tap to play'}>
-        <Feather name={isPlaying ? 'pause' : 'play'} size={24} color={'#fff'} />
+        <Feather name={isPlaying ? 'pause' : 'play'} size={24} color={theme.white} />
       </Pressable>
       <Pressable
         onPress={onMutePress}
@@ -35,7 +26,7 @@ export const VideoControls: React.FC<VideoControlsProps> = ({
         accessibilityRole="button"
         accessibilityLabel={isMuted ? 'Unmute video' : 'Mute video'}
         accessibilityHint={isMuted ? 'Double tap to unmute' : 'Double tap to mute'}>
-        <Octicons name={isMuted ? 'mute' : 'unmute'} size={24} color={'#fff'} />
+        <Octicons name={isMuted ? 'mute' : 'unmute'} size={24} color={theme.white} />
       </Pressable>
     </>
   );

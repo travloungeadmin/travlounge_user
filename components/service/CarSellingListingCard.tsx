@@ -1,7 +1,7 @@
+import { useTheme } from '@/hooks/useTheme';
 import { Image } from '@/lib/Image';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
-import { useTheme } from '@/newTheme';
 import { EvilIcons, FontAwesome } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -55,7 +55,7 @@ const CarSellingListingCard = ({
     <Pressable onPress={onPress}>
       <ThemedView style={styles.container} backgroundColor="white">
         <View>
-          <Image style={styles.image} source={{ uri: images?.[0]?.image_url || '' }}>
+          <Image style={styles.image} source={{ uri: images?.[0] || '' }}>
             <Pressable onPress={onPressFavorite}>
               <BlurView style={styles.favoriteButton}>
                 <FontAwesome

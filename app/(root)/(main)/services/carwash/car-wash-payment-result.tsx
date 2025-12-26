@@ -6,9 +6,10 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import PaymentFailed from '@/assets/svgs/payment-failed.svg';
 import PaymentSuccess from '@/assets/svgs/payment-success.svg';
+import { ThemedText } from '@/components/common/ThemedText';
 import CarwashDetailCard from '@/components/service/carwash/carwash-detail-card';
-import { Box, Device, Text, useSafeAreaInsets } from '@/core';
-import { colors } from '@/theme';
+import { Box, Device, useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 
 interface PaymentResultParams {
   id: string;
@@ -33,6 +34,7 @@ interface PaymentResultParams {
 
 const PaymentResult = () => {
   const { bottomHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
   const {
     id,
     vehicleTypeId,
@@ -64,14 +66,14 @@ const PaymentResult = () => {
       {isSuccess ? <PaymentSuccess /> : <PaymentFailed />}
 
       <Box style={styles.messageContainer} gap={10}>
-        <Text color="#fff" preset="POP_24_SB">
+        <ThemedText color="white" variant="headlineSmallEmphasized">
           {isSuccess ? 'Booking Confirmed' : 'Booking Failed'}
-        </Text>
-        <Text style={styles.messageText} color="#fff" preset="POP_14_M">
+        </ThemedText>
+        <ThemedText style={styles.messageText} color="white" variant="body">
           {isSuccess
             ? 'Your booking has been confirmed. You can view your booking details below.'
             : 'Your booking has been failed. Please try again.'}
-        </Text>
+        </ThemedText>
       </Box>
 
       <Box style={styles.fullWidth}>
@@ -88,9 +90,9 @@ const PaymentResult = () => {
       <Pressable
         style={[styles.buttonWhite, { bottom: bottomHeight || 20 }]}
         onPress={handleGoHome}>
-        <Text color="#3C3C3C" preset="POP_16_SB">
+        <ThemedText color="gray900" variant="bodyEmphasized">
           Home
-        </Text>
+        </ThemedText>
       </Pressable>
     </Box>
   );
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   balanceBox: {
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     padding: 20,
     margin: 20,
     borderRadius: 8,

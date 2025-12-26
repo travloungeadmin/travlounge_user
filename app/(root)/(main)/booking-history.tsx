@@ -3,13 +3,14 @@ import { router, useFocusEffect } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, FlatList, Modal, Pressable, StyleSheet, View } from 'react-native';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import Icon from '@/components/ui/icon';
 import { shadow } from '@/constants';
-import { Box, Device, Image, Row, Text } from '@/core';
+import { Box, Device, Image, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import useUserStore from '@/modules/user';
 import Loading from '@/old/components/common/Loading';
 import { getBookings } from '@/services/query/booking';
-import { colors } from '@/theme';
 
 type BookingItemProps = {
   item: any; // TODO: Add proper type
@@ -20,6 +21,7 @@ type BookingItemProps = {
 
 const BookingItem = ({ item, getStatus, getStatusColor, iconName }: BookingItemProps) => {
   const [isModalVisible, setModalVisible] = React.useState(false);
+  const { theme } = useTheme();
   return (
     <Pressable
       onPress={() => {
@@ -47,7 +49,7 @@ const BookingItem = ({ item, getStatus, getStatusColor, iconName }: BookingItemP
         {
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: colors.cardBackgroundPrimary,
+          backgroundColor: theme.backgroundCard,
           marginHorizontal: 16,
           padding: 10,
           borderRadius: 8,
@@ -76,13 +78,13 @@ const BookingItem = ({ item, getStatus, getStatusColor, iconName }: BookingItemP
           </View>
         )}
         <Box style={{ justifyContent: 'space-evenly' }}>
-          <Text color="#333333" preset="POP_14_SB">
+          <ThemedText color="gray900" variant="bodyEmphasized">
             {item?.no_of_pods ? `${item.no_of_pods} ` : ''}
             {item?.menu_item_name || item?.service_type_name}
-          </Text>
-          <Text color="rgba(51, 51, 51, 0.7)" preset="POP_12_R">
+          </ThemedText>
+          <ThemedText color="gray600" variant="bodySmall">
             {item?.date}
-          </Text>
+          </ThemedText>
         </Box>
       </Row>
       {item?.payment_status === 'PENDING' ? (
@@ -95,23 +97,24 @@ const BookingItem = ({ item, getStatus, getStatusColor, iconName }: BookingItemP
             backgroundColor: '#253D8F',
             borderRadius: 20,
           }}>
-          <Text preset="POP_12_SB" style={{ textAlign: 'right' }} color="#fff">
+          <ThemedText variant="bodySmallEmphasized" style={{ textAlign: 'right' }} color="white">
             Pay Now
-          </Text>
+          </ThemedText>
         </Box>
       ) : (
-        <Text
-          preset="POP_12_SB"
-          style={{ textAlign: 'right' }}
-          color={
-            item?.service_name === 'sleeping_pod' || item?.service_name === 'car_wash'
-              ? getStatusColor(item?.payment_status, item?.booking_status)
-              : '#138832'
-          }>
+        <ThemedText
+          variant="bodySmallEmphasized"
+          style={{
+            textAlign: 'right',
+            color:
+              item?.service_name === 'sleeping_pod' || item?.service_name === 'car_wash'
+                ? getStatusColor(item?.payment_status, item?.booking_status)
+                : '#138832',
+          }}>
           {item?.service_name === 'sleeping_pod' || item?.service_name === 'car_wash'
             ? getStatus(item?.payment_status, item?.booking_status)
             : 'Redeemed'}
-        </Text>
+        </ThemedText>
       )}
       <Modal
         animationType="slide"
@@ -162,20 +165,20 @@ const BookingItem = ({ item, getStatus, getStatusColor, iconName }: BookingItemP
             )}
             <Box style={{ padding: 20, marginTop: item?.images?.[0] ? 0 : 40 }}>
               <Row style={{ justifyContent: 'space-between' }}>
-                <Text color="#333333" preset="POP_14_SB">
+                <ThemedText color="gray900" variant="bodySmallEmphasized">
                   {item?.quantity > 1 ? `${item?.quantity} ` : ''}
                   {item?.menu_item_name || item?.service_type_name}
-                </Text>
-                <Text color="#253D8F" preset="POP_12_SB">
+                </ThemedText>
+                <ThemedText color="primary" variant="bodySmallEmphasized">
                   {item?.service_name === 'car_wash' ? 'Booked' : 'Redeemed'}
-                </Text>
+                </ThemedText>
               </Row>
-              <Text style={{ marginTop: 5 }} color="rgba(51, 51, 51, 0.7)" preset="POP_12_R">
+              <ThemedText style={{ marginTop: 5 }} color="gray600" variant="bodySmall">
                 {item?.date}
-              </Text>
-              <Text style={{ marginTop: 20 }} color="#333333)" preset="POP_14_R">
+              </ThemedText>
+              <ThemedText style={{ marginTop: 20 }} color="gray900" variant="body">
                 {item?.listing_name}
-              </Text>
+              </ThemedText>
             </Box>
           </Box>
         </View>
@@ -186,6 +189,7 @@ const BookingItem = ({ item, getStatus, getStatusColor, iconName }: BookingItemP
 
 const BookingHistory = () => {
   const { user } = useUserStore();
+  const { theme } = useTheme();
   const { data, isLoading, refetch, hasNextPage, isFetchingNextPage, fetchNextPage } =
     getBookings();
 
@@ -270,7 +274,7 @@ const BookingHistory = () => {
   };
 
   return (
-    <Box style={{ backgroundColor: colors.backgroundPrimary, flex: 1 }}>
+    <Box style={{ backgroundColor: theme.backgroundPrimary, flex: 1 }}>
       <FlatList
         contentContainerStyle={{ paddingVertical: 20 }}
         data={data}
@@ -289,9 +293,9 @@ const BookingHistory = () => {
               source={require('@/assets/images/not-found.png')}
               style={styles.notFoundImage}
             />
-            <Text style={{ textAlign: 'center', width: Device.width * 0.7 }} preset="POP_14_M">
+            <ThemedText style={{ textAlign: 'center', width: Device.width * 0.7 }} variant="body">
               No active bookings found. Please confirm your reservation.
-            </Text>
+            </ThemedText>
           </Box>
         }
         keyExtractor={(item) => item.id}

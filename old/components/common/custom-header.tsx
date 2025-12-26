@@ -10,11 +10,10 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { useTheme } from '@/hooks/useTheme';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import useUserStore from '@/modules/user';
 import { constants } from '@/old/constants';
-import { useTheme } from '@/old/lib/theme';
-import { colors } from '@/theme';
 import { Entypo, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -45,7 +44,7 @@ const CustomHeader = ({ isHome, title, isBack, isWallet, locationEnable, style }
   };
 
   return (
-    <SafeAreaView style={[{ backgroundColor: colors.backgroundPrimary }, style]} edges={['top']}>
+    <SafeAreaView style={[{ backgroundColor: theme.backgroundPrimary }, style]} edges={['top']}>
       <View style={[styles.headerContainer]}>
         {isHome ? (
           <Logo height={35} />

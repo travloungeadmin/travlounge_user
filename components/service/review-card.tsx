@@ -1,8 +1,10 @@
 import { shadow } from '@/constants';
-import { Box, Row, Text } from '@/core';
+import { Box, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
+import { ThemedText } from '../common/ThemedText';
 import Icon from '../ui/icon';
 import ReviewItem from './review-item';
 
@@ -17,13 +19,14 @@ type propsType = {
 
 const ReviewCard = (props: propsType) => {
   const { reviews, averageRating, image, name, location, id } = props;
+  const { theme } = useTheme();
 
   const router = useRouter();
   return (
     <Box
       style={[
         {
-          backgroundColor: '#F8FAFC',
+          backgroundColor: theme.backgroundTop,
           // marginTop: 30,
           marginHorizontal: 16,
           borderRadius: 8,
@@ -40,14 +43,14 @@ const ReviewCard = (props: propsType) => {
           borderColor: 'rgba(37, 61, 143, 0.2)',
         }}>
         <Box>
-          <Text preset="POP_18_SB" color="#333333">
+          <ThemedText variant="headline" color="gray900">
             Reviews
-          </Text>
+          </ThemedText>
           <Row style={{ gap: 5, alignItems: 'center' }}>
             <Icon name="Star" size={12} fill={'#EFB603'} />
-            <Text preset="POP_14_R" color="#333333">
+            <ThemedText variant="bodySmall" color="gray900">
               {averageRating?.toFixed(1) || 5}
-            </Text>
+            </ThemedText>
           </Row>
         </Box>
         <Pressable
@@ -63,16 +66,16 @@ const ReviewCard = (props: propsType) => {
             })
           }
           style={{
-            backgroundColor: '#253D8F',
+            backgroundColor: theme.primary,
             height: 30,
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 15,
             paddingHorizontal: 16,
           }}>
-          <Text preset="POP_14_M" color="#fff">
+          <ThemedText variant="bodySmall" color="white">
             Add Review
-          </Text>
+          </ThemedText>
         </Pressable>
       </Row>
 

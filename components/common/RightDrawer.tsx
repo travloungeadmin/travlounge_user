@@ -1,3 +1,4 @@
+import { useTheme } from '@/hooks/useTheme';
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
@@ -12,7 +13,6 @@ import {
 import Animated, { FadeIn, FadeOut, SlideInRight, SlideOutRight } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors } from '@/theme';
 import { DrawerItem, RightDrawerProps } from '@/types/components/common/rightDrawer.types';
 import { router, usePathname } from 'expo-router';
 
@@ -49,6 +49,7 @@ const defaultItems: DrawerItem[] = [
 
 const RightDrawer: React.FC<RightDrawerProps> = ({ visible, onClose, items = defaultItems }) => {
   const { top, bottom } = useSafeAreaInsets();
+  const { theme } = useTheme();
   const pathname = usePathname();
   console.log(pathname);
 
@@ -59,7 +60,7 @@ const RightDrawer: React.FC<RightDrawerProps> = ({ visible, onClose, items = def
 
   const renderDrawerItem = (item: DrawerItem) => {
     const isActive = pathname === item.pathName;
-    const iconColor = isActive ? colors.iconTertiary : colors.iconSecondary;
+    const iconColor = isActive ? theme.primary : theme.gray600;
 
     const renderIcon = () => {
       if (item.icon) {
@@ -89,25 +90,25 @@ const RightDrawer: React.FC<RightDrawerProps> = ({ visible, onClose, items = def
           style={[
             styles.drawerItem,
             {
-              backgroundColor: isActive ? colors.cardBackgroundSecondary : 'transparent',
+              backgroundColor: isActive ? theme.primary50 : 'transparent',
             },
           ]}
           onPress={() => handleItemPress(item.onPress)}
-          android_ripple={{ color: colors.cardBackgroundPrimary }}>
+          android_ripple={{ color: theme.backgroundCard }}>
           <View style={styles.itemContent}>
             <View style={styles.iconContainer}>{renderIcon()}</View>
             <Text
               style={[
                 styles.itemText,
                 {
-                  color: isActive ? colors.textTertiary : colors.textPrimary,
+                  color: isActive ? theme.primary : theme.gray900,
                 },
               ]}>
               {item.title}
             </Text>
           </View>
         </Pressable>
-        {item.separator && <View style={styles.separator} />}
+        {item.separator && <View style={[styles.separator, { backgroundColor: theme.gray200 }]} />}
       </View>
     );
   };
@@ -139,15 +140,18 @@ const RightDrawer: React.FC<RightDrawerProps> = ({ visible, onClose, items = def
             bottom: bottom || 20,
             borderTopLeftRadius: 8,
             borderBottomLeftRadius: 8,
+            backgroundColor: theme.backgroundPrimary,
           },
         ]}
         entering={SlideInRight.duration(300).damping(15)}
         exiting={SlideOutRight.duration(250).damping(15)}>
         {/* Header */}
-        <View style={styles.drawerHeader}>
-          <Text style={styles.drawerTitle}>Menu</Text>
-          <Pressable onPress={onClose} style={styles.closeButton}>
-            <Entypo name="cross" size={24} color={colors.iconSecondary} />
+        <View style={[styles.drawerHeader, { borderBottomColor: theme.gray200 }]}>
+          <Text style={[styles.drawerTitle, { color: theme.gray900 }]}>Menu</Text>
+          <Pressable
+            onPress={onClose}
+            style={[styles.closeButton, { backgroundColor: theme.backgroundCard }]}>
+            <Entypo name="cross" size={24} color={theme.gray600} />
           </Pressable>
         </View>
 
@@ -176,7 +180,6 @@ const styles = StyleSheet.create({
     right: 0,
 
     width: DRAWER_WIDTH,
-    backgroundColor: colors.backgroundPrimary,
     elevation: 16,
     shadowColor: '#000',
     shadowOffset: {
@@ -193,17 +196,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: colors.dividerPrimary,
   },
   drawerTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: colors.textPrimary,
   },
   closeButton: {
     padding: 8,
     borderRadius: 20,
-    backgroundColor: colors.cardBackgroundPrimary,
   },
   menuContainer: {
     flex: 1,
@@ -225,25 +225,21 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
-    color: colors.textPrimary,
     marginLeft: 10,
     fontWeight: '500',
   },
   separator: {
     height: 1,
-    backgroundColor: colors.dividerPrimary,
     marginVertical: 5,
     marginHorizontal: 20,
   },
   drawerFooter: {
     padding: 20,
     borderTopWidth: 1,
-    borderTopColor: colors.dividerPrimary,
     alignItems: 'center',
   },
   versionText: {
     fontSize: 12,
-    color: colors.textSecondary,
   },
 });
 

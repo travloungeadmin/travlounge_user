@@ -1,8 +1,9 @@
 import { shadow } from '@/constants';
-import { Box, Text } from '@/core';
-import { colors } from '@/theme';
+import { Box } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
+import { ThemedText } from './common/ThemedText';
 import Icon from './ui/icon';
 
 type PorpsType = {
@@ -15,6 +16,8 @@ type PorpsType = {
 
 const PackageCard = (props: PorpsType) => {
   const { index, price, services, name, onPress } = props;
+  const { theme } = useTheme();
+
   return (
     <Pressable
       onPress={onPress}
@@ -23,7 +26,7 @@ const PackageCard = (props: PorpsType) => {
           marginVertical: 20,
           marginBottom: 30,
           alignItems: 'center',
-          backgroundColor: colors.cardBackgroundPrimary,
+          backgroundColor: theme.backgroundCard,
           width: 205,
           paddingVertical: 20,
           paddingHorizontal: 10,
@@ -33,24 +36,24 @@ const PackageCard = (props: PorpsType) => {
         shadow,
       ]}>
       <Icon size={40} name={index === 0 ? 'Crown' : 'Surprice'} />
-      <Text preset="POP_14_SB" color="#333333">
+      <ThemedText variant="bodySmallEmphasized" color="gray800">
         {index === 0 ? 'Exclusive Access Awaits, Subscribe Now!' : `${name} plan`}
-      </Text>
+      </ThemedText>
       <Box gap={5}>
         {services?.map((item) => (
-          <Text style={{ textAlign: 'center' }} preset="POP_14_SB" color="#333333">
+          <ThemedText variant="bodySmallEmphasized" color="gray800" style={{ textAlign: 'center' }}>
             {item?.number}{' '}
-            <Text preset="POP_14_R" color="#333333">
+            <ThemedText variant="bodySmall" color="gray800">
               {item?.name}
-            </Text>
-          </Text>
+            </ThemedText>
+          </ThemedText>
         ))}
       </Box>
       <Box style={{ flex: 1 }} />
       {price === 0 && (
-        <Text color="#666666" style={{ paddingVertical: 12 }} preset="POP_12_R">
+        <ThemedText variant="label" color="gray600" style={{ paddingVertical: 12 }}>
           *{name} redeemed only in Travlounge stores
-        </Text>
+        </ThemedText>
       )}
       <Box
         style={{
@@ -60,9 +63,9 @@ const PackageCard = (props: PorpsType) => {
           justifyContent: 'center',
           paddingHorizontal: 20,
         }}>
-        <Text preset="POP_14_SB" color="#FFF">
+        <ThemedText variant="bodySmallEmphasized" color="white">
           ₹ {price}
-        </Text>
+        </ThemedText>
       </Box>
     </Pressable>
   );

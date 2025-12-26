@@ -7,11 +7,13 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 
 import SingleSelectList from '@/components/bottom-sheet/single-select-list';
+import { ThemedText } from '@/components/common/ThemedText';
 import Icon from '@/components/ui/icon';
 import { shadow } from '@/constants';
 import { vehicleOptions } from '@/constants/data';
-import { Device, Text, TextInput, useSafeAreaInsets } from '@/core';
+import { Device, TextInput, useSafeAreaInsets } from '@/core';
 import BottomSheet from '@/core/bottom-sheet';
+import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
 import {
   useGetCarWashPaymentOptions,
@@ -22,6 +24,7 @@ import {
 const CarWash = () => {
   const featuresRef = React.useRef<BottomSheetModal>(null);
   const { bottomHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
   const { id, header, place, image } = useLocalSearchParams();
   const [carTypeId, setCarTypeId] = React.useState<number | null>(
     vehicleOptions.length > 0 ? vehicleOptions[0].id : null
@@ -56,9 +59,9 @@ const CarWash = () => {
       <ScrollView>
         <View style={{ padding: 16, gap: 26 }}>
           <View style={{ gap: 10 }}>
-            <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+            <ThemedText variant="bodySmallEmphasized" color="gray600">
               Select your vehicle
-            </Text>
+            </ThemedText>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
               {vehicleOptions.map((option) => (
                 <Pressable
@@ -88,20 +91,20 @@ const CarWash = () => {
                       height: (Device.width - 64) / 3 - 60,
                     }}
                   />
-                  <Text color="#333333" preset="POP_12_M">
+                  <ThemedText color="gray900" variant="bodySmallEmphasized">
                     {option.type}
-                  </Text>
-                  <Text style={{ textAlign: 'center' }} color="#333333" preset="POP_12_R">
+                  </ThemedText>
+                  <ThemedText style={{ textAlign: 'center' }} color="gray900" variant="bodySmall">
                     {option.description}
-                  </Text>
+                  </ThemedText>
                 </Pressable>
               ))}
             </View>
           </View>
           <View style={{ gap: 10 }}>
-            <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+            <ThemedText variant="bodySmallEmphasized" color="gray600">
               Special Features
-            </Text>
+            </ThemedText>
             <Pressable
               onPress={() => featuresRef?.current?.present()}
               style={{
@@ -116,19 +119,19 @@ const CarWash = () => {
               }}>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Icon name="Stars" />
-                <Text color={featuresId ? '#22313F' : '#B0B0B0'} preset="POP_14_M">
+                <ThemedText color={featuresId ? 'gray900' : 'gray600'} variant="bodyEmphasized">
                   {featuresId
                     ? reqServices?.find((s) => s.id === featuresId)?.name
                     : 'Select Service'}
-                </Text>
+                </ThemedText>
               </View>
               <Ionicons name="chevron-down" size={24} color="#22313F" />
             </Pressable>
           </View>
           <View style={{ gap: 10 }}>
-            <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+            <ThemedText variant="bodySmallEmphasized" color="gray600">
               Vehicle Number
-            </Text>
+            </ThemedText>
             <Pressable
               style={{
                 backgroundColor: '#F5F6F6',
@@ -158,9 +161,9 @@ const CarWash = () => {
           </View>
 
           <View style={{ gap: 10 }}>
-            <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+            <ThemedText variant="bodySmallEmphasized" color="gray600">
               Select Date
-            </Text>
+            </ThemedText>
             <View style={{ flexDirection: 'row', gap: 10, display: 'flex', flexWrap: 'wrap' }}>
               <Pressable
                 onPress={() => setSelectedDate(new Date())}
@@ -187,7 +190,7 @@ const CarWash = () => {
                     elevation: 4,
                   },
                 ]}>
-                <Text preset="POP_14_M">Today</Text>
+                <ThemedText variant="bodyEmphasized">Today</ThemedText>
               </Pressable>
               <Pressable
                 onPress={() => setSelectedDate(new Date(Date.now() + 24 * 60 * 60 * 1000))}
@@ -219,7 +222,7 @@ const CarWash = () => {
                     elevation: 4,
                   },
                 ]}>
-                <Text preset="POP_14_M">Tomorrow</Text>
+                <ThemedText variant="bodyEmphasized">Tomorrow</ThemedText>
               </Pressable>
               <Pressable
                 onPress={() => setShowDatePicker(true)}
@@ -236,7 +239,7 @@ const CarWash = () => {
                 }}>
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <Icon name="Calendar" />
-                  <Text color="#22313F" preset="POP_14_M">
+                  <ThemedText color="gray900" variant="bodyEmphasized">
                     {selectedDate
                       ? selectedDate.toLocaleDateString('en-US', {
                           month: 'short',
@@ -244,16 +247,16 @@ const CarWash = () => {
                           year: 'numeric',
                         })
                       : 'Select Date'}
-                  </Text>
+                  </ThemedText>
                 </View>
               </Pressable>
             </View>
           </View>
           {timeSlots?.time_slots && (
             <View style={{ gap: 10 }}>
-              <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+              <ThemedText variant="bodySmallEmphasized" color="gray600">
                 Select Time Slot
-              </Text>
+              </ThemedText>
               {timeSlots?.time_slots?.length === 0 ? (
                 <View
                   style={{
@@ -264,9 +267,9 @@ const CarWash = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text preset="POP_14_M" color="rgba(34, 49, 63, 0.6)">
+                  <ThemedText variant="bodyEmphasized" color="gray600">
                     No slots available
-                  </Text>
+                  </ThemedText>
                 </View>
               ) : (
                 <View style={{ flexDirection: 'row', gap: 10, display: 'flex', flexWrap: 'wrap' }}>
@@ -297,7 +300,7 @@ const CarWash = () => {
                           opacity: 0.5,
                         },
                       ]}>
-                      <Text preset="POP_14_M">{item.time}</Text>
+                      <ThemedText variant="bodyEmphasized">{item.time}</ThemedText>
                     </Pressable>
                   ))}
                 </View>
@@ -306,9 +309,9 @@ const CarWash = () => {
           )}
         </View>
         <View style={{ gap: 16, marginTop: 10, paddingHorizontal: 16, marginBottom: 20 }}>
-          <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+          <ThemedText variant="bodySmallEmphasized" color="gray600">
             Payment Method
-          </Text>
+          </ThemedText>
 
           <Pressable
             disabled={!paymentOptions?.is_payment}
@@ -334,7 +337,9 @@ const CarWash = () => {
                 elevation: 4,
               },
             ]}>
-            <Text preset="POP_14_M">Pay via Online Payment (Credit/Debit/UPI)</Text>
+            <ThemedText variant="bodyEmphasized">
+              Pay via Online Payment (Credit/Debit/UPI)
+            </ThemedText>
           </Pressable>
 
           <Pressable
@@ -361,7 +366,7 @@ const CarWash = () => {
                 elevation: 4,
               },
             ]}>
-            <Text preset="POP_14_M">Pay via Subscription (Available Plans)</Text>
+            <ThemedText variant="bodyEmphasized">Pay via Subscription (Available Plans)</ThemedText>
           </Pressable>
 
           <Pressable
@@ -387,7 +392,7 @@ const CarWash = () => {
                 elevation: 4,
               },
             ]}>
-            <Text preset="POP_14_M">Pay at Service Center</Text>
+            <ThemedText variant="bodyEmphasized">Pay at Service Center</ThemedText>
           </Pressable>
         </View>
 
@@ -456,9 +461,9 @@ const CarWash = () => {
               },
             });
           }}>
-          <Text preset="POP_16_SB" color="#FFF">
+          <ThemedText variant="bodyEmphasized" color="white">
             Book Now
-          </Text>
+          </ThemedText>
         </Pressable>
       </View>
     </View>

@@ -9,8 +9,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useSafeAreaInsets } from '@/core/safe-area-context';
+import { useTheme } from '@/hooks/useTheme';
 import { moderateScale } from '@/lib/responsive-dimensions';
-import { colors } from '@/theme';
 
 type PropsType = {
   children: React.ReactNode;
@@ -31,6 +31,7 @@ const BottomSheet = React.forwardRef((props: PropsType, ref) => {
     onDismiss,
   } = props;
   const { bottomHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
 
   const renderBackdrop = React.useCallback(
     (param: React.PropsWithChildren<BottomSheetBackdropProps>) => (
@@ -63,10 +64,17 @@ const BottomSheet = React.forwardRef((props: PropsType, ref) => {
       enableOverDrag={false}
       enablePanDownToClose={enablePanDownToClose || true}
       {...(!handleIndicatorStyle && { handleComponent: () => null })}
-      handleIndicatorStyle={[styles.handleIndicator, handleIndicatorStyle]}
+      handleIndicatorStyle={[
+        styles.handleIndicator,
+        { backgroundColor: theme.backgroundCard },
+        handleIndicatorStyle,
+      ]}
       index={0}
       ref={ref as React.RefObject<BottomSheetModalMethods>}
-      style={styles.modal}
+      style={[
+        styles.modal,
+        { backgroundColor: theme.backgroundCard, shadowColor: theme.backgroundCard },
+      ]}
       {...(!enableDynamicSizing && { snapPoints })}>
       {children}
       {/* <View style={{ height: bottomHeight }} /> */}
@@ -83,13 +91,13 @@ const styles = StyleSheet.create({
   },
 
   handleIndicator: {
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
   },
   modal: {
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: moderateScale(20),
     overflow: 'hidden',
-    shadowColor: colors.cardBackgroundPrimary,
+    // shadowColor: colors.cardBackgroundPrimary,
     shadowOffset: {
       height: 2,
       width: 0,

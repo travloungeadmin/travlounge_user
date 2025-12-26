@@ -1,24 +1,30 @@
 import { LocationContext } from '@/context/location';
-import { colors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
-import { ActivityIndicator, Button, Linking, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Linking, StyleSheet, View } from 'react-native';
+import { ThemedText } from './ThemedText';
 
 const ScreenWrapper = ({ children }: { children: React.ReactNode }) => {
   const { isLoading, permissionStatus } = React.useContext(LocationContext) || {};
+  const { theme } = useTheme();
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={colors.buttonBackgroundPrimary} />
-        <Text style={styles.text}>Fetching location...</Text>
+      <View style={[styles.container, { backgroundColor: theme.backgroundPrimary }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
+        <ThemedText variant="body" color="gray900" style={styles.text}>
+          Fetching location...
+        </ThemedText>
       </View>
     );
   }
 
   if (permissionStatus === 'denied' || permissionStatus === 'unavailable') {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Location permission is required to use this app.</Text>
+      <View style={[styles.container, { backgroundColor: theme.backgroundPrimary }]}>
+        <ThemedText variant="body" color="gray900" style={styles.text}>
+          Location permission is required to use this app.
+        </ThemedText>
         <Button title="Open Settings" onPress={Linking.openSettings} />
       </View>
     );
@@ -32,13 +38,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.backgroundPrimary,
   },
   text: {
     marginBottom: 20,
     fontSize: 16,
     textAlign: 'center',
-    color: colors.textPrimary,
   },
 });
 

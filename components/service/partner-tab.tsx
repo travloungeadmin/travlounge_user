@@ -1,6 +1,6 @@
+import { useTheme } from '@/hooks/useTheme';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
-import { useTheme } from '@/newTheme';
 import useServiceStore from '@/store/service';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';

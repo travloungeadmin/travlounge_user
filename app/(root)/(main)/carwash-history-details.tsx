@@ -2,13 +2,14 @@ import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, Alert, Linking, Pressable, ScrollView } from 'react-native';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import Header from '@/components/header';
 import { shadow } from '@/constants';
-import { Box, Image, Row, Text } from '@/core';
+import { Box, Image, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
 import Loading from '@/old/components/common/Loading';
 import { cancelCarwashBookingMutation } from '@/services/query/booking';
-import { colors } from '@/theme';
 import type {
   BillingDetailsProps,
   CancellationTermsProps,
@@ -28,13 +29,15 @@ const CarwashTopCard: React.FC<CarwashTopCardProps> = ({
   vehicleNumber,
   carType,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <Box
       style={[
         {
           margin: 16,
           borderRadius: 8,
-          backgroundColor: colors.cardBackgroundPrimary,
+          backgroundColor: theme.backgroundCard,
           padding: 16,
           gap: 16,
         },
@@ -45,36 +48,36 @@ const CarwashTopCard: React.FC<CarwashTopCardProps> = ({
           <Image source={{ uri: image }} style={{ width: '100%', height: '100%' }} />
         </Box>
         <Box style={{ flex: 1, gap: 8 }}>
-          <Text preset="POP_16_SB" color="#253D8F">
+          <ThemedText variant="titleEmphasized" color="primary">
             {name}
-          </Text>
-          <Text preset="POP_14_R" color="#333333">
+          </ThemedText>
+          <ThemedText variant="bodySmall" color="gray900">
             Service: {serviceType}
-          </Text>
-          {/* <Text preset="POP_14_R" color="#333333">
+          </ThemedText>
+          {/* <ThemedText variant="bodySmall" color="gray900">
             Date: {date} • {bookingTime}
-          </Text> */}
-          <Text preset="POP_14_R" color="#333333">
+          </ThemedText> */}
+          <ThemedText variant="bodySmall" color="gray900">
             Booking ID: #{id}
-          </Text>
+          </ThemedText>
         </Box>
       </Row>
-      <Box style={{ backgroundColor: '#F8F9FA', padding: 12, borderRadius: 8, gap: 8 }}>
+      <Box style={{ backgroundColor: theme.backgroundTop, padding: 12, borderRadius: 8, gap: 8 }}>
         <Row style={{ justifyContent: 'space-between' }}>
-          <Text preset="POP_12_SB" color="#666666">
+          <ThemedText variant="labelEmphasized" color="gray600">
             Vehicle Number:
-          </Text>
-          <Text preset="POP_12_SB" color="#333333">
+          </ThemedText>
+          <ThemedText variant="labelEmphasized" color="gray900">
             {vehicleNumber}
-          </Text>
+          </ThemedText>
         </Row>
         <Row style={{ justifyContent: 'space-between' }}>
-          <Text preset="POP_12_SB" color="#666666">
+          <ThemedText variant="labelEmphasized" color="gray600">
             Car Type:
-          </Text>
-          <Text preset="POP_12_SB" color="#333333">
+          </ThemedText>
+          <ThemedText variant="labelEmphasized" color="gray900">
             {carType}
-          </Text>
+          </ThemedText>
         </Row>
       </Box>
     </Box>
@@ -82,37 +85,39 @@ const CarwashTopCard: React.FC<CarwashTopCardProps> = ({
 };
 
 const BillingDetails: React.FC<BillingDetailsProps> = ({ items, total }) => {
+  const { theme } = useTheme();
+
   return (
     <Box
       style={[
         {
           padding: 16,
-          backgroundColor: colors.cardBackgroundPrimary,
+          backgroundColor: theme.backgroundCard,
           margin: 16,
           borderRadius: 8,
           gap: 10,
         },
         shadow,
       ]}>
-      <Text preset="POP_14_SB" color="#333333">
+      <ThemedText variant="bodySmallEmphasized" color="gray900">
         Billing Details
-      </Text>
+      </ThemedText>
       <Box gap={5}>
         {items && items.length > 0 ? (
           items.map((item: any, index: number) => (
             <Row key={index} style={{ justifyContent: 'space-between' }}>
-              <Text preset="POP_14_R" color="#333333">
+              <ThemedText variant="bodySmall" color="gray900">
                 {item.type}
-              </Text>
-              <Text preset="POP_14_R" color="#333333">
+              </ThemedText>
+              <ThemedText variant="bodySmall" color="gray900">
                 {item.rate} X {item.quantity} = {item.rate * item.quantity}
-              </Text>
+              </ThemedText>
             </Row>
           ))
         ) : (
-          <Text preset="POP_14_R" color="#333333">
+          <ThemedText variant="bodySmall" color="gray900">
             Service charges as per booking
-          </Text>
+          </ThemedText>
         )}
       </Box>
 
@@ -122,12 +127,12 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ items, total }) => {
             style={{ height: 1, backgroundColor: 'rgba(37, 61, 143, 0.3)', marginVertical: 8 }}
           />
           <Row style={{ justifyContent: 'space-between' }}>
-            <Text preset="POP_14_SB" color="#333333">
+            <ThemedText variant="bodySmallEmphasized" color="gray900">
               Total
-            </Text>
-            <Text preset="POP_14_SB" color="#333333">
+            </ThemedText>
+            <ThemedText variant="bodySmallEmphasized" color="gray900">
               ₹{total}
-            </Text>
+            </ThemedText>
           </Row>
         </>
       )}
@@ -136,6 +141,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({ items, total }) => {
 };
 
 const StatusCard: React.FC<StatusCardProps> = ({ paymentStatus, bookingStatus }) => {
+  const { theme } = useTheme();
   const getStatusColor = (status: string) => {
     switch (status?.toUpperCase()) {
       case 'CONFIRMED':
@@ -155,20 +161,20 @@ const StatusCard: React.FC<StatusCardProps> = ({ paymentStatus, bookingStatus })
         {
           margin: 16,
           borderRadius: 8,
-          backgroundColor: colors.cardBackgroundPrimary,
+          backgroundColor: theme.backgroundCard,
           padding: 16,
           gap: 12,
         },
         shadow,
       ]}>
-      <Text preset="POP_14_SB" color="#333333">
+      <ThemedText variant="bodySmallEmphasized" color="gray900">
         Status Information
-      </Text>
+      </ThemedText>
 
       <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text preset="POP_14_R" color="#333333">
+        <ThemedText variant="bodySmall" color="gray900">
           Payment Status
-        </Text>
+        </ThemedText>
         <Box
           style={{
             backgroundColor: getStatusColor(paymentStatus),
@@ -176,17 +182,17 @@ const StatusCard: React.FC<StatusCardProps> = ({ paymentStatus, bookingStatus })
             paddingVertical: 4,
             borderRadius: 12,
           }}>
-          <Text preset="POP_12_SB" color="#FFFFFF">
+          <ThemedText variant="labelEmphasized" color="white">
             {paymentStatus || 'N/A'}
-          </Text>
+          </ThemedText>
         </Box>
       </Row>
 
       {bookingStatus && (
         <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text preset="POP_14_R" color="#333333">
+          <ThemedText variant="bodySmall" color="gray900">
             Booking Status
-          </Text>
+          </ThemedText>
           <Box
             style={{
               backgroundColor: getStatusColor(bookingStatus),
@@ -194,9 +200,9 @@ const StatusCard: React.FC<StatusCardProps> = ({ paymentStatus, bookingStatus })
               paddingVertical: 4,
               borderRadius: 12,
             }}>
-            <Text preset="POP_12_SB" color="#FFFFFF">
+            <ThemedText variant="labelEmphasized" color="white">
               {bookingStatus}
-            </Text>
+            </ThemedText>
           </Box>
         </Row>
       )}
@@ -205,35 +211,37 @@ const StatusCard: React.FC<StatusCardProps> = ({ paymentStatus, bookingStatus })
 };
 
 const TimeSlotCard: React.FC<TimeSlotCardProps> = ({ bookingTime, serviceDate }) => {
+  const { theme } = useTheme();
+
   return (
     <Box
       style={[
         {
           margin: 16,
           borderRadius: 8,
-          backgroundColor: colors.cardBackgroundPrimary,
+          backgroundColor: theme.backgroundCard,
           padding: 16,
           gap: 12,
         },
         shadow,
       ]}>
-      <Text preset="POP_14_SB" color="#333333">
+      <ThemedText variant="bodySmallEmphasized" color="gray900">
         Scheduled Time
-      </Text>
+      </ThemedText>
 
       <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text preset="POP_14_R" color="#666666">
+        <ThemedText variant="bodySmall" color="gray600">
           Service Date
-        </Text>
-        <Text preset="POP_14_SB" color="#333333">
+        </ThemedText>
+        <ThemedText variant="bodySmallEmphasized" color="gray900">
           {serviceDate}
-        </Text>
+        </ThemedText>
       </Row>
 
       <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text preset="POP_14_R" color="#666666">
+        <ThemedText variant="bodySmall" color="gray600">
           Time Slot
-        </Text>
+        </ThemedText>
         <Box
           style={{
             backgroundColor: '#E8F4FD',
@@ -243,9 +251,9 @@ const TimeSlotCard: React.FC<TimeSlotCardProps> = ({ bookingTime, serviceDate })
             borderWidth: 1,
             borderColor: '#253D8F',
           }}>
-          <Text preset="POP_12_SB" color="#253D8F">
+          <ThemedText variant="labelEmphasized" color="primary">
             {bookingTime}
-          </Text>
+          </ThemedText>
         </Box>
       </Row>
     </Box>
@@ -257,24 +265,26 @@ const CancellationTerms: React.FC<CancellationTermsProps> = ({
   onPressCancel,
   cancellable,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <Box
       style={{
         margin: 16,
         borderRadius: 8,
-        backgroundColor: colors.cardBackgroundPrimary,
+        backgroundColor: theme.backgroundCard,
         padding: 16,
         ...shadow,
         gap: 10,
       }}>
-      <Text color="#3C3C3C" preset="POP_14_SB">
+      <ThemedText variant="bodySmallEmphasized" color="gray900">
         Cancellation terms
-      </Text>
-      <Text color="#3C3C3C" preset="POP_14_R">
+      </ThemedText>
+      <ThemedText variant="bodySmall" color="gray900">
         {cancellable
           ? 'You can cancel your car wash booking up to 2 hours before the scheduled time. After that, the booking is non-refundable.'
           : 'This booking cannot be cancelled at this time.'}
-      </Text>
+      </ThemedText>
       {cancellable && (
         <Pressable
           disabled={isLoading}
@@ -293,9 +303,9 @@ const CancellationTerms: React.FC<CancellationTermsProps> = ({
           {isLoading ? (
             <ActivityIndicator color="#FFFFFF" size="small" />
           ) : (
-            <Text color="#fff" preset="POP_14_M">
+            <ThemedText variant="bodySmall" color="white">
               Cancel Booking
-            </Text>
+            </ThemedText>
           )}
         </Pressable>
       )}
@@ -304,10 +314,12 @@ const CancellationTerms: React.FC<CancellationTermsProps> = ({
 };
 
 const CancelledOnCard: React.FC<CancelledOnCardProps> = ({ canceledAt }) => {
+  const { theme } = useTheme();
+
   return (
     <Row
       style={{
-        backgroundColor: colors.cardBackgroundPrimary,
+        backgroundColor: theme.backgroundCard,
         margin: 16,
         padding: 16,
         borderRadius: 8,
@@ -316,18 +328,19 @@ const CancelledOnCard: React.FC<CancelledOnCardProps> = ({ canceledAt }) => {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <Text color="#881313" preset="POP_16_SB">
+      <ThemedText variant="titleEmphasized" color="error">
         Cancelled
-      </Text>
-      <Text color="#333333" preset="POP_14_SB">
+      </ThemedText>
+      <ThemedText variant="bodySmallEmphasized" color="gray900">
         on {canceledAt}
-      </Text>
+      </ThemedText>
     </Row>
   );
 };
 
 const CarwashHistoryDetails = () => {
   const { data } = useLocalSearchParams();
+  const { theme } = useTheme();
   const { mutate: cancelCarwashBooking } = cancelCarwashBookingMutation();
   const parsedData: CarwashBookingData | null = data
     ? JSON.parse(Array.isArray(data) ? data[0] : data)
@@ -372,7 +385,7 @@ const CarwashHistoryDetails = () => {
 
   if (!parsedData) {
     return (
-      <Box style={{ backgroundColor: colors.backgroundPrimary, flex: 1 }}>
+      <Box style={{ backgroundColor: theme.backgroundPrimary, flex: 1 }}>
         <Header back title="Booking Details" />
         <Loading />
       </Box>
@@ -401,7 +414,7 @@ const CarwashHistoryDetails = () => {
   const canCancel = cancellable;
 
   return (
-    <Box style={{ backgroundColor: colors.backgroundPrimary, flex: 1 }}>
+    <Box style={{ backgroundColor: theme.backgroundPrimary, flex: 1 }}>
       <Header back title="Booking Details" />
       {isLoading ? (
         <Loading />
@@ -437,9 +450,9 @@ const CarwashHistoryDetails = () => {
                 justifyContent: 'center',
               }}
               onPress={() => Linking.openURL(`tel:${7272000555}`)}>
-              <Text color="#fff" preset="POP_16_SB">
+              <ThemedText color="white" variant="titleEmphasized">
                 Support
-              </Text>
+              </ThemedText>
             </Pressable>
           }
 

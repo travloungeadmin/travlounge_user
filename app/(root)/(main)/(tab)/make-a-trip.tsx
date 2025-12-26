@@ -109,11 +109,14 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import Header from '@/components/header';
-import { Device, Image, Text, useSafeAreaInsets } from '@/core';
+import { Device, Image, useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 
 const MakeATrip = () => {
   const { bottomHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
   return (
     <View style={{ flex: 1 }}>
       <Header profileIcon title="Make a trip" />
@@ -124,12 +127,12 @@ const MakeATrip = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Text preset="POP_28_B" color="#253D8F">
+        <ThemedText variant="headlineEmphasized" color="primary">
           Coming Soon!
-        </Text>
-        <Text preset="POP_16_SB" color="#253D8F">
+        </ThemedText>
+        <ThemedText variant="bodyEmphasized" color="primary">
           We are working for you
-        </Text>
+        </ThemedText>
         <Image
           source={require('@/assets/images/coming_soon_make_a_trip.png')}
           priority="high"
@@ -153,9 +156,9 @@ const MakeATrip = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text preset="POP_16_SB" color="#FFF">
+          <ThemedText variant="bodyEmphasized" color="white">
             Go To Home
-          </Text>
+          </ThemedText>
         </Pressable>
       </View>
     </View>

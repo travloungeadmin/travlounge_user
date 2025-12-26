@@ -1,12 +1,14 @@
 import Header from '@/components/header';
 import SleepingPodBookingView from '@/components/service/sleeping-pod-booking-view';
 import { Box } from '@/core';
-import { colors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 import { ImageBackground } from 'expo-image';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
 const SleepingPod = () => {
+  const { theme } = useTheme();
+
   return (
     <ImageBackground
       contentFit="cover"
@@ -14,7 +16,7 @@ const SleepingPod = () => {
       style={styles.backgroundImage}>
       <Header title="Sleeping Pod" back location />
 
-      <Box style={styles.contentContainer}>
+      <Box style={[styles.contentContainer, { backgroundColor: theme.backgroundPrimary }]}>
         <ScrollView>
           <SleepingPodBookingView isSearch />
         </ScrollView>
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
   },
   contentBox: {
     marginTop: 200,
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 8,
     marginHorizontal: 16,
     marginBottom: 20,
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     height: 45,
-    backgroundColor: colors.buttonBackgroundPrimary,
+    // backgroundColor: colors.buttonBackgroundPrimary,
     borderRadius: 45 / 2,
     justifyContent: 'center',
     alignItems: 'center',

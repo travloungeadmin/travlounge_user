@@ -1,13 +1,14 @@
 import { Entypo, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Pressable, Text as RNText, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { Pressable, Text as RNText, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import Logo from '@/assets/svgs/headerLogo.svg';
 import RightDrawer from '@/components/common/RightDrawer';
-import { Box, Row, Text, useSafeAreaInsets } from '@/core';
+import { useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import useUserStore from '@/modules/user';
-import { colors } from '@/theme';
+import { ThemedText } from './common/ThemedText';
 
 type Props = {
   logo?: boolean;
@@ -23,6 +24,7 @@ type Props = {
 const Header = ({ logo, location, title, back, profileIcon, wallet, style, booking }: Props) => {
   const { place, setSession } = useUserStore((state) => state);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+  const { theme } = useTheme();
 
   const { topHeight } = useSafeAreaInsets();
 
@@ -50,47 +52,47 @@ const Header = ({ logo, location, title, back, profileIcon, wallet, style, booki
     {
       id: 'profile',
       title: 'Profile',
-      icon: <FontAwesome name="user" size={20} color={colors.iconSecondary} />,
+      icon: <FontAwesome name="user" size={20} color={theme.gray600} />,
       onPress: () => router.navigate('/profile'),
       pathName: '/profile',
     },
     {
       id: 'bookings',
       title: 'My Bookings',
-      icon: <Entypo name="book" size={20} color={colors.iconSecondary} />,
+      icon: <Entypo name="book" size={20} color={theme.gray600} />,
       onPress: () => router.navigate('/booking-history'),
     },
     {
       id: 'wallet',
       title: 'Wallet',
-      icon: <FontAwesome5 name="wallet" size={20} color={colors.iconSecondary} />,
+      icon: <FontAwesome5 name="wallet" size={20} color={theme.gray600} />,
       onPress: () => router.navigate('/old/wallet'),
     },
     {
       id: 'settings',
       title: 'Settings',
-      icon: <Entypo name="cog" size={20} color={colors.iconSecondary} />,
+      icon: <Entypo name="cog" size={20} color={theme.gray600} />,
       onPress: () => console.log('Settings pressed'), // Update with actual route when available
       separator: true,
     },
     {
       id: 'help',
       title: 'Help & Support',
-      icon: <Entypo name="help-with-circle" size={20} color={colors.iconSecondary} />,
+      icon: <Entypo name="help-with-circle" size={20} color={theme.gray600} />,
       onPress: () => console.log('Help pressed'), // Update with actual route when available
     },
     {
       id: 'about',
       title: 'About',
-      icon: <Entypo name="info-with-circle" size={20} color={colors.iconSecondary} />,
+      icon: <Entypo name="info-with-circle" size={20} color={theme.gray600} />,
       onPress: () => console.log('About pressed'), // Update with actual route when available
     },
   ];
 
   return (
-    <Box style={[styles.safeAreaView, style]}>
-      <Box style={[styles.headerContainer, { marginTop: topHeight }]}>
-        <Row style={[styles.row, { flex: 1 }]}>
+    <View style={[styles.safeAreaView, { backgroundColor: theme.backgroundPrimary }, style]}>
+      <View style={[styles.headerContainer, { marginTop: topHeight }]}>
+        <View style={[styles.row, { flex: 1 }]}>
           {logo && <Logo height={40} />}
           {back && (
             <Pressable
@@ -102,22 +104,22 @@ const Header = ({ logo, location, title, back, profileIcon, wallet, style, booki
                 justifyContent: 'center',
               }}
               onPress={handleBack}>
-              <FontAwesome name="chevron-left" size={20} color={colors.iconPrimary} />
+              <FontAwesome name="chevron-left" size={20} color={theme.primary} />
             </Pressable>
           )}
           {title && (
-            <Text
+            <ThemedText
               ellipsizeMode="tail"
               style={{ flex: 1 }}
               numberOfLines={1}
-              color={colors.textPrimary}
-              preset="POP_18_M">
+              color="gray900"
+              variant="title">
               {title}
-            </Text>
+            </ThemedText>
           )}
-        </Row>
+        </View>
 
-        <Row style={[styles.row]}>
+        <View style={[styles.row]}>
           {location && (
             <Pressable
               onPress={() =>
@@ -129,45 +131,45 @@ const Header = ({ logo, location, title, back, profileIcon, wallet, style, booki
                 })
               }
               style={{ alignItems: 'center', flexDirection: 'row' }}>
-              <Box>
-                <Entypo name="location-pin" size={20} color={colors.iconSecondary} />
+              <View>
+                <Entypo name="location-pin" size={20} color={theme.gray600} />
                 {!place && (
-                  <Box style={styles.locationBadge}>
+                  <View style={styles.locationBadge}>
                     <RNText style={styles.locationBadgeText}>x</RNText>
-                  </Box>
+                  </View>
                 )}
-              </Box>
-              <Text preset="POP_12_R" color={colors.textSecondary}>
+              </View>
+              <ThemedText variant="label" color="gray600">
                 {!!place ? place : 'Enable location'}
-              </Text>
+              </ThemedText>
             </Pressable>
           )}
 
           {/* {profileIcon && (
             <Pressable onPress={() => router.navigate('/profile')}>
-              <Icon name="User" fill={colors.iconSecondary} size={24} />
+              <Icon name="User" fill={theme.gray600} size={24} />
             </Pressable>
           )} */}
           {wallet && (
             <Pressable onPress={handleWallet}>
-              <FontAwesome5 name="wallet" size={24} color={colors.iconSecondary} />
+              <FontAwesome5 name="wallet" size={24} color={theme.gray600} />
             </Pressable>
           )}
 
           <Pressable style={{ paddingHorizontal: 5 }} onPress={handleMenuPress}>
-            <Entypo name="dots-three-vertical" size={24} color={colors.iconSecondary} />
+            <Entypo name="dots-three-vertical" size={24} color={theme.gray600} />
           </Pressable>
           {/* {booking && (
             <Pressable onPress={handleBooking}>
-              <Icon name="Bookings" fill={colors.iconSecondary} size={24} />
+              <Icon name="Bookings" fill={theme.gray600} size={24} />
             </Pressable>
           )} */}
-        </Row>
-      </Box>
+        </View>
+      </View>
 
       {/* Right Drawer Modal */}
       <RightDrawer visible={isDrawerVisible} onClose={handleCloseDrawer} items={drawerItems} />
-    </Box>
+    </View>
   );
 };
 
@@ -176,7 +178,7 @@ export default Header;
 const styles = StyleSheet.create({
   safeAreaView: {
     zIndex: 1000,
-    backgroundColor: colors.backgroundPrimary,
+    // backgroundColor set via inline style for theme
   },
   headerContainer: {
     height: 50,
@@ -186,6 +188,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   row: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },

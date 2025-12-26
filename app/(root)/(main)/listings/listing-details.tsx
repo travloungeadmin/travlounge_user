@@ -1,5 +1,5 @@
 import CarSellingListingCard from '@/components/service/CarSellingListingCard';
-import { colors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -27,6 +27,7 @@ const ListingDetails = () => {
   const params = useLocalSearchParams();
   const { id } = params;
   const { top, bottom } = useSafeAreaInsets();
+  const { theme } = useTheme();
 
   const { data: carData } = useUsedCarDetailsQuery(id as string) as { data: UsedCarItem };
   const { mutate: toggleFavorite } = useToggleUsedCarsFavoriteMutation();
@@ -83,7 +84,7 @@ const ListingDetails = () => {
   const packages = carData?.packages || [];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.backgroundTop }]}>
       <Header title={carDetails.name} back style={{ zIndex: 1, top: 0, right: 0, left: 0 }} />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -128,7 +129,7 @@ const ListingDetails = () => {
 
         {/* Car Overview */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Car Overview</Text>
+          <Text style={[styles.sectionTitle, { color: theme.gray900 }]}>Car Overview</Text>
           <View style={styles.overviewGrid}>
             {overviewData.map((item, index) => (
               <View key={index} style={styles.overviewItem}>
@@ -136,7 +137,7 @@ const ListingDetails = () => {
                   <MaterialCommunityIcons name="car-info" size={16} color="#666" />
                 </View>
                 <Text style={styles.overviewLabel}>{item.label}</Text>
-                <Text style={styles.overviewValue}>{item.value}</Text>
+                <Text style={[styles.overviewValue, { color: theme.gray900 }]}>{item.value}</Text>
               </View>
             ))}
           </View>
@@ -150,7 +151,7 @@ const ListingDetails = () => {
               {featuresData.map((feature, index) => (
                 <View key={index} style={styles.featureItem}>
                   <Ionicons name="checkmark-circle-outline" size={20} color={'#34C759'} />
-                  <Text style={styles.featureText}>{feature}</Text>
+                  <Text style={[styles.featureText, { color: theme.gray900 }]}>{feature}</Text>
                 </View>
               ))}
             </View>
@@ -210,32 +211,35 @@ const InspectionDonut = ({
   title: string;
   passed: number;
   issues: number;
-}) => (
-  <View style={styles.donutContainer}>
-    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-      <Text style={styles.donutTitle}>{title}</Text>
-    </View>
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-      <AnimatedCircularProgress
-        size={50}
-        width={6}
-        fill={(passed / (passed + issues)) * 100}
-        tintColor={colors.buttonBackgroundPrimary}
-        backgroundColor="#E0E0E0">
-        {() => <View />}
-      </AnimatedCircularProgress>
-      <View>
-        <Text style={styles.donutPassed}>{passed} Passed</Text>
-        <Text style={styles.donutIssues}>{issues} Issues</Text>
+}) => {
+  const { theme } = useTheme();
+  return (
+    <View style={styles.donutContainer}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+        <Text style={[styles.donutTitle, { color: theme.gray900 }]}>{title}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <AnimatedCircularProgress
+          size={50}
+          width={6}
+          fill={(passed / (passed + issues)) * 100}
+          tintColor={theme.primary}
+          backgroundColor="#E0E0E0">
+          {() => <View />}
+        </AnimatedCircularProgress>
+        <View>
+          <Text style={styles.donutPassed}>{passed} Passed</Text>
+          <Text style={[styles.donutIssues, { color: theme.gray900 }]}>{issues} Issues</Text>
+        </View>
       </View>
     </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(242, 244, 247, 1)',
+    // backgroundColor: 'rgba(242, 244, 247, 1)',
   },
   header: {
     backgroundColor: 'white',
@@ -259,7 +263,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: colors.textPrimary,
+    color: '#00205B',
   },
   headerRight: {
     flexDirection: 'row',
@@ -273,7 +277,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 14,
-    color: colors.textPrimary,
+    color: '#00205B',
     fontWeight: '500',
   },
   actionButton: {
@@ -301,8 +305,8 @@ const styles = StyleSheet.create({
   carName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.textPrimary,
-    marginBottom: 4,
+    color: '#00205B',
+    marginTop: 8,
   },
   variant: {
     fontWeight: '400',
@@ -325,7 +329,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: colors.textPrimary,
+    color: '#00205B',
     marginTop: 8,
   },
   giftBanner: {
@@ -391,7 +395,7 @@ const styles = StyleSheet.create({
   inspectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.textPrimary,
+    // color: colors.textPrimary,
   },
   scoreRow: {
     flexDirection: 'row',
@@ -464,7 +468,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   donutIssues: {
-    color: colors.textSecondary,
+    // color: colors.textSecondary,
     fontSize: 12,
   },
   downloadRow: {
@@ -473,7 +477,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   downloadText: {
-    color: colors.buttonBackgroundPrimary,
+    // color: colors.buttonBackgroundPrimary,
     fontWeight: '600',
     fontSize: 14,
   },
@@ -485,7 +489,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.textPrimary,
+    // color: colors.textPrimary,
     marginBottom: 16,
   },
   overviewGrid: {
@@ -508,7 +512,7 @@ const styles = StyleSheet.create({
   },
   overviewValue: {
     fontSize: 14,
-    color: colors.textPrimary,
+    // color: colors.textPrimary,
     fontWeight: '500',
   },
   featuresGrid: {
@@ -530,7 +534,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   viewAllText: {
-    color: colors.buttonBackgroundPrimary,
+    // color: colors.buttonBackgroundPrimary,
     fontWeight: 'bold',
     fontSize: 14,
   },
@@ -549,7 +553,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   specValue: {
-    color: colors.textPrimary,
+    // color: colors.textPrimary,
     fontSize: 14,
     fontWeight: '500',
   },

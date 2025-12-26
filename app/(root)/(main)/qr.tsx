@@ -270,24 +270,25 @@ import QRCode from 'react-native-qrcode-svg';
 import ViewShot from 'react-native-view-shot';
 
 import { getServiceListQuery, getWalletDetails } from '@//services/query/qr';
+import { ThemedText } from '@/components/common/ThemedText';
 import SubscriptionView from '@/components/dashboard/subscription-view';
 import { shadow } from '@/constants';
-import { Box, Device, Row, Text } from '@/core';
+import { Box, Device, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import useUserStore from '@/modules/user';
 import Loading from '@/old/components/common/Loading';
 import LocationPermissionView from '@/old/components/common/location-permission-view';
 import queryClient from '@/services/query';
 import QUERIES_KEY from '@/services/query/query-keys';
-import { colors } from '@/theme';
 
 const SubscribedCard = ({ subscription_data }) => {
   const list = subscription_data?.flatMap((item) => item?.service_type_counts);
 
   return (
     <Box gap={10} style={{ marginHorizontal: 40, marginTop: 20 }}>
-      <Text preset="POP_16_SB" color="#333333">
+      <ThemedText variant="bodyLargeEmphasized" color="gray900">
         Subscription Details
-      </Text>
+      </ThemedText>
       <Box gap={5}>
         {list?.map((item) => (
           <Row
@@ -297,12 +298,12 @@ const SubscribedCard = ({ subscription_data }) => {
               flex: 1,
               alignItems: 'center',
             }}>
-            <Text style={{ flex: 1 }} preset="POP_14_R" color="#333333">
+            <ThemedText variant="bodySmall" color="gray900" style={{ flex: 1 }}>
               {item?.service}
-            </Text>
-            <Text preset="POP_14_R" color="#333333">
+            </ThemedText>
+            <ThemedText variant="bodySmall" color="gray900">
               {item?.remaining}
-            </Text>
+            </ThemedText>
           </Row>
         ))}
       </Box>
@@ -316,6 +317,7 @@ const QR = () => {
   const { data: qrWalletData, isLoading, refetch } = getWalletDetails();
   const { isLocationPermissionGranted } = useUserStore();
   const viewShot = React.useRef<ViewShot>(null);
+  const { theme } = useTheme();
 
   const packages = queryClient.getQueryData([QUERIES_KEY.PACKAGES_LIST]);
 
@@ -337,7 +339,7 @@ const QR = () => {
     <View
       style={{
         flex: 1,
-        backgroundColor: colors.backgroundPrimary,
+        backgroundColor: theme.backgroundPrimary,
       }}>
       <ScrollView>
         <Box>
@@ -361,9 +363,9 @@ const QR = () => {
                 size={Device.width - 150}
                 backgroundColor="#fff"
               />
-              <Text preset="POP_16_SB" color="#333333">
+              <ThemedText variant="bodyLargeEmphasized" color="gray900">
                 {user?.name || user?.mobile_number}
-              </Text>
+              </ThemedText>
             </View>
           </ViewShot>
           <Row
@@ -375,12 +377,12 @@ const QR = () => {
               borderBottomWidth: 1,
               borderColor: 'rgba(37, 61, 143, 0.3)',
             }}>
-            <Text preset="POP_16_SB" color="#333333">
+            <ThemedText variant="bodyLargeEmphasized" color="gray900">
               Wallet Balance
-            </Text>
-            <Text preset="POP_16_SB" color="#333333">
+            </ThemedText>
+            <ThemedText variant="bodyLargeEmphasized" color="gray900">
               {qrWalletData.wallet_balance}
-            </Text>
+            </ThemedText>
           </Row>
           {qrWalletData.packages.length > 0 && (
             <SubscribedCard subscription_data={qrWalletData.subscription_data} />
@@ -388,12 +390,12 @@ const QR = () => {
           {qrWalletData.packages.length === 0 && (
             <Box gap={20} style={{ marginTop: 20 }}>
               <Box style={{ marginHorizontal: 40 }}>
-                <Text preset="POP_16_SB" color="#333333">
+                <ThemedText variant="bodyLargeEmphasized" color="gray900">
                   You don't have subscription
-                </Text>
-                <Text style={{ lineHeight: 24 }} preset="POP_14_R" color="#333333">
+                </ThemedText>
+                <ThemedText style={{ lineHeight: 24 }} variant="bodySmall" color="gray900">
                   Here are some of the best offer for you.{' '}
-                </Text>
+                </ThemedText>
               </Box>
               <SubscriptionView packages={packages} />
             </Box>

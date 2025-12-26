@@ -3,21 +3,24 @@ import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
 import ScreenWrapper from '@/components/common/ScreenWrapper';
+import { ThemedText } from '@/components/common/ThemedText';
 import AssociationList from '@/components/dashboard/association-list';
 import PackagesList from '@/components/dashboard/packages-list';
 import ServiceView from '@/components/dashboard/service-view';
 import TravloungeCard from '@/components/dashboard/travlounge-card';
 import HomeBannerContainer from '@/components/screens/home/home-banner-container';
-import { Box, Text } from '@/core';
+import { Box } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { getCurrentLocation } from '@/modules/location';
 import useUserStore, { setLocationPermissionGranted } from '@/modules/user';
 import Loading from '@/old/components/common/Loading';
 import LocationPermissionView from '@/old/components/common/location-permission-view';
 import { getHomeListQuery, getPackagesListQuery, useGetCategoryQuery } from '@/services/query/home';
-import { colors } from '@/theme';
+
 import * as Location from 'expo-location';
 
 const Home = () => {
+  const { theme } = useTheme();
   const { data, isLoading } = getHomeListQuery();
   const { data: packages, isLoading: packagesListLoading } = getPackagesListQuery();
   useGetCategoryQuery();
@@ -88,14 +91,14 @@ const Home = () => {
 
         <TravloungeCard />
         <Box style={styles.servicesContainer}>
-          <Text style={styles.sectionTitle} color={colors.textPrimary} preset="POP_16_M">
+          <ThemedText style={styles.sectionTitle} color="gray900" variant="titleEmphasized">
             Our Services
-          </Text>
+          </ThemedText>
           <ServiceView />
           {!!data?.assocition_banner && (
-            <Text style={styles.associationTitle} color={colors.textPrimary} preset="POP_16_M">
+            <ThemedText style={styles.associationTitle} color="gray900" variant="titleEmphasized">
               View our offering
-            </Text>
+            </ThemedText>
           )}
         </Box>
         {!!data?.assocition_banner && <AssociationList data={data?.assocition_banner} />}

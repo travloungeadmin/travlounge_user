@@ -3,87 +3,89 @@ import React from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import Header from '@/components/header';
 import SleepingPodPaymentTopCard from '@/components/service/sleeping-pod-payment-top-card';
 import { shadow } from '@/constants';
-import { Box, Row, Text } from '@/core';
+import { Box, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import useUserStore from '@/modules/user';
 import Loading from '@/old/components/common/Loading';
 import { cancelBooking, getBookingDetail, rePayPod } from '@/services/query/booking';
 import { verifySleepingPodOrder } from '@/services/query/service';
-import { colors } from '@/theme';
 
 const BillingDetails = (props) => {
   const { repayLoading, priceData, total, onPressPayNow, enableBookingButton } = props;
+  const { theme } = useTheme();
 
   return (
     <Box
       style={[
         {
           padding: 16,
-          backgroundColor: colors.cardBackgroundPrimary,
+          backgroundColor: theme.backgroundCard,
           margin: 16,
           borderRadius: 8,
           gap: 10,
         },
         shadow,
       ]}>
-      <Text preset="POP_14_SB" color="#333333">
+      <ThemedText variant="bodySmallEmphasized" color="gray900">
         Billing Details
-      </Text>
+      </ThemedText>
       <Box gap={5}>
         {priceData?.items.map((item) => (
           <Row style={{ justifyContent: 'space-between' }}>
-            <Text preset="POP_14_R" color="#333333">
+            <ThemedText variant="bodySmall" color="gray900">
               {item.type}
-            </Text>
-            <Text preset="POP_14_R" color="#333333">
+            </ThemedText>
+            <ThemedText variant="bodySmall" color="gray900">
               {item.rate} X {item.quantity} = {item.rate * item.quantity}
-            </Text>
+            </ThemedText>
           </Row>
         ))}
         <Row style={{ justifyContent: 'space-between' }}>
-          <Text preset="POP_14_R" color="#333333">
+          <ThemedText variant="bodySmall" color="gray900">
             Discount
-          </Text>
-          <Text preset="POP_14_R" color="#333333">
+          </ThemedText>
+          <ThemedText variant="bodySmall" color="gray900">
             -{priceData.discount}
-          </Text>
+          </ThemedText>
         </Row>
         <Row style={{ justifyContent: 'space-between' }}>
-          <Text preset="POP_14_R" color="#333333">
+          <ThemedText variant="bodySmall" color="gray900">
             Gst
-          </Text>
-          <Text preset="POP_14_R" color="#333333">
+          </ThemedText>
+          <ThemedText variant="bodySmall" color="gray900">
             {priceData?.tax_rate * 100}%={priceData.tax}
-          </Text>
+          </ThemedText>
         </Row>
         {priceData?.addons.map((item) => (
           <Row style={{ justifyContent: 'space-between' }}>
-            <Text preset="POP_14_R" color="#333333">
+            <ThemedText variant="bodySmall" color="gray900">
               {item.quantity} Add On Bath
-            </Text>
-            <Text preset="POP_14_R" color="#333333">
+            </ThemedText>
+            <ThemedText variant="bodySmall" color="gray900">
               {item.rate} X {item.quantity} = {item.total}
-            </Text>
+            </ThemedText>
           </Row>
         ))}
       </Box>
 
       <Row style={{ justifyContent: 'space-between' }}>
-        <Text preset="POP_14_SB" color="#333333">
+        <ThemedText variant="bodySmallEmphasized" color="gray900">
           Total
-        </Text>
-        <Text preset="POP_14_SB" color="#333333">
+        </ThemedText>
+        <ThemedText variant="bodySmallEmphasized" color="gray900">
           {total}
-        </Text>
+        </ThemedText>
       </Row>
       {enableBookingButton && (
         <Box gap={10}>
           <Box style={{ height: 1, backgroundColor: 'rgba(37, 61, 143, 0.3)', flex: 1 }} />
-          <Text preset="POP_14_R" color="#333333">
+          <ThemedText variant="bodySmall" color="gray900">
             The payment attempt failed due to technical issue. Please complete the Payment
-          </Text>
+          </ThemedText>
           <Pressable
             onPress={onPressPayNow}
             style={{
@@ -97,9 +99,9 @@ const BillingDetails = (props) => {
             {repayLoading ? (
               <ActivityIndicator color="#FFF" size="small" />
             ) : (
-              <Text preset="POP_14_SB" color="#FFF">
+              <ThemedText variant="bodySmallEmphasized" color="white">
                 Pay Now
-              </Text>
+              </ThemedText>
             )}
           </Pressable>
         </Box>
@@ -109,23 +111,24 @@ const BillingDetails = (props) => {
 };
 
 const CancellationTerms = ({ isLoading, onPressCancel }) => {
+  const { theme } = useTheme();
   return (
     <Box
       style={{
         margin: 16,
         borderRadius: 8,
-        backgroundColor: colors.cardBackgroundPrimary,
+        backgroundColor: theme.backgroundCard,
         padding: 16,
         ...shadow,
         gap: 10,
       }}>
-      <Text color="#3C3C3C" preset="POP_14_SB">
+      <ThemedText variant="bodySmallEmphasized" color="gray900">
         Cancellation terms
-      </Text>
-      <Text color="#3C3C3C" preset="POP_14_R">
+      </ThemedText>
+      <ThemedText variant="bodySmall" color="gray900">
         You can cancel your booking up to 24 hours before the check-in time. After that, the booking
         is non-refundable.
-      </Text>
+      </ThemedText>
       <Pressable
         disabled={isLoading}
         onPress={onPressCancel}
@@ -143,9 +146,9 @@ const CancellationTerms = ({ isLoading, onPressCancel }) => {
         {isLoading ? (
           <ActivityIndicator color="#3C3C3C" size="small" />
         ) : (
-          <Text color="#fff" preset="POP_14_M">
+          <ThemedText variant="bodySmall" color="white">
             Cancel Booking
-          </Text>
+          </ThemedText>
         )}
       </Pressable>
     </Box>
@@ -153,10 +156,11 @@ const CancellationTerms = ({ isLoading, onPressCancel }) => {
 };
 
 const CancelledOnCard = ({ canceledAt }) => {
+  const { theme } = useTheme();
   return (
     <Row
       style={{
-        backgroundColor: colors.cardBackgroundPrimary,
+        backgroundColor: theme.backgroundCard,
         margin: 16,
         padding: 16,
         borderRadius: 8,
@@ -165,18 +169,19 @@ const CancelledOnCard = ({ canceledAt }) => {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <Text color="#881313" preset="POP_16_SB">
+      <ThemedText variant="titleEmphasized" color="error">
         Cancelled
-      </Text>
-      <Text color="#333333" preset="POP_14_SB">
+      </ThemedText>
+      <ThemedText variant="bodySmallEmphasized" color="gray900">
         on {canceledAt}
-      </Text>
+      </ThemedText>
     </Row>
   );
 };
 
 const BookedDetails = () => {
   const { id } = useLocalSearchParams();
+  const { theme } = useTheme();
   const { mutate, isPending, isSuccess } = cancelBooking();
   const { mutate: rePayMutation, isPending: repayLoading } = rePayPod();
   const { user } = useUserStore();
@@ -275,7 +280,7 @@ const BookedDetails = () => {
   };
 
   return (
-    <Box style={{ backgroundColor: colors.backgroundPrimary, flex: 1 }}>
+    <Box style={{ backgroundColor: theme.backgroundPrimary, flex: 1 }}>
       <Header back title="Booking Details" />
       {isLoading ? (
         <Loading />
@@ -326,7 +331,7 @@ const BookedDetails = () => {
           {data?.refund_status && (
             <Row
               style={{
-                backgroundColor: colors.cardBackgroundPrimary,
+                backgroundColor: theme.backgroundCard,
                 marginHorizontal: 16,
                 marginBottom: 16,
                 padding: 12,
@@ -335,14 +340,14 @@ const BookedDetails = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text color="#253D8F" preset="POP_14_SB">
+              <ThemedText variant="bodySmallEmphasized" color="primary">
                 Refund Status:
-              </Text>
-              <Text color="#333333" preset="POP_14_SB" style={{ marginLeft: 8 }}>
+              </ThemedText>
+              <ThemedText variant="bodySmallEmphasized" color="gray900" style={{ marginLeft: 8 }}>
                 {typeof data.refund_status === 'string' && data.refund_status.length > 0
                   ? data.refund_status.charAt(0).toUpperCase() + data.refund_status.slice(1)
                   : data.refund_status}
-              </Text>
+              </ThemedText>
             </Row>
           )}
         </ScrollView>

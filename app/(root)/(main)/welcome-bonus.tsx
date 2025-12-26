@@ -5,7 +5,9 @@ import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, View } from 
 import RazorpayCheckout from 'react-native-razorpay';
 
 import WelcomeBG from '@/assets/svgs/welcome-bonus.svg';
-import { Device, Image, Text, useSafeAreaInsets } from '@/core';
+import { ThemedText } from '@/components/common/ThemedText';
+import { Device, Image, useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { showError, showSuccess } from '@/lib/toast';
 import useUserStore from '@/modules/user';
 import queryClient from '@/services/query';
@@ -31,6 +33,7 @@ interface SubscribeResponse {
 
 const WelcomeBonus: React.FC = () => {
   const { topHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
   const { data: packages, isLoading } = getPackagesListQuery();
   const { mutate: subscribe, isPending } = subscribeMutation();
   const { user, setLoginFistTime } = useUserStore();
@@ -132,9 +135,9 @@ const WelcomeBonus: React.FC = () => {
         <Ionicons name="close" size={24} color="white" />
       </Pressable>
 
-      <Text color="#fff" style={styles.headerText} preset="POP_24_SB">
+      <ThemedText color="white" style={styles.headerText} variant="headlineSmallEmphasized">
         Great Offers{'\n'}For You
-      </Text>
+      </ThemedText>
       <View>
         <FlatList
           showsHorizontalScrollIndicator={false}
@@ -148,34 +151,37 @@ const WelcomeBonus: React.FC = () => {
               />
               {parseInt(item?.amount) === 0 && (
                 <>
-                  <Text color="#000" style={styles.welcomeText} preset="POP_18_SB">
+                  <ThemedText
+                    color="gray900"
+                    style={styles.welcomeText}
+                    variant="bodyLargeEmphasized">
                     The great welcome bonus to you ...
-                  </Text>
-                  <Text color="#666666" style={styles.freeOfferText} preset="POP_12_R">
+                  </ThemedText>
+                  <ThemedText color="gray600" style={styles.freeOfferText} variant="bodySmall">
                     *{item?.package_name} redeemed only in Travlounge stores
-                  </Text>
+                  </ThemedText>
                 </>
               )}
               <View style={styles.offersContainer}>
                 {item?.display_description?.map((offer: PackageOffer) => (
                   <View key={`${item.id}-${offer.name}`} style={styles.offerTag}>
-                    <Text color="#333333" preset="POP_12_R">
+                    <ThemedText color="gray900" variant="bodySmall">
                       {offer.number} {offer.name}
-                    </Text>
+                    </ThemedText>
                   </View>
                 ))}
               </View>
               <View style={styles.spacer} />
-              <Text style={styles.amountText} color="#333333" preset="POP_18_SB">
+              <ThemedText style={styles.amountText} color="gray900" variant="bodyLargeEmphasized">
                 ₹ {item?.amount}
-              </Text>
+              </ThemedText>
 
               <Pressable
                 style={styles.actionButton}
                 onPress={() => handleBuy(item?.id, parseInt(item?.amount))}>
-                <Text style={styles.actionButtonText} preset="POP_16_SB">
+                <ThemedText style={styles.actionButtonText} variant="bodyEmphasized" color="white">
                   {parseInt(item?.amount) === 0 ? 'Claim Now' : 'Buy Now'}
-                </Text>
+                </ThemedText>
               </Pressable>
             </View>
           )}
@@ -272,7 +278,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     textAlign: 'center',
     borderRadius: 50,
-    color: '#fff',
+    // color: '#fff',
   },
 });
 

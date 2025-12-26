@@ -7,9 +7,9 @@ import ImageCarousel from '@/components/auth/image-carousel';
 import LoginContainer from '@/components/auth/login-container';
 import VerifyContainer from '@/components/auth/verify-container';
 import { Device, useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { DismissKeyboardView, KeyboardAwareView } from '@/lib/keyboard';
 import { moderateScale } from '@/lib/responsive-dimensions';
-import { colors } from '@/theme';
 import { AuthScreenProps } from '@/types/screens/auth/auth.types';
 /**
  * Authentication screen component that handles user login and verification.
@@ -17,6 +17,7 @@ import { AuthScreenProps } from '@/types/screens/auth/auth.types';
  */
 const Auth: React.FC<AuthScreenProps> = () => {
   const { bottomHeight, topHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [isLoginView, setIsLoginView] = React.useState(true);
 
@@ -30,7 +31,7 @@ const Auth: React.FC<AuthScreenProps> = () => {
 
   return (
     <DismissKeyboardView>
-      <View style={styles.screen}>
+      <View style={[styles.screen, { backgroundColor: theme.backgroundPrimary }]}>
         <StatusBar style="light" />
         <View
           style={{
@@ -67,7 +68,6 @@ export default Auth;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.backgroundPrimary,
   },
   container: {
     flex: 1,

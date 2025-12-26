@@ -1,14 +1,14 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import Icon from '@/components/ui/icon';
-import { Text } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
 import { getCurrentLocation } from '@/modules/location';
 import useSearchStore from '@/modules/search';
 import useSleepingPodCart from '@/modules/sleeping-pod';
 import useUserStore from '@/modules/user';
-import { colors } from '@/theme';
 import * as Location from 'expo-location';
 import { router, useLocalSearchParams } from 'expo-router';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -16,6 +16,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 const Search = () => {
   const { isFrom, isSleepingPod, isHeader } = useLocalSearchParams();
   const { setAutoFetchLocation, updateLocation } = useUserStore();
+  const { theme } = useTheme();
 
   const { updateFromPlace, updateToPlace, fromPlace, toPlace } = useSearchStore();
   const { updatePlace } = useSleepingPodCart();
@@ -78,7 +79,7 @@ const Search = () => {
       style={{
         padding: 20,
         flex: 1,
-        backgroundColor: colors.backgroundPrimary,
+        backgroundColor: theme.backgroundPrimary,
       }}>
       <GooglePlacesAutocomplete
         fetchDetails={true}
@@ -101,8 +102,8 @@ const Search = () => {
               currentCountry: '',
               currentState: '',
               currentZipCode: '',
-              latitude: details.geometry.location.lat,
-              longitude: details.geometry.location.lng,
+              latitude: details?.geometry.location.lat || 0,
+              longitude: details?.geometry.location.lng || 0,
               place: data.structured_formatting.main_text,
               subPlace: data.structured_formatting.secondary_text,
             });
@@ -114,8 +115,8 @@ const Search = () => {
             updatePlace({
               name: data.description,
               coordinates: {
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
+                latitude: details?.geometry.location.lat || 0,
+                longitude: details?.geometry.location.lng || 0,
               },
             });
             router.back();
@@ -125,16 +126,16 @@ const Search = () => {
             updateFromPlace({
               name: data.description,
               coordinates: {
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
+                latitude: details?.geometry.location.lat || 0,
+                longitude: details?.geometry.location.lng || 0,
               },
             });
           } else {
             updateToPlace({
               name: data.description,
               coordinates: {
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
+                latitude: details?.geometry.location.lat || 0,
+                longitude: details?.geometry.location.lng || 0,
               },
             });
           }
@@ -163,8 +164,8 @@ const Search = () => {
             marginHorizontal: 20,
             width: '100%',
           }}>
-          <Icon name="Send" size={20} fill={colors.iconPrimary} />
-          <Text color={colors.textPrimary}>Your location</Text>
+          <Icon name="Send" size={20} fill={theme.gray900} />
+          <ThemedText color="gray900">Your location</ThemedText>
         </Pressable>
       }
     </View>

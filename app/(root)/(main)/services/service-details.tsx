@@ -2,6 +2,7 @@ import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import AssociationList from '@/components/dashboard/association-list';
 import Header from '@/components/header';
 import CafeCard from '@/components/service/cafe-card';
@@ -13,19 +14,20 @@ import ServiceDetailCard from '@/components/service/service-detail-card';
 import { BookingFooter } from '@/components/service/service-details/booking-footer';
 import { convertDistance, convertTime } from '@/components/service/service-details/utils';
 import SleepingPodBookingView from '@/components/service/sleeping-pod-booking-view';
-import { Box, Text, useSafeAreaInsets } from '@/core';
+import { Box, useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
 import useSleepingPodCart from '@/modules/sleeping-pod';
 import useUserStore from '@/modules/user';
 import Loading from '@/old/components/common/Loading';
 import { getAvailabilitySleepingPod, getServiceDetailsQuery } from '@/services/query/service';
-import { colors } from '@/theme';
 import type { ServiceDetailsParams } from '@/types/screens/services/service-details.types';
 import analytics from '@react-native-firebase/analytics';
 
 const ServiceDetails = () => {
   const params = useLocalSearchParams<ServiceDetailsParams>();
   const { user } = useUserStore();
+  const { theme } = useTheme();
 
   const { id, name, isSleepingPod, serviceName, isPartner } = params;
   const isTravloungePartner = isPartner === 'true';
@@ -140,7 +142,7 @@ const ServiceDetails = () => {
     });
   };
   return (
-    <Box style={{ flex: 1, backgroundColor: colors.backgroundPrimary }}>
+    <Box style={{ flex: 1, backgroundColor: theme.backgroundPrimary }}>
       <Header title={name} back style={{ zIndex: 1, top: 0, right: 0, left: 0 }} />
 
       {!data && isLoading && <Loading />}
@@ -240,9 +242,9 @@ const ServiceDetails = () => {
                 },
               });
             }}>
-            <Text preset="POP_16_SB" color="#FFF">
+            <ThemedText variant="bodyLargeEmphasized" color="white">
               Book Now
-            </Text>
+            </ThemedText>
           </Pressable>
         </View>
       ) : null}

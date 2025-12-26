@@ -2,9 +2,9 @@ import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from 'react-native';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import CarwashDetailCard from '@/components/service/carwash/carwash-detail-card';
 import { shadow } from '@/constants';
-import { Text } from '@/core';
 import useUserStore from '@/modules/user';
 import { useCarWashBooking, useCarWashBookingVerify } from '@/services/query/car-wash';
 import RazorpayCheckout from 'react-native-razorpay';
@@ -131,24 +131,24 @@ const Payment = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <Text preset="POP_14_R" color="#333333">
+          <ThemedText variant="body" color="gray900">
             {selectedService?.name}
-          </Text>
-          <Text preset="POP_14_R" color="#333333">
+          </ThemedText>
+          <ThemedText variant="body" color="gray900">
             {selectedService?.price_without_tax}
-          </Text>
+          </ThemedText>
         </View>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <Text preset="POP_14_R" color="#333333">
+          <ThemedText variant="body" color="gray900">
             Discount
-          </Text>
-          <Text preset="POP_14_R" color="#333333">
+          </ThemedText>
+          <ThemedText variant="body" color="gray900">
             -{selectedService?.discount}
-          </Text>
+          </ThemedText>
         </View>
         {selectedService?.tax_amount && (
           <View
@@ -156,12 +156,12 @@ const Payment = () => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text preset="POP_14_R" color="#333333">
+            <ThemedText variant="body" color="gray900">
               Gst ({selectedService?.tax_rate * 100}%)
-            </Text>
-            <Text preset="POP_14_R" color="#333333">
+            </ThemedText>
+            <ThemedText variant="body" color="gray900">
               {selectedService?.tax_amount}
-            </Text>
+            </ThemedText>
           </View>
         )}
         <View
@@ -169,12 +169,12 @@ const Payment = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <Text preset="POP_16_SB" color="#333333">
+          <ThemedText variant="bodyEmphasized" color="gray900">
             Total
-          </Text>
-          <Text preset="POP_16_SB" color="#333333">
+          </ThemedText>
+          <ThemedText variant="bodyEmphasized" color="gray900">
             {selectedService?.discounted_price}
-          </Text>
+          </ThemedText>
         </View>
         <Pressable
           disabled={isPending}
@@ -294,9 +294,9 @@ const Payment = () => {
           {isPending ? (
             <ActivityIndicator size="small" color="#FFF" />
           ) : (
-            <Text preset="POP_16_SB" color="#FFF">
+            <ThemedText variant="bodyEmphasized" color="white">
               Confirm Booking
-            </Text>
+            </ThemedText>
           )}
         </Pressable>
       </View>

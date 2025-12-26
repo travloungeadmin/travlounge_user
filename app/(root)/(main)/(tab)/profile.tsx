@@ -1,16 +1,18 @@
 import { router, useFocusEffect } from 'expo-router';
 import React, { useEffect } from 'react';
-import { Alert, Linking, Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { Alert, Linking, Platform, Pressable, ScrollView } from 'react-native';
 
 import BG from '@/assets/svgs/package_background.svg';
+import { ThemedText } from '@/components/common/ThemedText';
 import PackageCard from '@/components/package-card';
 import Icon from '@/components/ui/icon';
 import { shadow } from '@/constants';
-import { Box, Device, Image, Row, Text, useSafeAreaInsets } from '@/core';
+import { Box, Device, Image, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import useUserStore, { logout } from '@/modules/user';
 import { useActiveSubscriptionsQuery } from '@/services/query/home';
 import { deleteAccountMutation, getProfileQuery } from '@/services/query/profile';
-import { colors } from '@/theme';
+
 import { ProfileScreenProps, ServiceItem, UserProfile } from '@/types/screens/profile/index.types';
 import { Canvas, RadialGradient, Rect, vec } from '@shopify/react-native-skia';
 
@@ -18,6 +20,7 @@ const Profile: React.FC<ProfileScreenProps> = () => {
   const { data } = getProfileQuery();
   const { mutate, isSuccess } = deleteAccountMutation();
   const { bottomHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
   const { data: subscribedPackage, refetch } = useActiveSubscriptionsQuery();
   const { reset, setUserDetails, user } = useUserStore();
 
@@ -96,7 +99,7 @@ const Profile: React.FC<ProfileScreenProps> = () => {
 
   // Render profile header with user avatar, name and phone
   const renderProfileHeader = () => (
-    <Row style={[styles.profileCard, shadow]}>
+    <Row style={[styles.profileCard, shadow, { backgroundColor: theme.backgroundCard }]}>
       <Image
         source={
           data?.user?.image
@@ -106,12 +109,12 @@ const Profile: React.FC<ProfileScreenProps> = () => {
         style={styles.avatar}
       />
       <Box style={styles.userInfo} gap={5}>
-        <Text preset="POP_14_B" color="#333333">
+        <ThemedText variant="bodyLargeEmphasized" color="gray900">
           {data?.user?.name || 'New User'}
-        </Text>
-        <Text preset="POP_12_R" color="#333333">
+        </ThemedText>
+        <ThemedText variant="bodySmall" color="gray900">
           {data?.user?.phone}
-        </Text>
+        </ThemedText>
       </Box>
       <Pressable
         onPress={() =>
@@ -146,16 +149,17 @@ const Profile: React.FC<ProfileScreenProps> = () => {
                   subscribedPackage?.active_subscriptions.length > 1
                     ? { width: Device.width * 0.75 }
                     : { width: Device.width - 40 },
+                  { backgroundColor: theme.backgroundCard },
                 ]}>
-                <Text color="#333333" preset="POP_16_SB">
+                <ThemedText color="gray900" variant="titleEmphasized">
                   Current Plan: {activeSubscription?.package_name}
-                </Text>
+                </ThemedText>
                 <Box style={styles.servicesContainer}>
                   {activeSubscription?.services?.map((item: ServiceItem, serviceIndex: number) => (
                     <Box key={`service-${serviceIndex}`} style={styles.serviceTag}>
-                      <Text color="#333333" preset="POP_12_R">
+                      <ThemedText color="gray900" variant="bodySmall">
                         {item?.type} {item?.remaining + '/' + item?.total}
-                      </Text>
+                      </ThemedText>
                     </Box>
                   ))}
                 </Box>
@@ -170,9 +174,9 @@ const Profile: React.FC<ProfileScreenProps> = () => {
   // Render available plans
   const renderPlansSection = () => (
     <Box>
-      <Text color="#333333" style={styles.sectionTitle} preset="POP_16_SB">
+      <ThemedText color="gray900" style={styles.sectionTitle} variant="titleEmphasized">
         Here are the plans for you
-      </Text>
+      </ThemedText>
       <Row>
         <ScrollView
           horizontal
@@ -201,7 +205,7 @@ const Profile: React.FC<ProfileScreenProps> = () => {
                     marginVertical: 20,
                     marginBottom: 30,
                     alignItems: 'center',
-                    backgroundColor: colors.cardBackgroundPrimary,
+                    backgroundColor: theme.backgroundCard,
                     width: 205,
                     paddingVertical: 20,
                     paddingHorizontal: 10,
@@ -240,12 +244,15 @@ const Profile: React.FC<ProfileScreenProps> = () => {
                   </Rect>
                 </Canvas>
                 <Icon size={50} name="Surprice" />
-                <Text style={{ textAlign: 'center' }} preset="POP_12_M" color="#253D8F">
+                <ThemedText
+                  style={{ textAlign: 'center' }}
+                  variant="labelEmphasized"
+                  color="primary">
                   The Great{'\n'}Exciting Offers
-                </Text>
-                <Text preset="POP_18_SB" color="#253D8F">
+                </ThemedText>
+                <ThemedText variant="headlineSmallEmphasized" color="primary">
                   Coming Soon
-                </Text>
+                </ThemedText>
               </Box>
             )}
           </Row>
@@ -258,25 +265,25 @@ const Profile: React.FC<ProfileScreenProps> = () => {
   const renderSupportCard = () => (
     <Pressable
       onPress={sendWhatsAppMessage}
-      style={[styles.supportCard, shadow]}
+      style={[styles.supportCard, shadow, { backgroundColor: theme.backgroundCard }]}
       accessibilityRole="button"
       accessibilityLabel="Contact support via WhatsApp">
       <Row gap={20}>
         <Box style={styles.supportInfoContainer}>
-          <Text preset="POP_14_M" color="#333333">
+          <ThemedText variant="bodyLargeEmphasized" color="gray900">
             Help and support
-          </Text>
-          <Text preset="POP_12_R" color="#333333">
+          </ThemedText>
+          <ThemedText variant="bodySmall" color="gray900">
             Our virtual assistant is ready to swiftly resolve your service concerns. Click here to
             get started!
-          </Text>
+          </ThemedText>
         </Box>
         <Icon name="Support" size={50} />
       </Row>
       <Box style={styles.chatButton}>
-        <Text color="#fff" preset="POP_14_B">
+        <ThemedText color="white" variant="bodyEmphasized">
           Chat with us
-        </Text>
+        </ThemedText>
       </Box>
     </Pressable>
   );
@@ -284,11 +291,11 @@ const Profile: React.FC<ProfileScreenProps> = () => {
   // Render footer with logout and delete options
   const renderFooterSection = () => (
     <Box>
-      <Text style={styles.noticeText} preset="POP_12_R" color="#333333">
+      <ThemedText style={styles.noticeText} variant="bodySmall" color="gray900">
         Notice:
         {'\n'}Delete will permanently remove your data. {'\n'}Log Out keeps your data safe and
         accessible after login.{' '}
-      </Text>
+      </ThemedText>
       <Box style={styles.divider} />
       <Row style={styles.buttonRow}>
         <Pressable
@@ -297,9 +304,9 @@ const Profile: React.FC<ProfileScreenProps> = () => {
           accessibilityRole="button"
           accessibilityLabel="Delete account">
           <Icon name="DeleteProfile" />
-          <Text preset="POP_16_M" color="#253D8F">
+          <ThemedText variant="titleEmphasized" color="primary">
             Delete
-          </Text>
+          </ThemedText>
         </Pressable>
         <Pressable
           onPress={handleLogout}
@@ -307,16 +314,16 @@ const Profile: React.FC<ProfileScreenProps> = () => {
           accessibilityRole="button"
           accessibilityLabel="Log out">
           <Icon name="Logout" />
-          <Text preset="POP_16_M" color="#253D8F">
+          <ThemedText variant="titleEmphasized" color="primary">
             Logout
-          </Text>
+          </ThemedText>
         </Pressable>
       </Row>
     </Box>
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.backgroundPrimary }]}>
       <Box style={[styles.contentContainer, { paddingBottom: bottomHeight || 20 }]}>
         {renderProfileHeader()}
         {renderSubscriptionInfo()}
@@ -332,7 +339,7 @@ export default Profile;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.backgroundPrimary,
+    // backgroundColor: colors.backgroundPrimary,
   },
   contentContainer: {
     gap: 30,
@@ -341,7 +348,7 @@ const styles = StyleSheet.create({
   profileCard: {
     alignItems: 'center',
     marginHorizontal: 20,
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 10,
     padding: 20,
     gap: 15,
@@ -364,7 +371,7 @@ const styles = StyleSheet.create({
   },
   subscriptionCard: {
     // margin: 20,
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingVertical: 20,
@@ -396,7 +403,7 @@ const styles = StyleSheet.create({
   },
   supportCard: {
     marginHorizontal: 20,
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 10,
     padding: 20,
     gap: 15,

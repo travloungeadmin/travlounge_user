@@ -11,12 +11,13 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 
+import { ThemedText } from '@/components/common/ThemedText';
 import { LocationProvider } from '@/context/location';
-import { Box, Text } from '@/core';
+import { Box } from '@/core';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useTheme } from '@/hooks/useTheme';
 import { useVersionCheck } from '@/hooks/useVersionCheck';
 import queryClient from '@/services/query';
-import { colors } from '@/theme';
 
 import { ThemeProvider } from '@/newTheme';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -67,15 +68,16 @@ export default function RootLayout() {
     error: Error;
     resetErrorBoundary: () => void;
   }) => {
+    const { theme } = useTheme();
     return (
       <Box
         style={{
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: colors.backgroundPrimary,
+          backgroundColor: theme.backgroundPrimary,
         }}>
-        <Text style={{ textAlign: 'center' }}>{error.message}</Text>
+        <ThemedText style={{ textAlign: 'center' }}>{error.message}</ThemedText>
         <Button title="Try again" onPress={resetErrorBoundary} />
       </Box>
     );
@@ -111,6 +113,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundPrimary,
+    backgroundColor: '#ffffff',
   },
 });

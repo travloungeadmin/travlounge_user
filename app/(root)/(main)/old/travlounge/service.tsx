@@ -6,7 +6,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -16,11 +15,12 @@ import SleepingPod from '@/old/assets/svgs/sleepingPod.svg';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Shadow } from 'react-native-shadow-2';
 
-import { Text as ThemedText, useSafeAreaInsets } from '@/core';
+import { ThemedText } from '@/components/common/ThemedText';
+import { useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import CustomHeader from '@/old/components/common/custom-header';
 import Loading from '@/old/components/common/Loading';
 import BannerContainer from '@/old/components/home/banner-container';
-import { constants } from '@/old/constants';
 import { Device } from '@/old/lib/device';
 import { getSingleServiceQuery } from '@/services/query/home';
 import { Image } from 'expo-image';
@@ -32,6 +32,7 @@ const screenWidth = Dimensions.get('window').width;
 const Service = () => {
   const { id, name } = useLocalSearchParams();
   const { data: serviceDashboard, isFetching } = getSingleServiceQuery(Number(id));
+  const { theme } = useTheme();
 
   if (isFetching) return <Loading />;
 
@@ -51,27 +52,27 @@ const Service = () => {
           paddingLeft: 15,
           gap: 10,
         }}>
-        <Text
+        <ThemedText
           style={{
             fontSize: 41,
-            fontFamily: constants.fontPopSB,
+            // fontFamily: constants.fontPopSB,
             color: '#00205B',
             paddingTop: Platform.OS === 'android' ? 7 : 2,
           }}>
           {serviceDashboard?.coupons?.remaining}
-        </Text>
-        <Text
+        </ThemedText>
+        <ThemedText
           style={{
             fontSize: 14,
-            fontFamily: constants.fontPopM,
+            // fontFamily: constants.fontPopM,
             color: '#00205B',
           }}>
           Coupons {'\n'}You have
-        </Text>
-        <Text
+        </ThemedText>
+        <ThemedText
           style={{
             fontSize: 74,
-            fontFamily: constants.fontPopB,
+            // fontFamily: constants.fontPopB,
             color: '#00205B',
             opacity: 0.03,
             position: 'absolute',
@@ -80,7 +81,7 @@ const Service = () => {
             alignSelf: 'center',
           }}>
           {serviceDashboard?.coupons?.remaining}
-        </Text>
+        </ThemedText>
         <View
           style={{
             right: -47,
@@ -121,7 +122,8 @@ const Service = () => {
         <Shadow distance={8}>
           <LinearGradient
             colors={['#F3F7FA', '#DDE0E5']}
-            angle={139}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
             style={{
               height: 100,
               alignSelf: 'center',
@@ -133,71 +135,71 @@ const Service = () => {
               // gap: 20,
               justifyContent: 'space-between',
             }}>
-            <Text
+            <ThemedText
               style={{
                 fontSize: 13,
-                fontFamily: constants.fontPopM,
+                // fontFamily: constants.fontPopM,
                 color: '#00205B',
               }}>
               Your pod booking confirmed
-            </Text>
+            </ThemedText>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View>
-                <Text
+                <ThemedText
                   style={{
                     fontSize: 12,
-                    fontFamily: constants.fontPopR,
+                    // fontFamily: constants.fontPopR,
                     color: '#31456A',
                     opacity: 0.6,
                   }}>
                   Date
-                </Text>
-                <Text
+                </ThemedText>
+                <ThemedText
                   style={{
                     fontSize: 15,
-                    fontFamily: constants.fontPopSB,
+                    // fontFamily: constants.fontPopSB,
                     color: '#31456A',
                   }}>
                   10-02-2022
-                </Text>
+                </ThemedText>
               </View>
               <View>
-                <Text
+                <ThemedText
                   style={{
                     fontSize: 12,
-                    fontFamily: constants.fontPopR,
+                    // fontFamily: constants.fontPopR,
                     color: '#31456A',
                     opacity: 0.6,
                   }}>
                   Time
-                </Text>
-                <Text
+                </ThemedText>
+                <ThemedText
                   style={{
                     fontSize: 15,
-                    fontFamily: constants.fontPopSB,
+                    // fontFamily: constants.fontPopSB,
                     color: '#31456A',
                   }}>
                   12:30 am
-                </Text>
+                </ThemedText>
               </View>
               <View>
-                <Text
+                <ThemedText
                   style={{
                     fontSize: 12,
-                    fontFamily: constants.fontPopR,
+                    // fontFamily: constants.fontPopR,
                     color: '#31456A',
                     opacity: 0.6,
                   }}>
                   Duration
-                </Text>
-                <Text
+                </ThemedText>
+                <ThemedText
                   style={{
                     fontSize: 15,
-                    fontFamily: constants.fontPopSB,
+                    // fontFamily: constants.fontPopSB,
                     color: '#31456A',
                   }}>
                   2 hours
-                </Text>
+                </ThemedText>
               </View>
             </View>
           </LinearGradient>
@@ -243,7 +245,8 @@ const Service = () => {
           })}>
           <LinearGradient
             colors={['#94CFFF', '#1999FF']}
-            angle={180}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
             style={{
               height: 127,
               width: screenWidth / 2 - 40,
@@ -252,23 +255,23 @@ const Service = () => {
               borderRadius: 10,
               gap: 5,
             }}>
-            <Text
+            <ThemedText
               style={{
                 fontSize: 36,
-                fontFamily: constants.fontPopB,
+                // fontFamily: constants.fontPopB,
                 color: '#FFFFFF',
                 marginBottom: Platform.OS === 'android' ? -14 : 0,
               }}>
               {couponCount}
-            </Text>
-            <Text
+            </ThemedText>
+            <ThemedText
               style={{
                 fontSize: 12,
-                fontFamily: constants.fontPopR,
+                // fontFamily: constants.fontPopR,
                 color: '#FFFFFF',
               }}>
               Coupons{'\n'}You have
-            </Text>
+            </ThemedText>
             <View style={styles.container}>
               <Animated.View style={[styles.progressBar, { width: animation }]}></Animated.View>
             </View>
@@ -302,7 +305,8 @@ const Service = () => {
             })}>
             <LinearGradient
               colors={['#B7A9FB', '#836FF1']}
-              angle={180}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}
               style={{
                 height: 127,
                 width: screenWidth / 2 - 40,
@@ -312,14 +316,14 @@ const Service = () => {
                 gap: 10,
               }}>
               <SleepingPod />
-              <Text
+              <ThemedText
                 style={{
                   fontSize: 12,
-                  fontFamily: constants.fontPopR,
+                  // fontFamily: constants.fontPopR,
                   color: '#FFFFFF',
                 }}>
                 Book your{'\n'}Sleeping pod
-              </Text>
+              </ThemedText>
               <View style={{ position: 'absolute', bottom: 0, right: 0 }}>
                 <LowOpacitySleepingPod />
               </View>
@@ -360,8 +364,8 @@ const Service = () => {
               borderColor: '#FFFFFFA6',
               borderWidth: 1,
             }}>
-            <Text style={styles.serviceName}>{item.service_name}</Text>
-            <Text style={styles.description}>{item.description}</Text>
+            <ThemedText style={styles.serviceName}>{item.service_name}</ThemedText>
+            <ThemedText style={styles.description}>{item.description}</ThemedText>
           </Shadow>
         </View>
       </View>
@@ -381,10 +385,10 @@ const Service = () => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <ThemedText preset="POP_28_B" color="#253D8F">
+          <ThemedText variant="headlineEmphasized" color="primary">
             Coming Soon!
           </ThemedText>
-          <ThemedText preset="POP_16_SB" color="#253D8F">
+          <ThemedText variant="bodyEmphasized" color="primary">
             We are working for you
           </ThemedText>
           <Image
@@ -439,13 +443,13 @@ const styles = StyleSheet.create({
 
   serviceName: {
     fontSize: 17,
-    fontFamily: constants.fontPopSB,
+    // fontFamily: constants.fontPopSB,
     color: '#31456A',
     marginBottom: 15,
   },
   description: {
     fontSize: 13,
-    fontFamily: constants.fontPopR,
+    // fontFamily: constants.fontPopR,
     color: '#31456A',
   },
   container: {

@@ -12,15 +12,16 @@ import NoSmoking from '@/assets/svgs/no-smocking.svg';
 import Silent from '@/assets/svgs/phone-silent.svg';
 import WakeUp from '@/assets/svgs/wake-up.svg';
 import Wallet from '@/assets/svgs/wallet.svg';
+import { ThemedText } from '@/components/common/ThemedText';
 import Header from '@/components/header';
 import PriceDistribution from '@/components/service/price-distribution';
 import SleepingPodPaymentTopCard from '@/components/service/sleeping-pod-payment-top-card';
 import { shadow } from '@/constants';
-import { Box, Device, Row, Text } from '@/core';
+import { Box, Device, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
 import useUserStore from '@/modules/user';
 import { createSleepingPodOrder, verifySleepingPodOrder } from '@/services/query/service';
-import { colors } from '@/theme';
 
 const rules = [
   { id: 1, icon: Silent, desc: 'Use mobile phones without disturbing others' },
@@ -77,16 +78,16 @@ type propsType = {
 const Rules = () => {
   return (
     <Box>
-      <Text preset="POP_14_SB" color="#333333" style={styles.rulesTitle}>
+      <ThemedText variant="bodySmallEmphasized" color="gray900" style={styles.rulesTitle}>
         Sleeping pods rules and guidelines
-      </Text>
+      </ThemedText>
       <Row style={styles.rulesContainer}>
         {rules.map((rule) => (
           <Box key={rule.id} gap={16} style={styles.ruleBox}>
             <rule.icon />
-            <Text style={styles.ruleText} preset="POP_14_R" color="#333333">
+            <ThemedText style={styles.ruleText} variant="bodySmall" color="gray900">
               {rule.desc}
-            </Text>
+            </ThemedText>
           </Box>
         ))}
       </Row>
@@ -95,18 +96,19 @@ const Rules = () => {
 };
 
 const Procedures = () => {
+  const { theme } = useTheme();
   return (
-    <Box style={[styles.proceduresContainer, shadow]}>
-      <Text preset="POP_14_SB" color="#333333" style={styles.proceduresTitle}>
+    <Box style={[styles.proceduresContainer, { backgroundColor: theme.backgroundCard }, shadow]}>
+      <ThemedText variant="bodySmallEmphasized" color="gray900" style={styles.proceduresTitle}>
         Check-in and check-out procedures
-      </Text>
+      </ThemedText>
       <Box style={styles.proceduresContent}>
         {procedures.map((procedure) => (
           <Row key={procedure.id} gap={16} style={styles.procedureRow}>
             <procedure.icon />
-            <Text style={styles.procedureText} preset="POP_14_R" color="#333333">
+            <ThemedText style={styles.procedureText} variant="bodySmall" color="gray900">
               {procedure.desc}
-            </Text>
+            </ThemedText>
           </Row>
         ))}
       </Box>
@@ -148,18 +150,18 @@ const sleepingPodPolicies = [
 const Policies = () => {
   return (
     <Box style={{ paddingHorizontal: 16 }}>
-      <Text preset="POP_14_SB" color="#333333" style={{ marginBottom: 10 }}>
+      <ThemedText variant="bodySmallEmphasized" color="gray900" style={{ marginBottom: 10 }}>
         Sleeping Pod Refund Policy
-      </Text>
+      </ThemedText>
       {sleepingPodPolicies.map((policy, index) => (
         <Box key={index} style={{ marginBottom: 10 }}>
-          <Text preset="POP_14_SB" color="#333333">
+          <ThemedText variant="bodySmallEmphasized" color="gray900">
             {policy.title}
-          </Text>
+          </ThemedText>
           {policy.details.map((detail, i) => (
-            <Text key={i} preset="POP_14_R" color="#333333" style={{ marginLeft: 10 }}>
+            <ThemedText key={i} variant="bodySmall" color="gray900" style={{ marginLeft: 10 }}>
               • {detail}
-            </Text>
+            </ThemedText>
           ))}
         </Box>
       ))}
@@ -172,6 +174,7 @@ const SleepingPodPayment = () => {
     useLocalSearchParams();
 
   const { user } = useUserStore();
+  const { theme } = useTheme();
   const { mutate, isPending } = createSleepingPodOrder();
   const { mutate: verifyMutation } = verifySleepingPodOrder();
 
@@ -301,7 +304,7 @@ const SleepingPodPayment = () => {
   };
 
   return (
-    <Box style={styles.container}>
+    <Box style={[styles.container, { backgroundColor: theme.backgroundPrimary }]}>
       <Header title={name || 'Payment'} back location />
       <ScrollView>
         <SleepingPodPaymentTopCard
@@ -317,15 +320,15 @@ const SleepingPodPayment = () => {
         <Procedures />
         <Policies />
       </ScrollView>
-      <Box style={[styles.paymentContainer, shadow]}>
+      <Box style={[styles.paymentContainer, { backgroundColor: theme.backgroundCard }, shadow]}>
         <PriceDistribution isGst priceData={JSON.parse(priceData)} />
         <Pressable onPress={handlePayment} style={styles.paymentButton}>
           {isPending ? (
             <ActivityIndicator color="#fff" size="small" />
           ) : (
-            <Text color="#fff" preset="POP_16_SB" style={styles.paymentButtonText}>
+            <ThemedText color="white" variant="bodyEmphasized" style={styles.paymentButtonText}>
               Make Payment
-            </Text>
+            </ThemedText>
           )}
         </Pressable>
       </Box>
@@ -338,12 +341,12 @@ export default SleepingPodPayment;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundPrimary,
+    // backgroundColor: colors.backgroundPrimary,
   },
   topCard: {
     padding: 16,
     margin: 16,
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 8,
     gap: 16,
   },
@@ -381,7 +384,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   proceduresContainer: {
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 8,
     margin: 16,
     padding: 16,
@@ -402,7 +405,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   paymentContainer: {
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     padding: 30,
   },
   paymentDivider: {

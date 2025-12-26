@@ -7,10 +7,12 @@ import RazorpayCheckout from 'react-native-razorpay';
 
 import PaymentFailed from '@/assets/svgs/payment-failed.svg';
 import PaymentSuccess from '@/assets/svgs/payment-success.svg';
+import { ThemedText } from '@/components/common/ThemedText';
 import CafeResultView from '@/components/payment/cafe-result-view';
 import SleepingPodPaymentTopCard from '@/components/service/sleeping-pod-payment-top-card';
 import { shadow } from '@/constants';
-import { Box, Device, Row, Text, useSafeAreaInsets } from '@/core';
+import { Box, Device, Row, useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import useSleepingPodCart from '@/modules/sleeping-pod';
 import useUserStore from '@/modules/user';
 import {
@@ -18,7 +20,6 @@ import {
   useCreateServicePayment,
   useVerifyServicePayment,
 } from '@/services/query/payment';
-import { colors } from '@/theme';
 
 interface PaymentResultParams {
   id: string;
@@ -93,6 +94,7 @@ const PaymentResult = () => {
   const { user } = useUserStore();
   const { resetState } = useSleepingPodCart();
   const { bottomHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
 
   const isSuccess = paymentParams.status === 'success';
   const isPopUp = paymentParams.is_popup === 'true';
@@ -117,7 +119,7 @@ const PaymentResult = () => {
       key: process.env.EXPO_PUBLIC_RAZOR_PAY_KEY_ID || '',
       amount: parseInt(required_amount) * 100,
       name: 'Travlounge',
-      order_id: booking_id,
+      order_id: booking_id || '',
       prefill: {
         contact: user?.mobile_number,
         name: user?.name,
@@ -211,15 +213,15 @@ const PaymentResult = () => {
       {isSuccess ? <PaymentSuccess /> : <PaymentFailed />}
 
       <Box style={styles.messageContainer} gap={10}>
-        <Text color="#fff" preset="POP_24_SB">
+        <ThemedText color="white" variant="headlineSmallEmphasized">
           {isSuccess ? 'Booking Confirmed' : 'Booking Failed'}
-        </Text>
-        <Text style={styles.messageText} color="#fff" preset="POP_14_M">
+        </ThemedText>
+        <ThemedText style={styles.messageText} color="white" variant="bodyEmphasized">
           {paymentParams.message ||
             (isSuccess
               ? 'Your booking has been confirmed. You can view your booking details below.'
               : 'Your booking has been failed. Please try again.')}
-        </Text>
+        </ThemedText>
       </Box>
 
       <Box style={styles.fullWidth}>
@@ -236,12 +238,12 @@ const PaymentResult = () => {
                   borderBottomWidth: 1,
                   borderBottomColor: '#E0E0E0',
                 }}>
-                <Text preset="POP_16_M" color="#333333">
+                <ThemedText variant="bodyLargeEmphasized" color="gray900">
                   {item.name} x {item.quantity}
-                </Text>
-                <Text preset="POP_16_M" color="#333333">
+                </ThemedText>
+                <ThemedText variant="bodyLargeEmphasized" color="gray900">
                   ₹ {item.price * item.quantity}
-                </Text>
+                </ThemedText>
               </Box>
             )}
           />
@@ -273,22 +275,22 @@ const PaymentResult = () => {
       </Box>
 
       {!isSuccess && paymentParams.required_amount && paymentParams.wallet_balance && (
-        <Row style={[styles.balanceBox, shadow]}>
+        <Row style={[styles.balanceBox, shadow, { backgroundColor: theme.backgroundCard }]}>
           <Box gap={5}>
-            <Text color="rgba(34, 49, 63, 0.8)" preset="POP_14_M">
+            <ThemedText color="gray900" variant="bodyEmphasized">
               Current Balance
-            </Text>
-            <Text color="rgba(51, 51, 51, 1)" preset="POP_16_SB">
+            </ThemedText>
+            <ThemedText color="gray900" variant="bodyLargeEmphasized">
               ₹ {paymentParams.wallet_balance}
-            </Text>
+            </ThemedText>
           </Box>
           <Box gap={5}>
-            <Text color="rgba(34, 49, 63, 0.8)" preset="POP_14_M">
+            <ThemedText color="gray900" variant="bodyEmphasized">
               Balance Required
-            </Text>
-            <Text color="rgba(51, 51, 51, 1)" preset="POP_16_SB">
+            </ThemedText>
+            <ThemedText color="gray900" variant="bodyLargeEmphasized">
               ₹ {paymentParams.required_amount}
-            </Text>
+            </ThemedText>
           </Box>
         </Row>
       )}
@@ -298,23 +300,23 @@ const PaymentResult = () => {
           <Row gap={20} style={[styles.footerContainer, { bottom: bottomHeight || 20 }]}>
             {!isTolooORCafe && params?.service_name !== 'buffet' && (
               <Pressable style={styles.buttonWhite} onPress={handleBookMore}>
-                <Text color="#3C3C3C" preset="POP_16_SB">
+                <ThemedText color="gray900" variant="titleEmphasized">
                   Book more
-                </Text>
+                </ThemedText>
               </Pressable>
             )}
             <Pressable style={styles.buttonWhite} onPress={handleGoHome}>
-              <Text color="#3C3C3C" preset="POP_16_SB">
+              <ThemedText color="gray900" variant="titleEmphasized">
                 Home
-              </Text>
+              </ThemedText>
             </Pressable>
           </Row>
         ) : paymentParams.service_name === 'toloo' ? (
           paymentParams.pay_now === 'true' ? (
             <Pressable style={styles.buttonWhiteFull} onPress={handleTolooPay}>
-              <Text color="#253D8F" preset="POP_16_SB">
+              <ThemedText color="primary" variant="titleEmphasized">
                 Pay Now
-              </Text>
+              </ThemedText>
             </Pressable>
           ) : null
         ) : null
@@ -369,7 +371,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   balanceBox: {
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     padding: 20,
     margin: 20,
     borderRadius: 8,

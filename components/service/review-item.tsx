@@ -1,11 +1,14 @@
-import { Box, Device, Image, Row, Text } from '@/core';
+import { Box, Device, Image, Row } from '@/core';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { useTheme } from '@/hooks/useTheme';
+import { ThemedText } from '../common/ThemedText';
 import Icon from '../ui/icon';
 
-const ReviewItem = (props: propsType) => {
+const ReviewItem = (props: any) => {
   const { review } = props;
+  const { theme } = useTheme();
 
   //i want to return like 1 Week ago
   const dateAgo = (date: string) => {
@@ -53,25 +56,25 @@ const ReviewItem = (props: propsType) => {
               />
             }
             <Box style={{ flex: 1 }}>
-              <Text color="#333333" preset="POP_14_SB">
+              <ThemedText color="gray900" variant="bodySmallEmphasized">
                 {review.user_details.name || 'New User'}
-              </Text>
+              </ThemedText>
               <Row style={{ justifyContent: 'space-between' }}>
-                <Text color="rgba(51, 51, 51, 1)" preset="POP_12_R">
+                <ThemedText color="gray700" variant="label">
                   {dateAgo(review.created_on)}
-                </Text>
+                </ThemedText>
                 <Row style={{ gap: 5, alignItems: 'center' }}>
                   <Icon name="Star" size={12} fill={'#EFB603'} />
-                  <Text preset="POP_14_R" color="#333333">
+                  <ThemedText variant="bodySmall" color="gray900">
                     {review.rating.toFixed(1)}
-                  </Text>
+                  </ThemedText>
                 </Row>
               </Row>
             </Box>
           </Row>
-          <Text color="#333333" preset="POP_12_R">
+          <ThemedText color="gray900" variant="label">
             {review.reviewText}
-          </Text>
+          </ThemedText>
           {review?.images?.length > 0 && (
             <Row
               style={{
@@ -79,8 +82,9 @@ const ReviewItem = (props: propsType) => {
                 width: '100%',
                 borderRadius: 8,
               }}>
-              {review?.images?.map((item, index) => (
+              {review?.images?.map((item: any, index: number) => (
                 <Image
+                  key={index}
                   contentFit="cover"
                   source={{
                     uri: item?.image,

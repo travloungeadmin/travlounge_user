@@ -1,16 +1,19 @@
 import { shadow } from '@/constants';
-import { Device, Text } from '@/core';
+import { Device } from '@/core';
 import { useReelsVideoPlayer } from '@/hooks/useReelsVideoPlayer';
+import { useTheme } from '@/hooks/useTheme';
 import { ReelsProps, VideoItem, VideoPlayerProps } from '@/types/components/service/reels.types';
 import { router } from 'expo-router';
 import { VideoView } from 'expo-video';
 import React, { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
+import { ThemedText } from '../common/ThemedText';
 import { VideoControls } from './VideoControls';
 
 const VideoPlayer: React.FC<VideoPlayerProps> = React.memo(
   ({ item, isSelected, isSingle, onChangeSelection, index, onPress }) => {
     const videoSource = item?.video || '';
+    const { theme } = useTheme();
 
     const { player, isPlaying, muted, isPlayerReady, togglePlay, toggleMute } = useReelsVideoPlayer(
       {
@@ -42,6 +45,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = React.memo(
             {
               width: isSingle ? Device.width - 32 : Device.width / 2,
               height: Device.width - 32,
+              backgroundColor: theme.backgroundCard,
             },
             shadow,
           ]}
@@ -72,6 +76,7 @@ VideoPlayer.displayName = 'VideoPlayer';
 
 const Reels: React.FC<ReelsProps> = ({ header, videos }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { theme } = useTheme();
 
   const handleVideoPress = useCallback(
     (index: number) => {
@@ -101,9 +106,9 @@ const Reels: React.FC<ReelsProps> = ({ header, videos }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText} preset="POP_16_SB">
+      <ThemedText style={styles.headerText} variant="headline" color="gray900">
         Our Social Media Presence
-      </Text>
+      </ThemedText>
       <ScrollView showsHorizontalScrollIndicator={false} horizontal>
         <View style={styles.scrollContainer}>
           {videos.map((item: VideoItem, index: number) => (

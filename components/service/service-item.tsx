@@ -1,7 +1,7 @@
 import Icon from '@/components/ui/icon';
 import { shadow } from '@/constants';
-import { Box, Device, Row, Text } from '@/core';
-import { colors } from '@/theme';
+import { Box, Device, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { getRating } from '@/utils/string';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,6 +9,7 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Extrapolation, interpolate, useSharedValue } from 'react-native-reanimated';
+import { ThemedText } from '../common/ThemedText';
 
 interface ServiceItemProps {
   item: {
@@ -17,6 +18,8 @@ interface ServiceItemProps {
     images: { image: string }[];
     distance: number;
     average_rating: number;
+    is_partner?: boolean;
+    place?: string;
   };
   index: number;
   isSleepingPod?: boolean;
@@ -35,6 +38,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
 }) => {
   const scrollOffsetValue = useSharedValue(0);
   const progress = useSharedValue<number>(0);
+  const { theme } = useTheme();
 
   const convertDistance = (distance: number) => {
     if (distance >= 1) {
@@ -106,25 +110,11 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
               borderBottomLeftRadius: 30,
             }}>
             <Icon name="PartnerIcon" size={14} />
-            <Text preset="POP_12_M" color="#FFFFFF">
+            <ThemedText variant="bodySmall" color="white">
               Travlounge Partner
-            </Text>
+            </ThemedText>
           </View>
         )}
-        {/* <Carousel
-          loop={false}
-          width={imageWidth}
-          height={imageHeight}
-          snapEnabled={true}
-          pagingEnabled={true}
-          autoPlayInterval={2000}
-          data={item?.images?.map((image) => ({ color: 'transparent', ...image }))}
-          onProgressChange={progress}
-          defaultScrollOffsetValue={scrollOffsetValue}
-          style={styles.carousel}
-          onConfigurePanGesture={onConfigurePanGesture}
-          renderItem={renderItem}
-        /> */}
         {!!offerPercentage && (
           <View
             style={{
@@ -141,69 +131,54 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
               borderTopLeftRadius: 30,
               borderBottomLeftRadius: 30,
             }}>
-            <Text preset="POP_12_M" color="#253D8F">
-              <Text style={{ fontWeight: '600' }} preset="POP_12_SB" color="#253D8F">
+            <ThemedText variant="bodySmall" color="primary">
+              <ThemedText
+                style={{ fontWeight: '600' }}
+                variant="bodySmallEmphasized"
+                color="primary">
                 {offerPercentage}%
-              </Text>{' '}
+              </ThemedText>{' '}
               Off for you
-            </Text>
+            </ThemedText>
           </View>
         )}
         <Image source={{ uri: item?.images?.[0]?.image }} style={styles.image} />
         <LinearGradient style={styles.linearGradient} colors={['transparent', '#000']}>
           <Row style={styles.row}>
-            <Text color={colors.textTertiary} preset="POP_14_SB">
+            <ThemedText color="white" variant="bodySmallEmphasized">
               {item.display_name}
-            </Text>
-
-            {/* {item?.images?.length > 1 && (
-              <Pagination.Custom<{ color: string }>
-                progress={progress}
-                data={item.images.map((image) => ({ color: 'transparent', ...image }))}
-                size={4}
-                dotStyle={styles.dotStyle}
-                activeDotStyle={styles.activeDotStyle}
-                containerStyle={styles.paginationContainer}
-                horizontal
-                customReanimatedStyle={customReanimatedStyle}
-                renderItem={renderPaginationItem}
-              />
-            )} */}
+            </ThemedText>
           </Row>
           <Box style={styles.infoBox}>
             {isSleepingPod ? (
               <Row gap={10}>
                 <Box style={styles.infoRow}>
-                  <Icon fill={colors.iconTertiary} size={14} name="Star" />
-                  <Text color={colors.textTertiary} preset="POP_14_R">
+                  <Icon fill={theme.primary} size={14} name="Star" />
+                  <ThemedText color="white" variant="bodySmall">
                     {getRating(item.average_rating || 5)}
-                  </Text>
+                  </ThemedText>
                 </Box>
                 <Box style={styles.infoRow}>
-                  <Icon fill={colors.iconQuaternary} size={12} name="Pin" />
-                  <Text color={colors.textTertiaryDescription} preset="POP_12_R">
+                  <Icon fill={theme.gray500} size={12} name="Pin" />
+                  <ThemedText color="gray300" variant="label">
                     {item.place}
-                  </Text>
+                  </ThemedText>
                 </Box>
               </Row>
             ) : (
               <Box style={styles.infoRow}>
-                <Icon fill={colors.iconQuaternary} size={12} name="Pin" />
-                <Text color={colors.textTertiaryDescription} preset="POP_12_R">
+                <Icon fill={theme.gray500} size={12} name="Pin" />
+                <ThemedText color="gray300" variant="label">
                   {convertDistance(item.distance)} away
-                </Text>
+                </ThemedText>
               </Box>
             )}
             {!isSleepingPod && (
-              // <Text preset="POP_18_SB" color="#fff">
-              //     ₹ {item.price}
-              // </Text>
-
               <Box style={styles.infoRow}>
-                <Icon fill={colors.iconTertiary} size={14} name="Star" />
-                <Text color={colors.textTertiary} preset="POP_14_R">
+                <Icon fill={theme.primary} size={14} name="Star" />
+                <ThemedText color="white" variant="bodySmall">
                   {getRating(item.average_rating || 5)}
-                </Text>
+                </ThemedText>
               </Box>
             )}
           </Box>
@@ -255,7 +230,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     overflow: 'hidden',
-    backgroundColor: colors.textTertiary,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   paginationContainer: {
     justifyContent: 'center',

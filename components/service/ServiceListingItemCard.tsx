@@ -1,4 +1,3 @@
-import { Text } from '@/core';
 import { Image } from '@/lib/Image';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
@@ -72,12 +71,12 @@ const ServiceListingItemCard = ({
                 borderTopLeftRadius: 30,
                 borderBottomLeftRadius: 30,
               }}>
-              <Text preset="POP_12_M" color="#253D8F">
-                <Text style={{ fontWeight: '600' }} preset="POP_12_SB" color="#253D8F">
+              <ThemedText variant="bodySmall" style={{ color: '#253D8F' }}>
+                <ThemedText variant="bodySmallEmphasized" style={{ color: '#253D8F' }}>
                   {offerPercentage}%
-                </Text>{' '}
+                </ThemedText>{' '}
                 Off for you
-              </Text>
+              </ThemedText>
             </View>
           )}
         </Image>

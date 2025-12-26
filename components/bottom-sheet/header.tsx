@@ -1,5 +1,5 @@
+import { useTheme } from '@/hooks/useTheme';
 import { moderateScale } from '@/lib/responsive-dimensions';
-import { colors } from '@/theme';
 import React from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
@@ -12,11 +12,12 @@ type PropsType = {
 
 const Header = (props: PropsType) => {
   const { headerRight, onPressClear, style, title } = props;
+  const { theme } = useTheme();
 
   return (
     <View style={[styles.container, style]}>
       <View style={styles.innerContainer}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: theme.gray900 }]}>{title}</Text>
         {headerRight ||
           (onPressClear && (
             <Text onPress={onPressClear} style={styles.clearAll}>
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(10),
   },
   title: {
-    color: colors.textPrimary,
     fontSize: moderateScale(17),
     fontWeight: '600',
   },

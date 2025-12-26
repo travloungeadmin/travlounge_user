@@ -9,15 +9,16 @@ import SelectionCard from '../sleeping-pod/selection-card';
 import PriceDistribution from './price-distribution';
 
 import SingleSelectList from '@/components/bottom-sheet/single-select-list';
+import { ThemedText } from '@/components/common/ThemedText';
 import { shadow } from '@/constants';
-import { Box, Pressable, Row, Text, useSafeAreaInsets } from '@/core';
+import { Box, Pressable, Row, useSafeAreaInsets } from '@/core';
 import BottomSheet from '@/core/bottom-sheet';
 import DatePicker from '@/core/date-picker';
+import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
 import useSleepingPodCart from '@/modules/sleeping-pod';
 import useUserStore from '@/modules/user';
 import { getSleepingPodLists } from '@/services/query/service';
-import { colors } from '@/theme';
 import { convertTimeTo12Hour, formatDateToDMY, revertFormattedDate } from '@/utils/string';
 
 const durationList = [
@@ -35,6 +36,7 @@ const SleepingPodBookingView = (props: PropsType) => {
   const { isSearch, priceData } = props;
   const { bottomHeight } = useSafeAreaInsets();
   const { place: currentPlace, latitude, longitude } = useUserStore();
+  const { theme } = useTheme();
   const {
     place,
     duration,
@@ -137,7 +139,13 @@ const SleepingPodBookingView = (props: PropsType) => {
   console.log({ datePickerValue });
 
   return (
-    <Box style={[styles.contentBox, !isSearch && { marginTop: 0 }, shadow]}>
+    <Box
+      style={[
+        styles.contentBox,
+        !isSearch && { marginTop: 0 },
+        shadow,
+        { backgroundColor: theme.backgroundCard },
+      ]}>
       <SelectionCard
         header="Location"
         icon="Pin"
@@ -178,13 +186,15 @@ const SleepingPodBookingView = (props: PropsType) => {
       <PodSelectContainer />
 
       {isSearch ? (
-        <Pressable onPress={handleSearch} style={styles.searchButton}>
+        <Pressable
+          onPress={handleSearch}
+          style={[styles.searchButton, { backgroundColor: theme.primary }]}>
           {isPending ? (
             <ActivityIndicator size="small" color="white" />
           ) : (
-            <Text preset="POP_16_M" style={styles.searchButtonText}>
+            <ThemedText variant="bodyEmphasized" color="white" style={styles.searchButtonText}>
               Search
-            </Text>
+            </ThemedText>
           )}
         </Pressable>
       ) : priceData ? (
@@ -242,8 +252,6 @@ const SleepingPodBookingView = (props: PropsType) => {
   );
 };
 
-export default SleepingPodBookingView;
-
 const styles = StyleSheet.create({
   backgroundImage: {
     width: '100%',
@@ -255,7 +263,6 @@ const styles = StyleSheet.create({
   },
   contentBox: {
     marginTop: 200,
-    backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 8,
     marginHorizontal: 16,
     marginBottom: 20,
@@ -338,7 +345,6 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     height: 45,
-    backgroundColor: colors.buttonBackgroundPrimary,
     borderRadius: 45 / 2,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,6 +1,7 @@
+import { ThemedText } from '@/components/common/ThemedText';
 import { shadow } from '@/constants';
-import { Box, Image, Pressable, Row, Text, TextInput, useSafeAreaInsets } from '@/core';
-import { colors } from '@/theme';
+import { Box, Image, Pressable, Row, TextInput, useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 
@@ -17,6 +18,7 @@ const AddReview = () => {
   const { mutate, isPending } = addReviewMutation();
   const router = useRouter();
   const { bottomHeight } = useSafeAreaInsets();
+  const { theme } = useTheme();
 
   const [userName, setUserName] = React.useState('');
   const [review, setReview] = React.useState('');
@@ -48,20 +50,20 @@ const AddReview = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Box style={[styles.box, shadow]}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.backgroundPrimary }]}>
+      <Box style={[styles.box, { backgroundColor: theme.backgroundCard }, shadow]}>
         <Row style={styles.row}>
           <Image contentFit="cover" source={{ uri: image }} style={styles.image} />
           <Box style={styles.textBox}>
-            <Text preset="POP_16_SB" color={colors.textPrimary}>
+            <ThemedText variant="bodyEmphasized" color="gray900">
               {name}
-            </Text>
-            <Text preset="POP_14_M" color={colors.textPrimary}>
+            </ThemedText>
+            <ThemedText variant="bodySmall" color="gray900">
               {location}
-            </Text>
+            </ThemedText>
           </Box>
         </Row>
-        <Box style={styles.divider} />
+        <Box style={[styles.divider, { backgroundColor: theme.divider }]} />
         <Box style={styles.contentBox}>
           {/* <TextInput
             type="outline"
@@ -79,7 +81,7 @@ const AddReview = () => {
             value={review}
             onChangeText={(text) => setReview(text)}
             type="outline"
-            borderColor={colors.dividerPrimary}
+            borderColor={theme.divider}
             placeholder="Enter your review"
             style={styles.reviewInput}
           />
@@ -90,9 +92,9 @@ const AddReview = () => {
               </Pressable>
             ))}
           </Row>
-          <Text preset="POP_14_R" color={colors.textPrimary}>
+          <ThemedText variant="bodySmall" color="gray900">
             Share images
-          </Text>
+          </ThemedText>
           <Pressable style={styles.photoBox} onPress={pickPhoto}>
             <Image
               contentFit="cover"
@@ -124,9 +126,9 @@ const AddReview = () => {
           {isPending ? (
             <ActivityIndicator />
           ) : (
-            <Text preset="POP_14_M" color={colors.textTertiary}>
+            <ThemedText variant="bodySmall" color="white">
               Submit
-            </Text>
+            </ThemedText>
           )}
         </Pressable>
       </Box>
@@ -139,12 +141,12 @@ export default AddReview;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.backgroundPrimary,
+    // backgroundColor: colors.backgroundPrimary,
     flex: 1,
   },
   box: {
     margin: 16,
-    backgroundColor: colors.cardBackgroundPrimary,
+    // backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 8,
   },
   row: {
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
   divider: {
     width: '100%',
     height: 1,
-    backgroundColor: colors.dividerPrimary,
+    // backgroundColor: colors.dividerPrimary,
   },
   contentBox: {
     padding: 16,
@@ -199,7 +201,7 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     height: 45,
-    backgroundColor: colors.buttonBackgroundPrimary,
+    backgroundColor: '#253D8F',
     borderRadius: 23,
     margin: 16,
     alignItems: 'center',
