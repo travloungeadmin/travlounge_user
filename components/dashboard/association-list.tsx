@@ -1,48 +1,58 @@
 import React from 'react';
-import { ImageStyle, ScrollView, StyleSheet, ViewStyle } from 'react-native';
+import { ImageStyle, Pressable, ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { shadow } from '@/constants';
-import { Device, Image, Pressable, Row } from '@/core';
-import { colors } from '@/theme';
+
+import { useTheme } from '@/hooks/useTheme';
+import { Image } from '@/lib/Image';
+import { moderateScale } from '@/lib/responsive-dimensions';
+import { SPACING } from '@/newConstants/spacing';
+import { AssociationBanner } from '@/services/api/types/home';
+import { handleBannerNavigation } from '@/utils/banners';
 import { useRouter } from 'expo-router';
+import { ThemedText } from '../common/ThemedText';
 
-interface AssociationListProps {
-  data: { image: string }[];
-}
-
-const AssociationList: React.FC<AssociationListProps> = ({ data }) => {
+const AssociationList: React.FC<{ data: AssociationBanner[]; title?: string | null }> = ({
+  data,
+  title = 'View our offering',
+}) => {
   const router = useRouter();
+  const { theme } = useTheme();
+
+  if (!data?.length) return null;
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <Row style={{ gap: 20, paddingHorizontal: 16 }}>
-        {data?.map((item, index) => {
-          return (
-            <Pressable
-              onPress={() =>
-                router.navigate({
-                  pathname: '/services/service-details',
-                  params: {
-                    id: item?.listing?.id,
-                    name: item?.title,
-                    ...(item?.listing?.category?.category_name === 'Sleeping pod'
-                      ? { isSleepingPod: 'true' }
-                      : {}),
-                  },
-                })
-              }
-              key={index}
-              style={[
-                shadow,
-                styles.shadowView,
-                { backgroundColor: colors.cardBackgroundPrimary },
-              ]}>
-              <Image contentFit="cover" source={{ uri: item.image }} style={[styles.image]} />
-            </Pressable>
-          );
-        })}
-      </Row>
-    </ScrollView>
+    <View>
+      {title && (
+        <ThemedText
+          style={{ paddingLeft: SPACING.screenPadding, marginBottom: SPACING.screenPadding }}
+          color="gray900"
+          variant="titleEmphasized">
+          {title}
+        </ThemedText>
+      )}
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <View
+          style={{
+            gap: SPACING.screenPadding,
+            flexDirection: 'row',
+            paddingHorizontal: SPACING.screenPadding,
+            paddingBottom: SPACING.screenPadding,
+          }}>
+          {data?.map((item, index) => {
+            return (
+              <Pressable
+                onPress={() => handleBannerNavigation(item)}
+                key={index}
+                style={[shadow, styles.shadowView, { backgroundColor: theme.backgroundCard }]}>
+                <Image contentFit="cover" source={{ uri: item.image }} style={[styles.image]} />
+              </Pressable>
+            );
+          })}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -50,14 +60,13 @@ export default AssociationList;
 
 const styles = StyleSheet.create({
   shadowView: {
-    marginBottom: 30,
-    // marginTop: 20,
-    width: Device.width * 0.78,
-    height: Device.width * 0.78 * 0.5,
-    borderRadius: 10,
+    marginBottom: moderateScale(30),
+    width: SPACING.deviceWidth * 0.78,
+    height: SPACING.deviceWidth * 0.78 * 0.5,
+    borderRadius: moderateScale(10),
   } as ViewStyle,
   image: {
-    borderRadius: 10,
+    borderRadius: moderateScale(10),
     width: '100%',
     height: '100%',
   } as ImageStyle,

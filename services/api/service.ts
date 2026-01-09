@@ -1,18 +1,15 @@
 import apiClient from '.';
 import ENDPOINTS from '../end-points';
-import { GetServiceListApiProps, ServiceListResponse } from './types';
+import { GetServiceListApiProps, ServiceListApiResponse } from './types/listings';
 
 export const getServiceListApi = async (
   props: GetServiceListApiProps
-): Promise<ServiceListResponse> => {
-  console.log({ props });
-
+): Promise<ServiceListApiResponse> => {
   const response = await apiClient({
     method: 'get',
     url: `${ENDPOINTS.SERVICE_LIST}`,
     params: props,
   });
-
   return response.data;
 };
 
@@ -181,5 +178,27 @@ export const verifySleepingPodOrderApi = async (props: verifySleepingPodOrderApi
     },
   });
 
+  return response.data;
+};
+
+export const createCoinOrderApi = async (data: { coins_amount: number }) => {
+  const response = await apiClient({
+    method: 'post',
+    url: ENDPOINTS.CREATE_COIN_ORDER,
+    data,
+  });
+  return response.data;
+};
+
+export const verifyCoinOrderApi = async (data: {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}) => {
+  const response = await apiClient({
+    method: 'put',
+    url: ENDPOINTS.VERIFY_COIN_ORDER,
+    data,
+  });
   return response.data;
 };

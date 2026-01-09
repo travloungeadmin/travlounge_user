@@ -10,6 +10,7 @@ type LocationContextValue = {
   permissionStatus: PermissionStatus | null;
   fetchLocation: (opts?: { force?: boolean }) => Promise<void>;
   clearLocation: () => Promise<void>;
+  updateLocation: (place: Place, coords?: Coords) => Promise<void>;
 };
 
 export const LocationContext = createContext<LocationContextValue | undefined>(undefined);
@@ -74,6 +75,16 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     [coords]
   );
 
+  const updateLocation = useCallback(async (place: Place, coords?: Coords) => {
+    setPlace(place);
+    await LocationStorage.savePlace(place);
+
+    if (coords) {
+      setCoords(coords);
+      await LocationStorage.saveCoords(coords);
+    }
+  }, []);
+
   const clearLocation = useCallback(async () => {
     setCoords(null);
     setPlace(null);
@@ -89,17 +100,10 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       permissionStatus,
       fetchLocation,
       clearLocation,
+      updateLocation,
     }),
-    [coords, place, isLoading, permissionStatus, fetchLocation, clearLocation]
+    [coords, place, isLoading, permissionStatus, fetchLocation, clearLocation, updateLocation]
   );
 
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>;
-};
-
-export const useLocation = () => {
-  const context = React.useContext(LocationContext);
-  if (context === undefined) {
-    throw new Error('useLocation must be used within a LocationProvider');
-  }
-  return context;
 };

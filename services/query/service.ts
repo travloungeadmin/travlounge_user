@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 import {
   addReviewApi,
+  createCoinOrderApi,
   createSleepingPodOrderApi,
   getAvailabilitySleepingPodApi,
   getCouponApi,
@@ -9,9 +10,11 @@ import {
   getServiceListApi,
   getSleepingPodDetailApi,
   getSleepingPodListsApi,
+  verifyCoinOrderApi,
   verifySleepingPodOrderApi,
 } from '../api/service';
-import { GetServiceListApiProps } from '../api/types';
+
+import { GetServiceListApiProps } from '../api/types/listings';
 import QUERIES_KEY from './query-keys';
 
 export const getServiceListQuery = (props: GetServiceListApiProps) => {
@@ -90,4 +93,14 @@ export const createSleepingPodOrder = () =>
 export const verifySleepingPodOrder = () =>
   useMutation({
     mutationFn: verifySleepingPodOrderApi,
+  });
+
+export const useCreateCoinOrder = () =>
+  useMutation({
+    mutationFn: createCoinOrderApi,
+  });
+
+export const useVerifyCoinOrder = () =>
+  useMutation({
+    mutationFn: verifyCoinOrderApi,
   });

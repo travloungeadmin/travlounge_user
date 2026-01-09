@@ -7,6 +7,7 @@ import Carousel, { Pagination } from 'react-native-reanimated-carousel';
 import { ThemedText } from '../common/ThemedText';
 
 import { shadow } from '@/constants';
+import useServiceStore from '@/store/service';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -17,12 +18,15 @@ type propsType = {
   rating: number;
   images: string[];
   offerPercentage?: number;
+  categoryId?: number;
 };
 
 const ServiceDetailCard = (props: propsType) => {
-  const { description, location, name, rating = 5, images, offerPercentage } = props;
+  const { description, location, name, rating = 5, images, offerPercentage, categoryId } = props;
   const scrollOffsetValue = useSharedValue(0);
   const progress = useSharedValue<number>(0);
+  const { services } = useServiceStore();
+  const CategoryName = services?.find((item) => item.id === categoryId)?.title;
   const { theme } = useTheme();
 
   const imageWidth = Device.width - 32;
@@ -161,7 +165,8 @@ const ServiceDetailCard = (props: propsType) => {
                 Get up to {offerPercentage}% OFF
               </ThemedText>
               <ThemedText variant="label" color="white">
-                Exclusive car wash offers available for you. Limited-time offer!
+                Exclusive {CategoryName?.toLowerCase()} offers available for you. Limited-time
+                offer!
               </ThemedText>
             </View>
             <ThemedText variant="headline" style={{ color: '#FFCC02' }}>

@@ -3,9 +3,9 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { shadow } from '@/constants';
 import { Box, Text } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { showError, showSuccess } from '@/lib/toast';
 import { generateOTPMutation } from '@/services/query/auth';
-import { colors } from '@/theme';
 
 interface ResentOtpContainerProps {
   number: string;
@@ -16,6 +16,7 @@ const INITIAL_TIMER = 60;
 const RESEND_DISABLED_OPACITY = 0.7;
 
 const ResentOtpContainer: React.FC<ResentOtpContainerProps> = ({ number, isLogin }) => {
+  const { theme } = useTheme();
   const { mutate, isPending } = generateOTPMutation();
   const [timer, setTimer] = useState(INITIAL_TIMER);
   const [error, setError] = useState('');
@@ -73,12 +74,12 @@ const ResentOtpContainer: React.FC<ResentOtpContainerProps> = ({ number, isLogin
         onPress={resentOtpHandler}
         disabled={isDisabled}>
         {isPending ? (
-          <Text color={colors.textSecondary} preset="ROB_14_M" style={styles.buttonText}>
+          <Text color={theme.primary} preset="ROB_14_M" style={styles.buttonText}>
             Sending...
           </Text>
         ) : (
           <Text
-            color={colors.textSecondary}
+            color={theme.primary}
             preset="ROB_14_M"
             style={[styles.buttonText, isDisabled && styles.disabledText]}>
             Resend OTP
@@ -87,13 +88,13 @@ const ResentOtpContainer: React.FC<ResentOtpContainerProps> = ({ number, isLogin
       </TouchableOpacity>
 
       {timer > 0 && (
-        <Text color={colors.textSecondary} preset="ROB_14_M">
+        <Text color={theme.primary} preset="ROB_14_M">
           00:{timer.toString().padStart(2, '0')}
         </Text>
       )}
 
       {error ? (
-        <Text color={colors.error} preset="POP_12_R" style={styles.errorText}>
+        <Text color={theme.error} preset="POP_12_R" style={styles.errorText}>
           {error}
         </Text>
       ) : null}
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    backgroundColor: colors.cardBackgroundPrimary,
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderRadius: 5,
     borderColor: '#F3F7FA',

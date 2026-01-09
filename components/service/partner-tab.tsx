@@ -71,7 +71,8 @@ export default PartnerTab;
 
 const styles = StyleSheet.create({
   container: {
-    margin: SPACING.screenPadding,
+    marginHorizontal: SPACING.screenPadding,
+    marginTop: SPACING.screenPadding,
     borderWidth: 1,
     height: moderateScale(46),
     borderRadius: 12,

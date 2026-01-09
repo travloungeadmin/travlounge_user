@@ -1,20 +1,13 @@
 import { Image } from '@/lib/Image';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { useTheme } from '@/newTheme';
+import { Banner } from '@/services/api/types/home';
+import { handleBannerNavigation } from '@/utils/banners';
 
-import { router } from 'expo-router';
 import React from 'react';
 import { Animated, Dimensions, FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
-
-interface Banner {
-  image: string;
-  service: {
-    id: number;
-    service_name: string;
-  };
-}
 
 interface IndicatorProps {
   scrollx: Animated.Value;
@@ -49,20 +42,7 @@ const BannerCard = ({ item }: { item: Banner }) => {
   return (
     <View style={styles.bannerCardContainer}>
       <View style={[styles.bannerCard, { backgroundColor: theme.white }]}>
-        <Pressable
-          onPress={() => {
-            if (item?.service?.service_name === 'Sleeping pod') {
-              router.navigate('/services/sleeping-pod');
-            } else {
-              router.navigate({
-                pathname: '/services/service',
-                params: {
-                  id: item?.service?.id,
-                  name: item?.service?.service_name,
-                },
-              });
-            }
-          }}>
+        <Pressable onPress={() => handleBannerNavigation(item)}>
           <Image
             source={{ uri: item?.image }}
             style={styles.bannerImage}
@@ -116,7 +96,6 @@ const styles = StyleSheet.create({
   bannerCardContainer: {
     width: screenWidth,
     padding: moderateScale(16),
-    paddingBottom: moderateScale(20),
   },
   bannerCard: {
     borderRadius: moderateScale(10),

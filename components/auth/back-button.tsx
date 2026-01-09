@@ -2,14 +2,17 @@ import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { colors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 import { BackButtonProps } from '@/types/screens/auth/auth.types';
 
-export const BackButton: React.FC<BackButtonProps> = ({ onPress, topInset }) => (
-  <Pressable onPress={onPress} style={[styles.button, { top: topInset }]}>
-    <FontAwesome name="chevron-left" size={30} color={colors.iconPrimary} />
-  </Pressable>
-);
+export const BackButton: React.FC<BackButtonProps> = ({ onPress, topInset }) => {
+  const { theme } = useTheme();
+  return (
+    <Pressable onPress={onPress} style={[styles.button, { top: topInset }]}>
+      <FontAwesome name="chevron-left" size={30} color={theme.primary} />
+    </Pressable>
+  );
+};
 
 const styles = StyleSheet.create({
   button: {

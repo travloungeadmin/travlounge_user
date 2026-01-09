@@ -1,46 +1,45 @@
-import { Platform, Pressable, StyleSheet, View } from "react-native";
-import React from "react";
-import Icon from "@/components/ui/icon";
+import Icon from '@/components/ui/icon';
+import React from 'react';
+import { Platform, Pressable, StyleSheet } from 'react-native';
 
-import { router } from "expo-router";
-import { Box, Text } from "@/core";
-import { shadow } from "@/constants";
-import { colors } from "@/theme";
+import { shadow } from '@/constants';
+import { Box, Text } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
+import { router } from 'expo-router';
 
 const TravloungeCard = () => {
+  const { theme } = useTheme();
   return (
     <Pressable
-      onPress={() => router.navigate("/old/travlounge/home")}
+      onPress={() => router.navigate('/old/travlounge/home')}
       style={[
-     
         {
           borderRadius: 8,
           marginHorizontal: 16,
-          backgroundColor: colors.cardBackgroundSecondary,
-          shadowColor: colors.cardBackgroundSecondary,
+          backgroundColor: theme.backgroundCard,
+          shadowColor: theme.backgroundCard,
           shadowOpacity: 0.5,
-        }, 
-          shadow,
-      ]}
-    >
+        },
+        shadow,
+      ]}>
       <Box style={[styles.shadowView]}>
-        <Box style={[styles.outerCircle, { backgroundColor: "#2A46A8" }]}>
-          <Box style={[styles.middleCircle, { backgroundColor: "#3553BB" }]}>
-            <Box style={[styles.innerCircle, { backgroundColor: "#385BD6" }]}>
+        <Box style={[styles.outerCircle, { backgroundColor: '#2A46A8' }]}>
+          <Box style={[styles.middleCircle, { backgroundColor: '#3553BB' }]}>
+            <Box style={[styles.innerCircle, { backgroundColor: '#385BD6' }]}>
               <Icon size={51} name="TravloungeIcon" />
             </Box>
           </Box>
         </Box>
         <Box style={styles.textContainer}>
-          <Text preset="POP_16_M" color={colors.textTertiary}>
+          <Text preset="POP_16_M" color={theme.gray700}>
             Travlounge
           </Text>
-          <Text preset="POP_12_R" color={colors.textTertiary}>
+          <Text preset="POP_12_R" color={theme.gray500}>
             explore all travlounge
           </Text>
         </Box>
         <Box style={styles.iconContainer}>
-          <Icon stroke={colors.iconQuinary} size={24} name="ArrowRight" />
+          <Icon stroke={theme.primary} size={24} name="ArrowRight" />
         </Box>
       </Box>
     </Pressable>
@@ -54,8 +53,8 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     height: 76,
     borderRadius: 8,
-    flexDirection: "row",
-    overflow: "hidden",
+    flexDirection: 'row',
+    overflow: 'hidden',
   },
   outerCircle: {
     borderRadius: 120,
@@ -77,16 +76,16 @@ const styles = StyleSheet.create({
     width: 76,
     marginLeft: 35,
     marginTop: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textContainer: {
-    gap: Platform.OS === "ios" ? 5 : 0,
-    justifyContent: "center",
+    gap: Platform.OS === 'ios' ? 5 : 0,
+    justifyContent: 'center',
     marginLeft: 16,
     flex: 1,
   },
   iconContainer: {
-    justifyContent: "center",
+    justifyContent: 'center',
   },
 });

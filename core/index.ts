@@ -10,4 +10,5 @@ export * from '@/core/image-picker';
 export * from '@/core/pressable';
 export * from '@/core/safe-area';
 export * from '@/core/scaling';
+export * from '@/core/text';
 export * from '@/core/text-input';

@@ -9,6 +9,22 @@ const getWalletApi = async () => {
   return response.data;
 };
 
+const getEliteWalletDashboardApi = async () => {
+  const response = await apiClient({
+    method: 'get',
+    url: ENDPOINTS.ELITE_DASHBOARD,
+  });
+  return response.data;
+};
+
+const getWalletTransactionHistoryApi = async () => {
+  const response = await apiClient({
+    method: 'get',
+    url: ENDPOINTS.ELITE_TRANSACTION_HISTORY,
+  });
+  return response.data;
+};
+
 const addMoneyApi = async (data: FormData) => {
   const response = await apiClient({
     method: 'post',
@@ -20,7 +36,7 @@ const addMoneyApi = async (data: FormData) => {
   });
   return response.data;
 };
-const updateAddMoneyApi = async (props) => {
+const updateAddMoneyApi = async (props: any) => {
   const { id, amount, requested_by, pk } = props;
 
   const response = await apiClient({
@@ -36,4 +52,10 @@ const updateAddMoneyApi = async (props) => {
   return response.data;
 };
 
-export { addMoneyApi, getWalletApi, updateAddMoneyApi };
+export {
+  addMoneyApi,
+  getEliteWalletDashboardApi,
+  getWalletApi,
+  getWalletTransactionHistoryApi,
+  updateAddMoneyApi,
+};

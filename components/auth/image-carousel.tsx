@@ -1,16 +1,19 @@
 import { ImageBackground } from 'expo-image';
 import React, { memo, useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 
 import Logo_main from '@/assets/svgs/logo_main.svg';
-import { Box, Device, scaleSize, Text } from '@/core';
-import { colors } from '@/theme';
+
+import { useTheme } from '@/hooks/useTheme';
+import { moderateScale } from '@/lib/responsive-dimensions';
+import { SPACING } from '@/newConstants/spacing';
 import type {
   CarouselItem,
   CarouselRenderItemProps,
   ImageCarouselProps,
 } from '@/types/components/auth/image-carousel.types';
+import { ThemedText } from '../common/ThemedText';
 
 const CAROUSEL_DATA: CarouselItem[] = [
   {
@@ -30,19 +33,22 @@ const CAROUSEL_DATA: CarouselItem[] = [
   },
 ];
 
-const CarouselSlide = memo(({ item }: CarouselRenderItemProps) => (
-  <ImageBackground source={item.image} contentFit="cover" style={styles.imageBackground}>
-    <Box style={styles.textContainer}>
-      <Logo_main width={scaleSize(162)} height={scaleSize(44)} style={styles.logo} />
-      <Text preset="POP_28_M" color={colors.textTertiary} style={styles.title}>
-        {item.title}
-      </Text>
-      <Text preset="POP_14_R" color={colors.textTertiary} style={styles.description}>
-        {item.desc}
-      </Text>
-    </Box>
-  </ImageBackground>
-));
+const CarouselSlide = memo(({ item }: CarouselRenderItemProps) => {
+  const { theme } = useTheme();
+  return (
+    <ImageBackground source={item.image} contentFit="cover" style={styles.imageBackground}>
+      <View style={styles.textContainer}>
+        <Logo_main width={moderateScale(162)} height={moderateScale(44)} style={styles.logo} />
+        <ThemedText color="white" variant="headline" style={styles.title}>
+          {item.title}
+        </ThemedText>
+        <ThemedText color="white" variant="bodyLarge" style={styles.description}>
+          {item.desc}
+        </ThemedText>
+      </View>
+    </ImageBackground>
+  );
+});
 
 CarouselSlide.displayName = 'CarouselSlide';
 
@@ -50,8 +56,8 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   autoPlayInterval = 5000,
   scrollAnimationDuration = 1000,
 }) => {
-  const carouselWidth = Device.width;
-  const carouselHeight = Device.height * 0.75;
+  const carouselWidth = SPACING.deviceWidth;
+  const carouselHeight = SPACING.deviceHeight * 0.75;
 
   const renderItem = useMemo(
     () => (props: CarouselRenderItemProps) => <CarouselSlide {...props} />,
@@ -59,7 +65,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   );
 
   return (
-    <Box style={styles.container}>
+    <View style={styles.container}>
       <Carousel
         loop
         width={carouselWidth}
@@ -70,7 +76,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         autoPlayInterval={autoPlayInterval}
         renderItem={renderItem}
       />
-    </Box>
+    </View>
   );
 };
 
@@ -78,8 +84,8 @@ const styles = StyleSheet.create({
   container: {
     height: '70%',
     width: '100%',
-    borderBottomLeftRadius: scaleSize(20),
-    borderBottomRightRadius: scaleSize(20),
+    borderBottomLeftRadius: moderateScale(20),
+    borderBottomRightRadius: moderateScale(20),
     overflow: 'hidden',
   },
   imageBackground: {
@@ -87,18 +93,18 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   textContainer: {
-    marginTop: scaleSize(90),
-    marginLeft: scaleSize(40),
-    marginRight: scaleSize(20),
+    marginTop: moderateScale(90),
+    marginLeft: moderateScale(40),
+    marginRight: moderateScale(20),
   },
   logo: {
-    marginBottom: scaleSize(41),
+    marginBottom: moderateScale(41),
   },
   title: {
-    marginBottom: scaleSize(10),
+    marginBottom: moderateScale(10),
   },
   description: {
-    marginTop: scaleSize(10),
+    marginTop: moderateScale(10),
   },
 });
 

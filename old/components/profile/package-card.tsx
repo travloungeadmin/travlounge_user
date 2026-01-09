@@ -77,7 +77,7 @@ const PackageCard = ({ item }) => {
                 text: 'Go to Profile',
                 onPress: () => {
                   router.navigate({
-                    pathname: '/(root)/(main)/old/edit-profile',
+                    pathname: '/(main)/old/edit-profile',
                     params: { type: 'edit' },
                   });
                 },

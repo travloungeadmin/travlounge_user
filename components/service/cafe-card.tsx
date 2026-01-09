@@ -20,7 +20,7 @@ const CafeCard = (props: props) => {
 
   return (
     <Pressable
-      onPress={() => router.navigate('/(root)/(main)/qr')} // Assuming this path is correct, or update if needed
+      onPress={() => router.navigate('/(main)/qr')} // Assuming this path is correct, or update if needed
       style={{ marginHorizontal: 16, marginBottom: 20 }}>
       <LinearGradient
         colors={['rgba(102, 161, 244, 1)', 'rgba(45, 96, 227, 1)']}

@@ -1,12 +1,12 @@
-import { Platform, Pressable, StyleSheet, View } from "react-native";
-import React from "react";
-import { services } from "@/data";
-import { useTheme } from "@/old/lib/theme";
-import { Device } from "@/old/lib/device";
-import Icon from "../ui/icon";
-import { router } from "expo-router";
-import { shadow } from "@/old/constants";
-import { Text } from "@/core";
+import { Text } from '@/core';
+import { services } from '@/data';
+import { shadow } from '@/old/constants';
+import { Device } from '@/old/lib/device';
+import { useTheme } from '@/old/lib/theme';
+import { router } from 'expo-router';
+import React from 'react';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import Icon from '../ui/icon';
 
 const ServiceView = () => {
   const { theme } = useTheme();
@@ -27,14 +27,13 @@ const ServiceView = () => {
           key={service.id}
           onPress={() =>
             router.navigate({
-              pathname: `/(root)/services/${service.id}`,
+              pathname: `/services/${service.id}`,
               params: {
                 id: service.id,
               },
             })
-          }
-        >
-          <Icon size={Platform.OS === "ios" ? 40 : 45} name={service.icon} />
+          }>
+          <Icon size={Platform.OS === 'ios' ? 40 : 45} name={service.icon} />
           <Text preset="POP_12_SB" color={theme.textSecondary}>
             {service.title}
           </Text>
@@ -48,16 +47,16 @@ export default ServiceView;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    display: "flex",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    display: 'flex',
+    flexWrap: 'wrap',
     gap: 20,
   },
   shadowView: {
     padding: 10,
     borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 10,
   },
 });

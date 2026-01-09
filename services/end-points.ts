@@ -5,16 +5,22 @@ const AUTH = {
   REFRESH: 'customer/refresh-token-access/',
 };
 const ENDPOINTS = {
+  USED_CARS_FILTER_OPTIONS: 'used-cars/customers/cars/filter-options/',
+
   AUTH,
   SERVICE_LIST: 'customer/home_listing/',
-  MAKE_A_TRIP: 'listing/listing-filter/',
   HOME: 'customer/dashboard/',
+  MAKE_A_TRIP: 'listing/listing-filter/',
   SERVICES: 'customer/service_type/',
   SINGLE_SERVICE: 'customer/single-servicetype/',
   LOUNGES_COORDINATES_LIST: 'listing/listings-travlounge/',
   LOUNGES_CATEGORY: 'listing/listings-category/',
   LOUNGE_DETAILS: 'listing/listing-single-filter/',
   QR_CHECK: 'customer/generateqr_checking/',
+  ELITE_DASHBOARD: 'food/dashboard/',
+  ELITE_TRANSACTION_HISTORY: 'food/transaction-history/',
+  CREATE_COIN_ORDER: 'food/coins/',
+  VERIFY_COIN_ORDER: 'food/coins/',
   WALLET: 'customer/wallet/',
   WALLET_UPDATE: 'customer/wallet/',
   QR_WALLET_DETAILS: 'customer/wallet-subs-usage/',

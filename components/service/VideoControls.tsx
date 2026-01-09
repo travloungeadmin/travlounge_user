@@ -1,4 +1,6 @@
 import { useTheme } from '@/hooks/useTheme';
+import { Feather, Octicons } from '@expo/vector-icons';
+import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 // ...
 export const VideoControls: React.FC<VideoControlsProps> = ({
   isPlaying,

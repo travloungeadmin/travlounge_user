@@ -1,4 +1,4 @@
-import { GetUsedCarsResponse } from '@/types/api/used-cars.types';
+import { CarFilterOptionsResponse, GetUsedCarsResponse } from '@/types/api/used-cars.types';
 import apiClient from '.';
 import ENDPOINTS from '../end-points';
 
@@ -44,4 +44,12 @@ const getUsedCarDetailsApi = async (id: number | string): Promise<any> => {
   return response.data;
 };
 
-export { getUsedCarDetailsApi, getUsedCarsListApi, toggleUsedCarsFavoriteApi };
+const getFilterOptionsApi = async (): Promise<CarFilterOptionsResponse> => {
+  const response = await apiClient({
+    method: 'get',
+    url: ENDPOINTS.USED_CARS_FILTER_OPTIONS,
+  });
+  return response.data;
+};
+
+export { getFilterOptionsApi, getUsedCarDetailsApi, getUsedCarsListApi, toggleUsedCarsFavoriteApi };

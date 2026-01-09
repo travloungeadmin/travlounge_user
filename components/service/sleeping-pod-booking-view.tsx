@@ -2,7 +2,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { format, formatDate, isBefore } from 'date-fns';
 import { router } from 'expo-router';
 import React from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet } from 'react-native';
 
 import PodSelectContainer from '../sleeping-pod/pod-select-container';
 import SelectionCard from '../sleeping-pod/selection-card';
@@ -14,10 +14,10 @@ import { shadow } from '@/constants';
 import { Box, Pressable, Row, useSafeAreaInsets } from '@/core';
 import BottomSheet from '@/core/bottom-sheet';
 import DatePicker from '@/core/date-picker';
+import { useLocation } from '@/hooks';
 import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
 import useSleepingPodCart from '@/modules/sleeping-pod';
-import useUserStore from '@/modules/user';
 import { getSleepingPodLists } from '@/services/query/service';
 import { convertTimeTo12Hour, formatDateToDMY, revertFormattedDate } from '@/utils/string';
 
@@ -35,7 +35,7 @@ type PropsType = {
 const SleepingPodBookingView = (props: PropsType) => {
   const { isSearch, priceData } = props;
   const { bottomHeight } = useSafeAreaInsets();
-  const { place: currentPlace, latitude, longitude } = useUserStore();
+  const { coords, place: currentPlace } = useLocation();
   const { theme } = useTheme();
   const {
     place,
@@ -93,8 +93,8 @@ const SleepingPodBookingView = (props: PropsType) => {
       })
     );
     const mutationData = {
-      latitude: place ? place.coordinates.latitude : latitude,
-      longitude: place ? place.coordinates.longitude : longitude,
+      latitude: place ? place.coordinates.latitude : coords?.latitude,
+      longitude: place ? place.coordinates.longitude : coords?.longitude,
       date,
       time,
       duration,
@@ -124,10 +124,10 @@ const SleepingPodBookingView = (props: PropsType) => {
   React.useEffect(() => {
     if (!place?.name) {
       updatePlace({
-        name: currentPlace as string,
+        name: (Platform.OS === 'ios' ? currentPlace?.name : (currentPlace?.city as string)) || '',
         coordinates: {
-          latitude: latitude as number,
-          longitude: longitude as number,
+          latitude: coords?.latitude as number,
+          longitude: coords?.longitude as number,
         },
       });
     }
@@ -136,7 +136,6 @@ const SleepingPodBookingView = (props: PropsType) => {
   const selectedDuration = durationList.find((item) => item.value === duration)?.name;
   const datePickerValue = date ? revertFormattedDate(date) : new Date();
   const timePickerValue = time ? new Date(`2025-02-25T${time}`) : new Date();
-  console.log({ datePickerValue });
 
   return (
     <Box
@@ -152,7 +151,7 @@ const SleepingPodBookingView = (props: PropsType) => {
         value={place?.name || 'Select Location'}
         onPress={() =>
           router.navigate({
-            pathname: '/search',
+            pathname: '/search-location',
             params: { isSleepingPod: 'true' },
           })
         }
@@ -251,6 +250,8 @@ const SleepingPodBookingView = (props: PropsType) => {
     </Box>
   );
 };
+
+export default SleepingPodBookingView;
 
 const styles = StyleSheet.create({
   backgroundImage: {

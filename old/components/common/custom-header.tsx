@@ -33,7 +33,7 @@ const CustomHeader = ({ isHome, title, isBack, isWallet, locationEnable, style }
 
   const handleBack = () => {
     if (title === 'Profile') {
-      router.navigate('/(root)/(main)/(tab)');
+      router.navigate('/(main)/(tab)');
       return;
     }
     router.back();

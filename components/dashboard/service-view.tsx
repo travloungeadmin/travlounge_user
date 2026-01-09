@@ -16,38 +16,56 @@ const ServiceView = () => {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      {services?.map((service) => (
-        <Pressable
-          style={[
-            styles.shadowView,
-            shadow,
-            {
-              width: (SPACING.contentWidth - moderateScale(24)) / 3,
-              height: moderateScale(140),
-              backgroundColor: theme.backgroundCard,
-            },
-          ]}
-          key={service.id}
-          onPress={() => router.push(`/listings/${service.id}`)}>
-          <Icon
-            size={
-              Platform.OS === 'ios'
-                ? service.icon === 'Toloo'
-                  ? moderateScale(50)
-                  : moderateScale(40)
-                : service.icon === 'Toloo'
-                  ? moderateScale(55)
-                  : moderateScale(45)
-            }
-            name={service.icon as IconName}
-          />
+    <View>
+      <ThemedText
+        style={{
+          paddingLeft: SPACING.screenPadding,
+          marginBottom: SPACING.screenPadding,
+        }}
+        color="gray900"
+        variant="titleEmphasized">
+        Our Services
+      </ThemedText>
 
-          <ThemedText style={{ textAlign: 'center' }} variant="label" color="gray900">
-            {service.title}
-          </ThemedText>
-        </Pressable>
-      ))}
+      <View style={styles.container}>
+        {services?.map((service) => {
+          return (
+            <Pressable
+              style={[
+                styles.shadowView,
+                shadow,
+                {
+                  width: (SPACING.contentWidth - 2 * SPACING.screenPadding) / 3,
+                  height: moderateScale(140),
+                  backgroundColor: theme.backgroundCard,
+                },
+              ]}
+              key={service.id}
+              onPress={() =>
+                router.push({
+                  pathname: `/listings/[id]`,
+                  params: { id: service?.id ?? '999', name: service.title },
+                })
+              }>
+              <Icon
+                size={
+                  Platform.OS === 'ios'
+                    ? service.icon === 'Toloo'
+                      ? moderateScale(50)
+                      : moderateScale(40)
+                    : service.icon === 'Toloo'
+                      ? moderateScale(55)
+                      : moderateScale(45)
+                }
+                name={service.icon as IconName}
+              />
+              <ThemedText style={{ textAlign: 'center' }} variant="label" color="gray900">
+                {service.title}
+              </ThemedText>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 };
@@ -56,13 +74,14 @@ export default ServiceView;
 
 const styles = StyleSheet.create({
   container: {
-    rowGap: moderateScale(12),
+    rowGap: SPACING.screenPadding,
     flexDirection: 'row',
     display: 'flex',
     flexWrap: 'wrap',
     paddingHorizontal: SPACING.screenPadding,
-    gap: moderateScale(11.9),
+    gap: Math.floor(SPACING.screenPadding),
     alignContent: 'center',
+    paddingBottom: SPACING.screenPadding,
   },
   shadowView: {
     padding: moderateScale(10),
