@@ -8,7 +8,7 @@ import { showError } from '@/lib/toast';
 import queryClient from '@/services/query';
 
 type UserType = {
-  id: string;
+  id: string | number;
   mobile_number?: string;
   name?: string;
   image?: string;

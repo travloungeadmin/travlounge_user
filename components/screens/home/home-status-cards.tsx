@@ -4,7 +4,6 @@ import Icon from '@/components/ui/icon';
 import { useTheme } from '@/hooks';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
-import { getPackagesListQuery } from '@/services/query/home';
 import { AntDesign } from '@expo/vector-icons';
 import { Image, ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,8 +20,6 @@ const HomeStatusCards: React.FC<HomeStatusCardsProps> = ({
   walletBalance = 0,
   activeSubscription = [],
 }) => {
-  const { data: packages } = getPackagesListQuery();
-
   const { theme } = useTheme();
 
   const hasActivePlan = !!activeSubscription && activeSubscription.length > 0;
@@ -30,7 +27,7 @@ const HomeStatusCards: React.FC<HomeStatusCardsProps> = ({
     if (!Array.isArray(active_subscriptions)) return 0;
     return active_subscriptions.reduce((total, sub) => {
       const remaining =
-        sub.services?.reduce((sum: number, service: any) => sum + (service.remaining || 0), 0) || 0;
+        sub.benefits?.reduce((sum: number, service: any) => sum + (service.remaining || 0), 0) || 0;
 
       return total + remaining;
     }, 0);
@@ -39,7 +36,7 @@ const HomeStatusCards: React.FC<HomeStatusCardsProps> = ({
     if (!Array.isArray(activeSubscription)) return 0;
     return activeSubscription.reduce((total, sub) => {
       const totalUses =
-        sub.services?.reduce((sum: number, service: any) => sum + (service.total || 0), 0) || 0;
+        sub.benefits?.reduce((sum: number, service: any) => sum + (service.total || 0), 0) || 0;
 
       return total + totalUses;
     }, 0);
@@ -154,14 +151,12 @@ const HomeStatusCards: React.FC<HomeStatusCardsProps> = ({
 
       <Pressable
         onPress={() => {
-          if (hasActivePlan) return;
-          router.navigate({
-            pathname: '/old/packge',
-            params: {
-              isPlans: true,
-              plans: JSON.stringify(packages),
-            },
-          });
+          if (hasActivePlan) {
+            router.navigate(`/subscription/history`);
+            return;
+          }
+
+          router.navigate(`/subscription/[id]`);
         }}>
         <ThemedView style={styles.card} backgroundColor="white">
           <Image
@@ -179,8 +174,13 @@ const HomeStatusCards: React.FC<HomeStatusCardsProps> = ({
                     <ThemedText variant="label" color="primary800">
                       Active plan
                     </ThemedText>
-                    <ThemedText numberOfLines={3} variant="labelLargeEmphasized" color="primary800">
-                      {activeSubscription[0].package_name} & {activeSubscription.length - 1}+
+                    <ThemedText
+                      ellipsizeMode="middle"
+                      numberOfLines={2}
+                      variant="labelLargeEmphasized"
+                      color="primary800">
+                      {activeSubscription[0].package_name}
+                      {activeSubscription.length > 1 && ` & ${activeSubscription.length - 1}+`}
                     </ThemedText>
                   </View>
                 </View>

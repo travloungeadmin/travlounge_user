@@ -18,7 +18,8 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://stage-apis.travlounge.in/api/v1/",
         "EXPO_PUBLIC_RAZOR_PAY_KEY_ID": "rzp_test_X7HSvDV1qCV9SV",
-        "EXPO_PUBLIC_MAP_KEY_ID": "AIzaSyAfaCR43T4eEiSNhrAs6XgeeYkM49ZwhlA"
+        "EXPO_PUBLIC_MAP_KEY_ID": "AIzaSyAfaCR43T4eEiSNhrAs6XgeeYkM49ZwhlA",
+        "EXPO_PUBLIC_API_URL_V2": "https://stage-apis.travlounge.in/"
       },
       "channel": "preview"
     },
@@ -27,7 +28,8 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://apis.travlounge.in/api/v1/",
         "EXPO_PUBLIC_RAZOR_PAY_KEY_ID": "rzp_live_45t7Nf7uHVYDd7",
-        "EXPO_PUBLIC_MAP_KEY_ID": "AIzaSyAfaCR43T4eEiSNhrAs6XgeeYkM49ZwhlA"
+        "EXPO_PUBLIC_MAP_KEY_ID": "AIzaSyAfaCR43T4eEiSNhrAs6XgeeYkM49ZwhlA",
+        "EXPO_PUBLIC_API_URL_V2": "https://apis.travlounge.in/"
       },
       "channel": "production"
     }

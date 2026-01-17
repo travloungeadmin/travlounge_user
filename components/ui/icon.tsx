@@ -53,6 +53,7 @@ import Star from '@/assets/svgs/icons/star.svg';
 import Stars from '@/assets/svgs/icons/stars.svg';
 import Support from '@/assets/svgs/icons/support.svg';
 import Surprice from '@/assets/svgs/icons/surprice.svg';
+import SubscriptionBg from '@/assets/svgs/subscriptions/bg-lines.svg';
 import { moderateScale } from '@/lib/responsive-dimensions';
 
 const icons = {
@@ -109,6 +110,7 @@ const icons = {
   DeleteProfile,
   Logout,
   EliteCardIcon,
+  SubscriptionBg,
 };
 
 export type IconName = keyof typeof icons;
@@ -118,10 +120,12 @@ interface PropsType {
   size?: number;
   stroke?: string;
   fill?: string;
+  width?: number;
+  height?: number;
 }
 
 const Icon = (props: PropsType): React.JSX.Element => {
-  const { stroke, name, size, fill } = props;
+  const { stroke, name, size, fill, width, height } = props;
 
   const IconName = icons[name];
   console.log('Icon render:', { name, found: !!IconName });
@@ -130,9 +134,9 @@ const Icon = (props: PropsType): React.JSX.Element => {
   return (
     <IconName
       fill={fill ?? 'none'}
-      height={size ?? moderateScale(24)}
+      height={height ?? size ?? moderateScale(24)}
       stroke={stroke ?? 'none'}
-      width={size ?? moderateScale(24)}
+      width={width ?? size ?? moderateScale(24)}
     />
   );
 };

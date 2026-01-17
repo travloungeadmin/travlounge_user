@@ -15,7 +15,7 @@ export interface ThemedTextProps extends RNTextProps {
 
 export const ThemedText: FC<ThemedTextProps> = ({
   variant = 'body',
-  color = 'text',
+  color = 'gray900',
   style,
   children,
   ...rest

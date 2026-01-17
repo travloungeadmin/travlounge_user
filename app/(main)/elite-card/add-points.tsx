@@ -1,21 +1,20 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Image, ImageBackground } from 'expo-image';
+import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
-  ScrollView,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
-  TextInput,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-toast-message';
 
+import { ContentPlaceholder, Rect } from '@/components/common/ContentPlaceholder';
 import { ThemedText } from '@/components/common/ThemedText';
-import { ThemedView } from '@/components/common/ThemedView';
-import CoinSuccessModal from '@/components/elite-card/CoinSuccessModal';
+import ComingSoonListing from '@/components/screens/listing/coming-soon';
 import { useTheme } from '@/hooks/useTheme';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import useUserStore from '@/modules/user';
@@ -31,14 +30,24 @@ const AddPoints = () => {
   const { mutate: verifyOrder, isPending: isVerifyingOrder } = useVerifyCoinOrder();
   const { user } = useUserStore();
 
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState({
+    amount: 0,
+    points: 0,
+    id: 0,
+  });
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successAmount, setSuccessAmount] = useState(0);
 
-  const points = amount ? Math.floor(parseInt(amount) * 1) : 0; // Assuming 1 Rupee = 1 Point
+  const displayPoints =
+    amount?.id !== 0 && amount?.points
+      ? amount.points
+      : amount?.amount
+        ? Math.floor(amount.amount * 1)
+        : 0;
 
   const handleBuyCoin = () => {
-    if (!amount || parseInt(amount) <= 0) {
+    if (!amount?.amount || amount.amount <= 0) {
       Toast.show({
         type: 'error',
         text1: 'Invalid Amount',
@@ -47,10 +56,10 @@ const AddPoints = () => {
       return;
     }
 
-    const coinsAmount = parseInt(amount);
+    const coinsAmount = amount.amount;
 
     createOrder(
-      { coins_amount: coinsAmount },
+      { coins_amount: coinsAmount, offer_id: amount.id },
       {
         onSuccess: (data) => {
           const options = {
@@ -82,7 +91,7 @@ const AddPoints = () => {
                   onSuccess: () => {
                     setSuccessAmount(data.coins_amount);
                     setShowSuccessModal(true);
-                    setAmount('');
+                    setAmount({ amount: 0, points: 0, id: 0 });
                     refetchWallet();
                   },
                   onError: (error) => {
@@ -91,14 +100,11 @@ const AddPoints = () => {
                       text1: 'Verification Failed',
                       text2: 'Payment verification failed. Please contact support.',
                     });
-                    console.error('Verification Error', error);
                   },
                 }
               );
             })
             .catch((error) => {
-              // Error handling for payment failure or cancellation
-              console.log('Payment error', error);
               Toast.show({
                 type: 'error',
                 text1: 'Payment Failed',
@@ -118,127 +124,206 @@ const AddPoints = () => {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        className="flex-1"
-        keyboardShouldPersistTaps="handled">
-        <View style={styles.headerSection}>
-          <ImageBackground
-            source={require('@/assets/images/elite-card/add-coin-bg.png')}
-            style={styles.balanceCard}>
-            <View>
-              <Image
-                source={require('@/assets/images/elite-card/elite-coin.png')}
-                style={styles.coinIcon}
-              />
-              <ThemedText variant="bodyLargeEmphasized" color="white">
-                Balance
-              </ThemedText>
-            </View>
-            <View style={styles.balanceInfo}>
-              <ThemedText variant="large" color="white">
-                {walletData?.coin_balance} Pts
-              </ThemedText>
-              <ThemedText variant="body" color="white">
-                Worth approx ₹{walletData?.coin_balance}
-              </ThemedText>
-            </View>
-          </ImageBackground>
-          <ThemedView backgroundColor="white" style={styles.emptyStateCard}>
-            <Image
-              source={
-                (walletData?.coin_balance || 0) > 0
-                  ? require('@/assets/images/elite-card/coin-box-half.png')
-                  : require('@/assets/images/elite-card/coin-box-empty.png')
-              }
-              style={styles.emptyStateImage}
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={[styles.headerSection, { marginTop: SPACING.screenPadding }]}>
+          <ContentPlaceholder width={SPACING.contentWidth} height={moderateScale(100)}>
+            <Rect
+              x="0"
+              y="0"
+              rx="16"
+              ry="16"
+              width={SPACING.contentWidth}
+              height={moderateScale(100)}
             />
-            <ThemedText
-              style={styles.emptyStateText}
-              variant="labelLargeEmphasized"
-              color="gray900">
-              {(walletData?.coin_balance || 0) > 0
-                ? 'Your new coin box with coins is ready to credit'
-                : 'Your new coin box is empty. Enter an amount to fill the box.'}
-            </ThemedText>
-          </ThemedView>
+          </ContentPlaceholder>
         </View>
 
-        {/* Offers Section */}
-        {/* <View style={styles.offersSection}>
-          <ThemedText variant="bodyLargeEmphasized" style={styles.sectionTitle}>
-            The best offer for you
-          </ThemedText>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.offersScroll}>
-            <OfferCard
-              title="The Starter"
-              points="110"
-              price="₹100"
-              colors={['#FFF5C3', '#FFD700']} // Goldish
-            />
-            <OfferCard
-              title="Elite Points"
-              points="550"
-              price="₹500" // Assuming 500 based on the 10% logic, or maybe it is different
-              colors={['#FFF5C3', '#FFD700']}
-            />
-          </ScrollView>
-        </View> */}
-
-        {/* Conversion Input */}
-      </ScrollView>
-      <View style={styles.inputSection}>
-        <View style={styles.inputContainer}>
-          <ThemedText variant="bodySmall" color="gray600" style={styles.inputLabel}>
-            How much to convert?
-          </ThemedText>
-          <View style={styles.inputRow}>
-            <ThemedText variant="titleLarge" color="gray900" style={styles.currencySymbol}>
-              ₹
-            </ThemedText>
-            <TextInput
-              style={[styles.input, { color: theme.gray900 }]}
-              placeholder="Enter Amount"
-              placeholderTextColor={theme.gray400}
-              keyboardType="numeric"
-              value={amount}
-              onChangeText={setAmount}
-            />
-            {points > 0 && (
-              <ThemedText variant="headlineEmphasized" color="gray900" style={styles.pointsPreview}>
-                {points}Pts
-              </ThemedText>
-            )}
+        <View style={styles.offersSection}>
+          <View
+            style={{ paddingHorizontal: SPACING.screenPadding, marginBottom: moderateScale(12) }}>
+            <ContentPlaceholder width={150} height={20}>
+              <Rect x="0" y="0" rx="4" ry="4" width="150" height="20" />
+            </ContentPlaceholder>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingHorizontal: SPACING.screenPadding,
+              gap: moderateScale(12),
+            }}>
+            {[1, 2].map((i) => (
+              <ContentPlaceholder key={i} width={160} height={moderateScale(70)}>
+                <Rect x="0" y="0" rx="13" ry="13" width="160" height={moderateScale(70)} />
+              </ContentPlaceholder>
+            ))}
           </View>
         </View>
 
-        <TouchableOpacity
-          style={[styles.buyButton, { backgroundColor: theme.primary }]}
-          onPress={handleBuyCoin}
-          disabled={isCreatingOrder || isVerifyingOrder}>
-          <View style={styles.buyButtonContent}>
-            {isCreatingOrder || isVerifyingOrder ? (
-              <ActivityIndicator color="white" size="small" />
-            ) : (
-              <>
-                <Ionicons name="wallet-outline" size={20} color="white" />
-                <ThemedText color="white" variant="bodyLargeEmphasized">
-                  Buy Coin
-                </ThemedText>
-              </>
-            )}
+        <View style={[styles.inputSection, { marginTop: 'auto' }]}>
+          <View style={{ marginBottom: moderateScale(16) }}>
+            <ContentPlaceholder width={150} height={20}>
+              <Rect x="0" y="0" rx="4" ry="4" width="100" height="20" />
+            </ContentPlaceholder>
+            <View style={{ marginTop: moderateScale(8) }}>
+              <ContentPlaceholder width="100%" height={moderateScale(80)}>
+                <Rect x="0" y="0" rx="12" ry="12" width="100%" height={moderateScale(80)} />
+              </ContentPlaceholder>
+            </View>
           </View>
-        </TouchableOpacity>
+          <ContentPlaceholder width="100%" height={moderateScale(44)}>
+            <Rect x="0" y="0" rx="8" ry="8" width="100%" height={moderateScale(44)} />
+          </ContentPlaceholder>
+        </View>
       </View>
+    );
+  }
 
-      <CoinSuccessModal
-        visible={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        amount={successAmount}
-      />
-    </View>
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        {/* <View style={styles.container}>
+          <View style={{ flex: 1 }}>
+            <View style={styles.headerSection}>
+              <ImageBackground
+                source={require('@/assets/images/elite-card/add-coin-bg.png')}
+                style={styles.balanceCard}>
+                <View>
+                  <Image
+                    source={require('@/assets/images/elite-card/elite-coin.png')}
+                    style={styles.coinIcon}
+                  />
+                  <ThemedText variant="bodyLargeEmphasized" color="white">
+                    Balance
+                  </ThemedText>
+                </View>
+                <View style={styles.balanceInfo}>
+                  <ThemedText variant="large" color="white">
+                    {walletData?.coin_balance} Pts
+                  </ThemedText>
+                  <ThemedText variant="body" color="white">
+                    Worth approx ₹{walletData?.coin_balance}
+                  </ThemedText>
+                </View>
+              </ImageBackground>
+              <ThemedView backgroundColor="white" style={styles.emptyStateCard}>
+                <Image
+                  source={
+                    (walletData?.coin_balance || 0) > 0
+                      ? require('@/assets/images/elite-card/coin-box-half.png')
+                      : require('@/assets/images/elite-card/coin-box-empty.png')
+                  }
+                  style={styles.emptyStateImage}
+                />
+                <ThemedText
+                  style={styles.emptyStateText}
+                  variant="labelLargeEmphasized"
+                  color="gray900">
+                  {(walletData?.coin_balance || 0) > 0
+                    ? 'Your new coin box with coins is ready to credit'
+                    : 'Your new coin box is empty. Enter an amount to fill the box.'}
+                </ThemedText>
+              </ThemedView>
+            </View>
+
+            {walletData?.offers && (
+              <View style={styles.offersSection}>
+                <ThemedText variant="bodyLargeEmphasized" style={styles.sectionTitle}>
+                  The best offer for you
+                </ThemedText>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={styles.offersScroll}>
+                  {walletData?.offers?.map((offer, index) => (
+                    <TouchableOpacity
+                      key={offer.id || index}
+                      onPress={() =>
+                        setAmount({
+                          amount: offer.amount_inr,
+                          points: offer.coins_given,
+                          id: offer.id,
+                        })
+                      }
+                      style={{ height: '100%', marginRight: moderateScale(12) }}>
+                      <OfferCard
+                        title={offer.offer_name}
+                        points={offer.coins_given?.toString()}
+                        price={`₹${offer.amount_inr}`}
+                        bonus={offer.bonus_coins}
+                      />
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+          </View>
+          <View style={styles.inputSection}>
+            <View style={styles.inputContainer}>
+              <ThemedText variant="bodySmall" color="gray600" style={styles.inputLabel}>
+                How much to convert?
+              </ThemedText>
+              <View style={styles.inputRow}>
+                <ThemedText variant="titleLarge" color="gray900" style={styles.currencySymbol}>
+                  ₹
+                </ThemedText>
+                <TextInput
+                  style={[styles.input, { color: theme.gray900 }]}
+                  placeholder="Enter Amount"
+                  placeholderTextColor={theme.gray400}
+                  keyboardType="numeric"
+                  value={amount.amount > 0 ? amount.amount.toString() : ''}
+                  onChangeText={(text) => {
+                    const val = parseInt(text) || 0;
+                    setAmount({
+                      amount: val,
+                      points: val, // Default 1:1 conversion for custom input
+                      id: 0,
+                    });
+                  }}
+                />
+                {displayPoints > 0 && (
+                  <ThemedText
+                    variant="headlineEmphasized"
+                    color="gray900"
+                    style={styles.pointsPreview}>
+                    {displayPoints}Pts
+                  </ThemedText>
+                )}
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.buyButton, { backgroundColor: theme.primary }]}
+              onPress={handleBuyCoin}
+              disabled={isCreatingOrder || isVerifyingOrder}>
+              <View style={styles.buyButtonContent}>
+                {isCreatingOrder || isVerifyingOrder ? (
+                  <ActivityIndicator color="white" size="small" />
+                ) : (
+                  <>
+                    <Ionicons name="wallet-outline" size={20} color="white" />
+                    <ThemedText color="white" variant="bodyLargeEmphasized">
+                      Buy Coin
+                    </ThemedText>
+                  </>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <CoinSuccessModal
+            visible={showSuccessModal}
+            onClose={() => setShowSuccessModal(false)}
+            amount={successAmount}
+          />
+        </View> */}
+        <ComingSoonListing image={require('@/assets/images/coming_soon_make_a_trip.png')} />
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -246,44 +331,60 @@ interface OfferCardProps {
   title: string;
   points: string;
   price: string;
-  colors: string[];
+  bonus?: number;
 }
 
-const OfferCard = ({ title, points, price, colors }: OfferCardProps) => {
+const OfferCard = ({ title, points, price, bonus }: OfferCardProps) => {
   const { theme } = useTheme();
   return (
     <LinearGradient
+      style={{
+        height: moderateScale(70),
+        padding: moderateScale(1),
+        borderRadius: moderateScale(13),
+      }}
       colors={theme.goldStroke}
-      style={styles.offerCard}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}>
-      <Image
-        source={require('@/assets/images/elite-card/coin-bundle-icon.png')}
-        style={{
-          height: moderateScale(58),
-          width: moderateScale(58),
-        }}
-      />
-      <View>
-        <ThemedText variant="labelSmall" color="secondary950">
-          {title}
-        </ThemedText>
-        <View style={styles.offerPriceRow}>
-          <ThemedText variant="labelLargeEmphasized" color="gray900">
-            {points}Pts
+      start={{ x: 1, y: 0 }}
+      end={{ x: 1, y: 0 }}>
+      <LinearGradient
+        colors={theme.goldStroke}
+        style={styles.offerCard}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}>
+        <Image
+          source={require('@/assets/images/elite-card/coin-bundle-icon.png')}
+          style={{
+            height: moderateScale(58),
+            width: moderateScale(58),
+          }}
+        />
+        <View>
+          <ThemedText variant="labelSmall" color="secondary950">
+            {title}
           </ThemedText>
-          <ThemedText variant="bodySmall" color="gray900">
-            {' '}
-            - {price}
-          </ThemedText>
+          <View style={styles.offerPriceRow}>
+            <ThemedText variant="labelLargeEmphasized" color="gray900">
+              {points}Pts
+            </ThemedText>
+            <ThemedText variant="bodySmall" color="gray900">
+              {' '}
+              - {price}
+            </ThemedText>
+          </View>
+          {bonus && bonus > 0 && (
+            <ThemedText variant="labelSmall" color="secondary950" style={{ fontSize: 10 }}>
+              +{bonus} Bonus
+            </ThemedText>
+          )}
         </View>
-      </View>
+      </LinearGradient>
     </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: SPACING.screenPadding,
     flex: 1,
   },
   scrollContent: {
@@ -291,6 +392,7 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.screenBottom,
   },
   headerSection: {
+    flex: 1,
     gap: moderateScale(12),
     paddingHorizontal: SPACING.screenPadding,
   },
@@ -341,12 +443,12 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   offerCard: {
-    padding: moderateScale(16),
-    borderRadius: moderateScale(12),
-    marginRight: moderateScale(12),
+    paddingHorizontal: moderateScale(12),
     flexDirection: 'row',
     alignItems: 'center',
     gap: moderateScale(12),
+    borderRadius: moderateScale(12),
+    height: '100%',
   },
   offerIconPlaceholder: {
     //

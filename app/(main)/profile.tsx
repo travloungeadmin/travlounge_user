@@ -189,8 +189,8 @@ const Profile: React.FC<ProfileScreenProps> = () => {
                 key={`package-${index}`}
                 onPress={() =>
                   router.navigate({
-                    pathname: '/old/packge',
-                    params: { packageDetails: JSON.stringify(item) },
+                    pathname: '/subscription/[id]',
+                    params: { id: item?.id },
                   })
                 }
                 name={item?.package_name}

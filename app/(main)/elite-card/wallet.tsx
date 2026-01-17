@@ -1,17 +1,29 @@
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Pressable, SectionList, StyleSheet, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  SectionList,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 
+import SingleSelectList from '@/components/bottom-sheet/single-select-list';
 import ScreenWrapper from '@/components/common/ScreenWrapper';
 import { ThemedText } from '@/components/common/ThemedText';
 import { ThemedView } from '@/components/common/ThemedView';
 import AssociationList from '@/components/dashboard/association-list';
 import Icon from '@/components/ui/icon';
+import Skeleton from '@/components/ui/Skeleton';
+import BottomSheet from '@/core/bottom-sheet';
 import { useTheme } from '@/hooks/useTheme';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
-import { getTransactionHistoryQuery } from '@/services/query/transaction';
-import { getEliteWalletDashboardQuery } from '@/services/query/wallet';
+import { TransactionHistoryParams } from '@/services/api/types/wallet';
+import { getTransactionHistoryQuery, Transaction } from '@/services/query/transaction'; // Moved this import to the top
+import { getEliteWalletDashboardQuery } from '@/services/query/wallet'; // Added this import
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Image, ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -34,17 +46,120 @@ const howToUseCoins = [
   },
 ];
 
+const WalletSkeleton = () => {
+  return (
+    <View style={{ flex: 1 }}>
+      {/* Card Skeleton */}
+      <View
+        style={{
+          width: SPACING.contentWidth,
+          height: SPACING.contentWidth * 0.56,
+          borderRadius: moderateScale(12),
+          backgroundColor: '#E1E9EE', // Placeholder color
+          marginHorizontal: SPACING.screenPadding,
+          marginTop: SPACING.screenPadding,
+          overflow: 'hidden',
+        }}>
+        <Skeleton width="100%" height="100%" borderRadius={moderateScale(12)} />
+      </View>
+
+      {/* Banners Skeleton */}
+      <View style={{ marginTop: moderateScale(20), paddingHorizontal: SPACING.screenPadding }}>
+        <Skeleton
+          width={moderateScale(150)}
+          height={moderateScale(20)}
+          style={{ marginBottom: 10 }}
+        />
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <Skeleton width={moderateScale(280)} height={moderateScale(150)} borderRadius={12} />
+          <Skeleton width={moderateScale(280)} height={moderateScale(150)} borderRadius={12} />
+        </View>
+      </View>
+
+      {/* How to use Skeleton */}
+      <View
+        style={{
+          marginHorizontal: SPACING.screenPadding,
+          marginTop: moderateScale(20),
+          height: moderateScale(200),
+          borderRadius: moderateScale(12),
+          overflow: 'hidden',
+        }}>
+        <Skeleton width="100%" height="100%" borderRadius={12} />
+      </View>
+
+      {/* Transaction History Skeleton */}
+      <View style={{ marginTop: moderateScale(20), paddingHorizontal: SPACING.screenPadding }}>
+        <Skeleton
+          width={moderateScale(150)}
+          height={moderateScale(20)}
+          style={{ marginBottom: 15 }}
+        />
+        <View style={{ gap: 15 }}>
+          {[1, 2, 3, 4].map((i) => (
+            <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <Skeleton width={moderateScale(40)} height={moderateScale(40)} borderRadius={20} />
+              <View style={{ flex: 1, gap: 5 }}>
+                <Skeleton width="60%" height={moderateScale(16)} />
+                <Skeleton width="40%" height={moderateScale(12)} />
+              </View>
+              <Skeleton width={moderateScale(60)} height={moderateScale(16)} />
+            </View>
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const filterOptions = [
+  { id: 'last_3_months', name: 'Last 3 Months' },
+  { id: 'all', name: 'All Transactions' },
+  { id: 'credit', name: 'Credits Only' },
+  { id: 'debit', name: 'Debits Only' },
+];
+
 const Wallet = () => {
   const { theme } = useTheme();
-  const { data: walletData, isLoading } = getEliteWalletDashboardQuery();
-  const { data: transactionHistoryData } = getTransactionHistoryQuery();
-  const [searchQuery, setSearchQuery] = useState('');
+  const filterRef = React.useRef<BottomSheetModal>(null);
+  const [transactionFilter, setTransactionFilter] = useState('last_3_months');
+  const [filterLabel, setFilterLabel] = useState('Last 3 Months');
 
-  const transactionSections =
-    transactionHistoryData?.transactions_by_month?.map((month) => ({
-      title: month.month,
-      data: month.transactions,
-    })) ?? [];
+  const filteredParams: TransactionHistoryParams = React.useMemo(() => {
+    if (transactionFilter === 'credit' || transactionFilter === 'debit') {
+      return { transaction_type: transactionFilter };
+    }
+    return {};
+  }, [transactionFilter]);
+
+  const { data: walletData, isLoading: isWalletLoading } = getEliteWalletDashboardQuery();
+  const {
+    data: transactionHistoryData,
+    isLoading: isHistoryLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = getTransactionHistoryQuery(filteredParams);
+
+  const isLoading = isWalletLoading || isHistoryLoading;
+
+  const transactionSections = React.useMemo(() => {
+    if (!transactionHistoryData?.pages) return [];
+
+    const grouped = new Map<string, Transaction[]>();
+
+    transactionHistoryData.pages.forEach((page) => {
+      page.transactions_by_month.forEach((group) => {
+        const current = grouped.get(group.month) || [];
+        grouped.set(group.month, [...current, ...group.transactions]);
+      });
+    });
+
+    return Array.from(grouped.entries()).map(([month, transactions]) => ({
+      title: month,
+      data: transactions,
+    }));
+  }, [transactionHistoryData?.pages]);
 
   const renderTransactionItem = ({ item }: { item: any }) => (
     <ThemedView
@@ -71,7 +186,7 @@ const Wallet = () => {
           {item.title}
         </ThemedText>
         <ThemedText variant="bodySmall" color="gray500" numberOfLines={1}>
-          {item.location} •{item.date_display} {item.time}
+          {item.date_display} {item.time}
         </ThemedText>
       </View>
       <ThemedText
@@ -159,28 +274,12 @@ const Wallet = () => {
         </View>
       </ImageBackground>
 
-      <View style={{ marginTop: moderateScale(20) }}>
-        <AssociationList
-          data={walletData?.banners?.map((banner: any) => ({
-            title: banner.service.service_name,
-            image: banner.image,
-            listing: {
-              id: banner.service.id,
-              name: banner.service.service_name,
-              category: {
-                id: 0,
-                category_name: banner.service.service_name,
-              },
-            },
-          }))}
-          title={null}
-        />
-      </View>
       <LinearGradient
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 1 }}
         colors={[theme.primary300, theme.white]}
         style={{
+          marginTop: moderateScale(16),
           marginHorizontal: SPACING.screenPadding,
           marginBottom: moderateScale(20),
           borderRadius: moderateScale(12),
@@ -222,6 +321,25 @@ const Wallet = () => {
           </View>
         </LinearGradient>
       </LinearGradient>
+      <View style={{ marginBottom: moderateScale(-24) }}>
+        <AssociationList
+          data={
+            walletData?.banners?.map((banner: any) => ({
+              title: banner.service.service_name,
+              image: banner.image,
+              listing: {
+                id: banner.service.id,
+                name: banner.service.service_name,
+                category: {
+                  id: 0,
+                  category_name: banner.service.service_name,
+                },
+              },
+            })) || []
+          }
+          title={null}
+        />
+      </View>
 
       <ThemedView backgroundColor="white" style={styles.historySection}>
         <View style={styles.historyHeader}>
@@ -231,7 +349,7 @@ const Wallet = () => {
           </ThemedText>
         </View>
 
-        <Pressable>
+        <Pressable onPress={() => filterRef.current?.present()}>
           <ThemedView backgroundColor="primary50" style={[styles.searchContainer]}>
             <Ionicons name="search" size={20} color={theme.gray500} />
             <TextInput
@@ -239,15 +357,22 @@ const Wallet = () => {
               style={[styles.searchInput, { color: theme.gray900 }]}
               placeholder="Last three month"
               placeholderTextColor={theme.gray500}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
+              value={filterLabel}
             />
-            <Ionicons name="calendar-outline" size={20} color={theme.gray500} />
+            <Ionicons name="filter-outline" size={20} color={theme.gray500} />
           </ThemedView>
         </Pressable>
       </ThemedView>
     </View>
   );
+
+  if (isLoading) {
+    return (
+      <ScreenWrapper>
+        <WalletSkeleton />
+      </ScreenWrapper>
+    );
+  }
 
   return (
     <ScreenWrapper>
@@ -279,7 +404,6 @@ const Wallet = () => {
               height: moderateScale(12),
               marginHorizontal: SPACING.screenPadding,
               paddingHorizontal: moderateScale(12),
-
               justifyContent: 'center',
             }}>
             <ThemedView backgroundColor="gray200" style={{ height: StyleSheet.hairlineWidth }} />
@@ -310,20 +434,43 @@ const Wallet = () => {
           </ThemedView>
         )}
         ListFooterComponent={() => (
-          <ThemedView
-            backgroundColor="white"
-            style={{
-              height: moderateScale(12),
-              marginHorizontal: SPACING.screenPadding,
-              borderBottomLeftRadius: moderateScale(8),
-              borderBottomRightRadius: moderateScale(8),
-            }}
-          />
+          <View>
+            {isFetchingNextPage && (
+              <ActivityIndicator color={theme.primary} style={{ marginVertical: 20 }} />
+            )}
+            <ThemedView
+              backgroundColor="white"
+              style={{
+                height: moderateScale(12),
+                marginHorizontal: SPACING.screenPadding,
+                borderBottomLeftRadius: moderateScale(8),
+                borderBottomRightRadius: moderateScale(8),
+              }}
+            />
+          </View>
         )}
+        onEndReached={() => {
+          if (hasNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: SPACING.screenBottom }}
         stickySectionHeadersEnabled={false}
       />
+      <BottomSheet ref={filterRef} enableDynamicSizing>
+        <SingleSelectList
+          data={filterOptions}
+          headerTitle="Filter Transactions"
+          selectedId={transactionFilter}
+          onSelect={(val: string, index: number, id: string) => {
+            setTransactionFilter(id);
+            setFilterLabel(val);
+            filterRef.current?.dismiss();
+          }}
+        />
+      </BottomSheet>
     </ScreenWrapper>
   );
 };

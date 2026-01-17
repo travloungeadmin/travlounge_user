@@ -181,15 +181,18 @@ export const verifySleepingPodOrderApi = async (props: verifySleepingPodOrderApi
   return response.data;
 };
 
-export const createCoinOrderApi = async (data: { coins_amount: number }) => {
-  const response = await apiClient({
-    method: 'post',
-    url: ENDPOINTS.CREATE_COIN_ORDER,
-    data,
-  });
+type CreateCoinOrderPayload =
+  | { offer_id: number; coins_amount?: never }
+  | { coins_amount: number; offer_id?: 0 };
+
+export const createCoinOrderApi = async (payload: CreateCoinOrderPayload) => {
+  const data =
+    payload.offer_id && payload.offer_id !== 0
+      ? { offer_id: payload.offer_id }
+      : { coins_amount: payload.coins_amount };
+  const response = await apiClient.post(ENDPOINTS.CREATE_COIN_ORDER, data);
   return response.data;
 };
-
 export const verifyCoinOrderApi = async (data: {
   razorpay_order_id: string;
   razorpay_payment_id: string;

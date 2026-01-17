@@ -9,14 +9,12 @@ import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
 import { AssociationBanner } from '@/services/api/types/home';
 import { handleBannerNavigation } from '@/utils/banners';
-import { useRouter } from 'expo-router';
 import { ThemedText } from '../common/ThemedText';
 
 const AssociationList: React.FC<{ data: AssociationBanner[]; title?: string | null }> = ({
   data,
   title = 'View our offering',
 }) => {
-  const router = useRouter();
   const { theme } = useTheme();
 
   if (!data?.length) return null;

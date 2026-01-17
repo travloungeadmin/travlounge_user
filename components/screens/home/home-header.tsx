@@ -3,8 +3,8 @@ import { ThemedText } from '@/components/common/ThemedText';
 import { useLocation, useTheme } from '@/hooks';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
-
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+
 import { useRouter } from 'expo-router';
 import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,7 +14,6 @@ const HomeHeader = () => {
   const { theme } = useTheme();
   const { place } = useLocation();
   const router = useRouter();
-  console.log('>>', place);
 
   return (
     <SafeAreaView style={{ backgroundColor: theme.backgroundPrimary }} edges={['top']}>
@@ -41,7 +40,14 @@ const HomeHeader = () => {
               size={moderateScale(20)}
               color={theme.primary}
             />
-            <ThemedText color="gray900" variant="titleSmallEmphasized">
+            <ThemedText
+              style={{
+                flexShrink: 1,
+                maxWidth: SPACING.contentWidth - moderateScale(190),
+              }}
+              numberOfLines={1}
+              color="gray900"
+              variant="titleSmallEmphasized">
               {(Platform.OS === 'ios' ? place?.name : place?.city) || 'Unknown Location'}
             </ThemedText>
           </TouchableOpacity>
@@ -90,6 +96,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   rightContainer: {
+    justifyContent: 'flex-end',
     flexDirection: 'row',
     alignItems: 'center',
     height: '100%',

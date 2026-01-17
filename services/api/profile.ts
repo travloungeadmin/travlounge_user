@@ -1,5 +1,6 @@
 import apiClient from '@/services/api';
 import ENDPOINTS from '@/services/end-points';
+import { SubscriptionOrderResponse } from '@/types/api/subscription.types';
 
 const getProfileApi = async () => {
   const response = await apiClient({
@@ -8,11 +9,14 @@ const getProfileApi = async () => {
   });
   return response.data;
 };
-const subscribeApi = async (formData: FormData) => {
+const subscribeApi = async (formData: FormData): Promise<SubscriptionOrderResponse> => {
   const response = await apiClient({
     method: 'post',
     url: ENDPOINTS.SUBSCRIBE,
     data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
   return response.data;
 };

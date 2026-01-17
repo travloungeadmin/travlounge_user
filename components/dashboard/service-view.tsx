@@ -35,7 +35,7 @@ const ServiceView = () => {
                 styles.shadowView,
                 shadow,
                 {
-                  width: (SPACING.contentWidth - 2 * SPACING.screenPadding) / 3,
+                  width: Math.floor((SPACING.contentWidth - 2 * SPACING.screenPadding) / 3),
                   height: moderateScale(140),
                   backgroundColor: theme.backgroundCard,
                 },

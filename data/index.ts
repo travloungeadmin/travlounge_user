@@ -4,7 +4,7 @@ export const services = [
     icon: 'Toloo',
   },
   {
-    title: 'Sleeping Pod',
+    title: 'Sleeping pod',
     icon: 'SleepingPod',
   },
   {

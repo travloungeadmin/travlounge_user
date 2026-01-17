@@ -204,15 +204,6 @@ export default function MainLayout() {
           headerShown: true,
           headerTitle: 'Wallet',
           // headerTitleAlign: 'left',
-          headerRight: () => (
-            <TouchableOpacity onPress={() => router.push('/(main)/old/wallet')}>
-              <MaterialIcons
-                name="account-balance-wallet"
-                size={moderateScale(20)}
-                color={theme.primary}
-              />
-            </TouchableOpacity>
-          ),
         }}
       />
       <Stack.Screen
@@ -241,6 +232,24 @@ export default function MainLayout() {
           headerTintColor: theme.gray900,
           headerShown: true,
           headerTitle: 'Select Location',
+        }}
+      />
+      <Stack.Screen
+        name="subscription/[id]"
+        options={{
+          headerBackButtonDisplayMode: 'minimal',
+          headerTintColor: theme.gray900,
+          headerShown: true,
+          headerTitle: 'Best Plans',
+        }}
+      />
+      <Stack.Screen
+        name="subscription/history"
+        options={{
+          headerBackButtonDisplayMode: 'minimal',
+          headerTintColor: theme.gray900,
+          headerShown: true,
+          headerTitle: 'History',
         }}
       />
     </Stack>

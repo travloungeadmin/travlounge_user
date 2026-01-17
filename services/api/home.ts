@@ -1,9 +1,11 @@
 import apiClient from '.';
 import ENDPOINTS from '../end-points';
 import { GetCategoryApiResponce } from './types';
+import { HomeApiResponse } from './types/home';
 
-const getHomeApi = async () => {
+const getHomeApi = async (): Promise<HomeApiResponse> => {
   const response = await apiClient({
+    baseURL: process.env.EXPO_PUBLIC_API_URL_V2,
     method: 'get',
     url: `${ENDPOINTS.HOME}`,
   });

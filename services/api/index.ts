@@ -81,7 +81,6 @@ apiClient.interceptors.response.use(
     const { message } = error;
     const { status } = error.response || {};
     const { method, url } = error.config;
-
     // Handle Token Expiry
     if (status === 401) {
       logout();

@@ -1,4 +1,5 @@
 import apiClient from '@/services/api';
+import { EliteDashboardResponse, TransactionHistoryParams } from '@/services/api/types/wallet';
 import ENDPOINTS from '@/services/end-points';
 
 const getWalletApi = async () => {
@@ -9,7 +10,7 @@ const getWalletApi = async () => {
   return response.data;
 };
 
-const getEliteWalletDashboardApi = async () => {
+const getEliteWalletDashboardApi = async (): Promise<EliteDashboardResponse> => {
   const response = await apiClient({
     method: 'get',
     url: ENDPOINTS.ELITE_DASHBOARD,
@@ -17,10 +18,11 @@ const getEliteWalletDashboardApi = async () => {
   return response.data;
 };
 
-const getWalletTransactionHistoryApi = async () => {
+const getWalletTransactionHistoryApi = async (params?: TransactionHistoryParams) => {
   const response = await apiClient({
     method: 'get',
     url: ENDPOINTS.ELITE_TRANSACTION_HISTORY,
+    params,
   });
   return response.data;
 };

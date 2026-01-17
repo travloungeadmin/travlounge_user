@@ -147,6 +147,7 @@ const ServiceDetails = () => {
       {data && (
         <ScrollView>
           <ServiceDetailCard
+            isCoinAccept={data?.is_coin_accept}
             categoryId={data?.category}
             description={data?.description}
             images={data?.images}

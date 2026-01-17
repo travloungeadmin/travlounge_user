@@ -59,7 +59,7 @@ const CarSellingListingCard = ({
     <Pressable onPress={onPress}>
       <ThemedView style={styles.container} backgroundColor="white">
         <View>
-          <Image style={styles.image} source={{ uri: images?.[0] || '' }}>
+          <Image style={styles.image} source={{ uri: images?.[0]?.image_url || '' }}>
             <Pressable onPress={onPressFavorite}>
               <BlurView style={styles.favoriteButton}>
                 <FontAwesome

@@ -200,9 +200,6 @@ const PaymentResult = () => {
     router.replace('/services/sleeping-pod');
   };
   const handleAddMoney = () => router.navigate('/(main)/old/wallet');
-  const handleAddSubscription = () =>
-    router.replace({ pathname: '/old/packge', params: { isPlans: 'true' } });
-  console.log(params?.cafeData);
 
   return (
     <Box style={[styles.container, { backgroundColor: isSuccess ? '#253D8F' : '#8B0000' }]}>

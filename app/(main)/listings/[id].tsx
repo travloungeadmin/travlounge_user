@@ -7,9 +7,10 @@ import SleepingPod from '../services/sleeping-pod';
 
 const ServiceListings = () => {
   const { id, name } = useLocalSearchParams() as { name: CategoryName };
+
   if (id === '999') return <ComingSoonListing />;
   switch (name as CategoryName) {
-    case 'Sleeping Pod':
+    case 'Sleeping pod':
       return <SleepingPod />;
     case 'Cars':
       return <UsedCarListings />;

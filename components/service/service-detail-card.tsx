@@ -7,8 +7,10 @@ import Carousel, { Pagination } from 'react-native-reanimated-carousel';
 import { ThemedText } from '../common/ThemedText';
 
 import { shadow } from '@/constants';
+import { SPACING } from '@/newConstants/spacing';
+import { getHomeListQuery } from '@/services/query/home';
 import useServiceStore from '@/store/service';
-import { Image } from 'expo-image';
+import { Image, ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 
 type propsType = {
@@ -22,13 +24,23 @@ type propsType = {
 };
 
 const ServiceDetailCard = (props: propsType) => {
-  const { description, location, name, rating = 5, images, offerPercentage, categoryId } = props;
+  const {
+    description,
+    location,
+    name,
+    rating = 5,
+    images,
+    offerPercentage,
+    categoryId,
+    isCoinAccept,
+  } = props;
+  const { data } = getHomeListQuery();
+  const eliteCoin = data?.user_details?.elite_coin_balance || 0;
   const scrollOffsetValue = useSharedValue(0);
   const progress = useSharedValue<number>(0);
   const { services } = useServiceStore();
   const CategoryName = services?.find((item) => item.id === categoryId)?.title;
   const { theme } = useTheme();
-
   const imageWidth = Device.width - 32;
   const imageHeight = 332;
   return (
@@ -150,29 +162,64 @@ const ServiceDetailCard = (props: propsType) => {
         </ThemedText>
 
         {!!offerPercentage ? (
-          <LinearGradient
-            colors={['#2D60E3', '#253D8F']}
-            style={{
-              marginTop: 14,
-              borderRadius: 4,
-              padding: 10,
-              flexDirection: 'row',
-              gap: 8,
-              alignItems: 'center',
-            }}>
-            <View style={{ gap: 8, flex: 1 }}>
-              <ThemedText variant="bodySmallEmphasized" color="white">
-                Get up to {offerPercentage}% OFF
+          isCoinAccept ? (
+            <ImageBackground
+              style={{
+                marginTop: 16,
+                width: SPACING.contentWidth - 32,
+                height: 84,
+                borderRadius: 8,
+                overflow: 'hidden',
+                alignItems: 'center',
+                paddingHorizontal: 16,
+                gap: 8,
+                flexDirection: 'row',
+              }}
+              source={require('@/assets/images/elite-card/add-coin-bg.png')}>
+              <Image
+                source={require('@/assets/images/elite-card/elite-coin.png')}
+                style={{
+                  width: 44,
+                  height: 44,
+                }}
+              />
+              <View style={{ gap: 0, flex: 1 }}>
+                <ThemedText variant="labelLargeEmphasized" color="white">
+                  Elite card points
+                </ThemedText>
+                <ThemedText numberOfLines={1} variant="boldHighlightTextS" color="white">
+                  {eliteCoin.toFixed(1)} Pts
+                </ThemedText>
+              </View>
+              <ThemedText variant="labelLargeEmphasized" color="white">
+                Pay with Points{`\n`}Earn {offerPercentage}% back
               </ThemedText>
-              <ThemedText variant="label" color="white">
-                Exclusive {CategoryName?.toLowerCase()} offers available for you. Limited-time
-                offer!
+            </ImageBackground>
+          ) : (
+            <LinearGradient
+              colors={['#2D60E3', '#253D8F']}
+              style={{
+                marginTop: 14,
+                borderRadius: 4,
+                padding: 10,
+                flexDirection: 'row',
+                gap: 8,
+                alignItems: 'center',
+              }}>
+              <View style={{ gap: 8, flex: 1 }}>
+                <ThemedText variant="bodySmallEmphasized" color="white">
+                  Get up to {offerPercentage}% OFF
+                </ThemedText>
+                <ThemedText variant="label" color="white">
+                  Exclusive {CategoryName?.toLowerCase()} offers available for you. Limited-time
+                  offer!
+                </ThemedText>
+              </View>
+              <ThemedText variant="headline" style={{ color: '#FFCC02' }}>
+                {offerPercentage}%
               </ThemedText>
-            </View>
-            <ThemedText variant="headline" style={{ color: '#FFCC02' }}>
-              {offerPercentage}%
-            </ThemedText>
-          </LinearGradient>
+            </LinearGradient>
+          )
         ) : null}
       </Box>
     </Box>
