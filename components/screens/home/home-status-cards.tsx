@@ -97,7 +97,7 @@ const HomeStatusCards: React.FC<HomeStatusCardsProps> = ({
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => router.push('/elite-card/wallet')}>
+      <Pressable onPress={() => router.push('/notification/payment-request')}>
         <ImageBackground
           style={styles.card}
           source={require('@/assets/images/elite-card/home-card-bg.png')}>

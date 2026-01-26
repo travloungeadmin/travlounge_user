@@ -4,9 +4,16 @@ import { useTheme } from '@/hooks';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
 
 type QRDisplayProps = {
   username?: string;
@@ -15,6 +22,23 @@ type QRDisplayProps = {
 
 const QRDisplay = ({ username, userId }: QRDisplayProps) => {
   const { theme } = useTheme();
+  const rotation = useSharedValue(0);
+
+  useEffect(() => {
+    rotation.value = withRepeat(
+      withTiming(360, {
+        duration: 5000,
+        easing: Easing.linear,
+      }),
+      -1
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${rotation.value}deg` }],
+    };
+  });
 
   return (
     <View style={styles.container}>
@@ -27,27 +51,34 @@ const QRDisplay = ({ username, userId }: QRDisplayProps) => {
         </ThemedText>
         redeem points, or use your subscription.
       </ThemedText>
-      <View
-        style={[
-          styles.shadowContainer,
-          {
-            backgroundColor: theme.primary500,
-            shadowColor: theme.primary500,
-          },
-        ]}>
-        <LinearGradient
-          style={styles.gradient}
-          start={[0, 0]}
-          end={[1, 1]}
-          colors={[theme.primary400, theme.primary800, theme.primary600, theme.primary800]}>
+      <View style={styles.shadowContainer}>
+        <View style={styles.gradientContainer}>
+          <Animated.View style={[styles.gradient, animatedStyle]}>
+            <LinearGradient
+              style={StyleSheet.absoluteFill}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              colors={[
+                theme.primary500,
+                theme.primary200,
+                theme.primary600,
+                theme.primary800,
+                theme.primary200,
+              ]}
+            />
+          </Animated.View>
           <ThemedView backgroundColor="white" style={styles.qrBackground}>
             <QRCode
               value={userId?.toString() || '0'}
               size={SPACING.contentWidth - 6 * SPACING.screenPadding}
               backgroundColor="#fff"
+              logo={require('@/assets/images/splash-icon.png')}
+              logoSize={moderateScale(50)}
+              logoBackgroundColor={theme.primary800}
+              logoBorderRadius={moderateScale(50)}
             />
           </ThemedView>
-        </LinearGradient>
+        </View>
       </View>
     </View>
   );
@@ -70,15 +101,26 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 2 * SPACING.screenPadding,
   },
-  gradient: {
-    alignSelf: 'center',
-    padding: SPACING.screenPadding,
+  gradientContainer: {
+    padding: SPACING.screenPadding, // Spacing for the border thickness
     borderRadius: 2 * SPACING.screenPadding,
+    overflow: 'hidden',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gradient: {
+    width: '200%', // Make it large enough to cover corners during rotation
+    height: '200%',
+    position: 'absolute',
+    top: '-50%',
+    left: '-50%',
   },
   qrBackground: {
     backgroundColor: '#fff',
     padding: SPACING.screenPadding,
     borderRadius: SPACING.screenPadding,
+    zIndex: 1, // Ensure QR code sits on top
   },
 });
 

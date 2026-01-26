@@ -88,6 +88,7 @@ const UsedCarListingDetails = () => {
 
   useEffect(() => {
     analytics().logEvent('visited_listing', {
+      environment: process.env.NODE_ENV,
       user_id: String(user?.id || ''),
       user_name: user?.name || '',
       user_phone: user?.mobile_number || '',

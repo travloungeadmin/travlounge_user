@@ -86,15 +86,16 @@ const ServiceDetails = () => {
 
   useEffect(() => {
     analytics().logEvent('visited_listing', {
+      environment: process.env.NODE_ENV,
       user_id: String(user?.id || ''),
       user_name: user?.name || '',
       user_phone: user?.mobile_number || '',
       listing_id: id,
       listing_name: name,
-      listing_type: serviceName || '',
+      listing_type: params.category,
       is_partner: isTravloungePartner || false,
     });
-  }, [id, name, serviceName, isTravloungePartner]);
+  }, [id, name, params.category, isTravloungePartner]);
 
   useFocusEffect(
     React.useCallback(() => {

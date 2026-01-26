@@ -28,6 +28,7 @@ import DoublePod from '@/assets/svgs/icons/double-pod.svg';
 import DurationIcon from '@/assets/svgs/icons/duration-icon.svg';
 import EditProfile from '@/assets/svgs/icons/edit-profile.svg';
 import EliteCardIcon from '@/assets/svgs/icons/elite-card/elite-card-icon.svg';
+import PercentageIcon from '@/assets/svgs/icons/elite-card/percentage-icon.svg';
 import Empty from '@/assets/svgs/icons/empty.svg';
 import Error from '@/assets/svgs/icons/error.svg';
 import Fillomart from '@/assets/svgs/icons/fillomart.svg';
@@ -110,6 +111,7 @@ const icons = {
   DeleteProfile,
   Logout,
   EliteCardIcon,
+  PercentageIcon,
   SubscriptionBg,
 };
 

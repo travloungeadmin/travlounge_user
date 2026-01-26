@@ -321,25 +321,27 @@ const Wallet = () => {
           </View>
         </LinearGradient>
       </LinearGradient>
-      <View style={{ marginBottom: moderateScale(-24) }}>
-        <AssociationList
-          data={
-            walletData?.banners?.map((banner: any) => ({
-              title: banner.service.service_name,
-              image: banner.image,
-              listing: {
-                id: banner.service.id,
-                name: banner.service.service_name,
-                category: {
-                  id: 0,
-                  category_name: banner.service.service_name,
+      {walletData?.banners?.length > 0 && (
+        <View style={{ marginBottom: moderateScale(-24) }}>
+          <AssociationList
+            data={
+              walletData?.banners?.map((banner: any) => ({
+                title: banner.service.service_name,
+                image: banner.image,
+                listing: {
+                  id: banner.service.id,
+                  name: banner.service.service_name,
+                  category: {
+                    id: 0,
+                    category_name: banner.service.service_name,
+                  },
                 },
-              },
-            })) || []
-          }
-          title={null}
-        />
-      </View>
+              })) || []
+            }
+            title={null}
+          />
+        </View>
+      )}
 
       <ThemedView backgroundColor="white" style={styles.historySection}>
         <View style={styles.historyHeader}>

@@ -4,6 +4,7 @@ import React from 'react';
 
 import { ThemedText } from '@/components/common/ThemedText';
 import Header from '@/components/header';
+import HomeHeader from '@/components/screens/home/home-header';
 import { useNotificationObserver } from '@/core/notification';
 import { useLocation } from '@/hooks';
 import { moderateScale } from '@/lib/responsive-dimensions';
@@ -32,7 +33,15 @@ export default function MainLayout() {
       });
       return;
     }
-
+    if (data?.event_payload?.type === 'payment_request') {
+      router.navigate({
+        pathname: '/(main)/notification/payment-request',
+        params: {
+          data: JSON.stringify(data.event_payload.payment_request),
+        },
+      });
+      return;
+    }
     if (data?.is_popup) {
       router.navigate({
         pathname: '/payment-result',
@@ -250,6 +259,13 @@ export default function MainLayout() {
           headerTintColor: theme.gray900,
           headerShown: true,
           headerTitle: 'History',
+        }}
+      />
+      <Stack.Screen
+        name="notification/payment-request"
+        options={{
+          headerShown: true,
+          header: () => <HomeHeader disableLocation disableMenu />,
         }}
       />
     </Stack>
