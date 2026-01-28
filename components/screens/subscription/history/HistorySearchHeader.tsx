@@ -57,10 +57,10 @@ const styles = StyleSheet.create({
     gap: moderateScale(8),
   },
   searchContainer: {
+    height: moderateScale(48),
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: moderateScale(12),
-    paddingVertical: moderateScale(10),
     borderRadius: moderateScale(12),
     gap: moderateScale(8),
   },

@@ -11,6 +11,7 @@ import {
   getSleepingPodDetailApi,
   getSleepingPodListsApi,
   verifyCoinOrderApi,
+  verifyPaymentRequestApi,
   verifySleepingPodOrderApi,
 } from '../api/service';
 
@@ -103,4 +104,8 @@ export const useCreateCoinOrder = () =>
 export const useVerifyCoinOrder = () =>
   useMutation({
     mutationFn: verifyCoinOrderApi,
+  });
+export const useVerifyPaymentRequest = () =>
+  useMutation({
+    mutationFn: verifyPaymentRequestApi,
   });

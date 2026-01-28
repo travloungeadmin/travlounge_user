@@ -205,3 +205,16 @@ export const verifyCoinOrderApi = async (data: {
   });
   return response.data;
 };
+export const verifyPaymentRequestApi = async (data: {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  order_id: string;
+}) => {
+  const response = await apiClient({
+    method: 'put',
+    url: ENDPOINTS.VERIFY_PAYMENT_REQUEST,
+    data,
+  });
+  return response.data;
+};

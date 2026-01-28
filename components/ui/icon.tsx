@@ -130,7 +130,6 @@ const Icon = (props: PropsType): React.JSX.Element => {
   const { stroke, name, size, fill, width, height } = props;
 
   const IconName = icons[name];
-  console.log('Icon render:', { name, found: !!IconName });
   if (!IconName) return <View />;
 
   return (

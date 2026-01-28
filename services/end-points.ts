@@ -21,6 +21,7 @@ const ENDPOINTS = {
   ELITE_TRANSACTION_HISTORY: 'food/transaction-history/',
   CREATE_COIN_ORDER: 'food/coins/',
   VERIFY_COIN_ORDER: 'food/coins/',
+  VERIFY_PAYMENT_REQUEST: 'food/redeem/',
   WALLET: 'customer/wallet/',
   WALLET_UPDATE: 'customer/wallet/',
   QR_WALLET_DETAILS: 'api/v2/customer/customer-qr/',

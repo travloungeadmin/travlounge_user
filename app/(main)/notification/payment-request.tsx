@@ -1,10 +1,11 @@
 import { ThemedText } from '@/components/common/ThemedText';
 import { ThemedView } from '@/components/common/ThemedView';
 import Icon from '@/components/ui/icon';
+import { usePaymentTimer } from '@/hooks/usePaymentTimer';
 import useUserStore from '@/modules/user';
 import { SPACING } from '@/newConstants/spacing';
 import { useTheme } from '@/newTheme';
-import { useVerifyCoinOrder } from '@/services/query/service';
+import { useVerifyPaymentRequest } from '@/services/query/service';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -14,6 +15,7 @@ import Toast from 'react-native-toast-message';
 interface PaymentRequest {
   order_id: string;
   request_id: string;
+  razorpay_order_id: string;
   user: {
     id: string;
     name: string;
@@ -23,7 +25,9 @@ interface PaymentRequest {
     id: string;
     name: string;
     location: string;
+    image: string;
   };
+  backend_order_id: string;
   amount_breakdown: {
     currency: string;
     subtotal: number;
@@ -48,11 +52,25 @@ const PaymentRequestScreen = () => {
   const { theme } = useTheme();
   const { data } = useLocalSearchParams<{ data: string }>();
   const { user } = useUserStore();
-  const { mutate: verifyOrder, isPending: isVerifyingOrder } = useVerifyCoinOrder();
+  const { mutate: verifyOrder, isPending: isVerifyingOrder } = useVerifyPaymentRequest();
 
   const paymentData: PaymentRequest = data ? JSON.parse(data) : null;
 
   const paymentRequest = paymentData;
+
+  // Initialize timer
+  const { minutes, seconds, isExpired } = usePaymentTimer({
+    requestedAt: paymentRequest?.schedule?.requested_at || new Date().toISOString(),
+    requestId: paymentRequest?.request_id || '',
+    onExpire: () => {
+      Toast.show({
+        type: 'error',
+        text1: 'Payment Request Expired',
+        text2: 'This payment request has expired after 5 minutes',
+      });
+      router.replace('/(main)/(tab)');
+    },
+  });
 
   // Format date and time
   const formatDateTime = (dateString: string) => {
@@ -80,11 +98,11 @@ const PaymentRequestScreen = () => {
       key: process.env.EXPO_PUBLIC_RAZOR_PAY_KEY_ID,
       amount: paymentRequest.amount_breakdown.total_payable * 100,
       name: 'Travlounge',
-      order_id: paymentRequest.order_id,
+      order_id: paymentRequest.razorpay_order_id,
       prefill: {
         contact: user?.mobile_number,
         name: user?.name,
-        // email: user?.email,
+        // email: 'suhail@gmail.com',
       },
       theme: { color: theme.primary },
     };
@@ -93,6 +111,7 @@ const PaymentRequestScreen = () => {
       .then((res) => {
         verifyOrder(
           {
+            order_id: paymentRequest.backend_order_id,
             razorpay_order_id: res.razorpay_order_id,
             razorpay_payment_id: res.razorpay_payment_id,
             razorpay_signature: res.razorpay_signature,
@@ -153,7 +172,7 @@ const PaymentRequestScreen = () => {
         {/* Profile Image */}
         <View style={styles.profileContainer}>
           <Image
-            source={{ uri: paymentRequest?.user?.profile_image || '' }}
+            source={{ uri: paymentRequest?.merchant?.image || '' }}
             style={styles.profileImage}
           />
         </View>
@@ -166,6 +185,23 @@ const PaymentRequestScreen = () => {
           <ThemedText variant="bodyEmphasized" color="gray600" style={styles.requestSubtitle}>
             {paymentRequest?.merchant?.location || ''} · {time} - {date}
           </ThemedText>
+
+          {/* Countdown Timer */}
+          <View
+            style={[
+              styles.timerContainer,
+              {
+                backgroundColor: isExpired ? theme.red100 : theme.primary100,
+                borderColor: isExpired ? theme.red500 : theme.primary500,
+              },
+            ]}>
+            <Icon name="Clock" size={20} />
+            <ThemedText variant="titleSmallEmphasized" color={isExpired ? 'red700' : 'primary700'}>
+              {isExpired
+                ? 'Expired'
+                : `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`}
+            </ThemedText>
+          </View>
         </View>
         <View style={{ marginVertical: 20 }}>
           {/* Price Breakdown */}
@@ -429,6 +465,17 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  timerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginTop: 12,
+    borderWidth: 1,
   },
 });
 

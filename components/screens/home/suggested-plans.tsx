@@ -42,7 +42,7 @@ const SuggestedPlans: React.FC<SuggestedPlansProps> = ({ packages }) => {
         ]}>
         <LinearGradient
           colors={[theme.primary800, theme.primary600]} // Approx blue gradient from screenshot
-          start={{ x: 0, y: 0.5 }}
+          start={{ x: 1, y: 0.5 }}
           end={{ x: 0, y: 0.5 }}
           style={styles.card}>
           <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
