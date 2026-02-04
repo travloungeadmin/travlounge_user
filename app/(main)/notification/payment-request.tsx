@@ -12,7 +12,7 @@ import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-toast-message';
 
-interface PaymentRequest {
+export interface PaymentRequestResponse {
   order_id: string;
   request_id: string;
   razorpay_order_id: string;
@@ -54,12 +54,12 @@ const PaymentRequestScreen = () => {
   const { user } = useUserStore();
   const { mutate: verifyOrder, isPending: isVerifyingOrder } = useVerifyPaymentRequest();
 
-  const paymentData: PaymentRequest = data ? JSON.parse(data) : null;
+  const paymentData: PaymentRequestResponse = data ? JSON.parse(data) : null;
 
   const paymentRequest = paymentData;
 
   // Initialize timer
-  const { minutes, seconds, isExpired } = usePaymentTimer({
+  const { minutes, seconds, isExpired, pause, resume, isPaused } = usePaymentTimer({
     requestedAt: paymentRequest?.schedule?.requested_at || new Date().toISOString(),
     requestId: paymentRequest?.request_id || '',
     onExpire: () => {
@@ -92,7 +92,21 @@ const PaymentRequestScreen = () => {
     ? formatDateTime(paymentRequest.schedule.requested_at)
     : { time: '', date: '' };
 
-  const handleContinueToPay = () => {
+  const handleContinueToPay = async () => {
+    // Prevent payment if timer is expired
+    if (isExpired) {
+      Toast.show({
+        type: 'error',
+        text1: 'Payment Request Expired',
+        text2: 'This payment request has expired. Please request a new payment link.',
+      });
+      router.replace('/(main)/(tab)');
+      return;
+    }
+
+    // Pause the timer when payment processing starts
+    await pause();
+
     const options = {
       currency: 'INR',
       key: process.env.EXPO_PUBLIC_RAZOR_PAY_KEY_ID,
@@ -109,6 +123,7 @@ const PaymentRequestScreen = () => {
 
     RazorpayCheckout.open(options)
       .then((res) => {
+        // Payment successful, verify it
         verifyOrder(
           {
             order_id: paymentRequest.backend_order_id,
@@ -126,6 +141,8 @@ const PaymentRequestScreen = () => {
               router.replace('/(main)/(tab)');
             },
             onError: (error) => {
+              // Resume timer on verification failure
+              resume();
               Toast.show({
                 type: 'error',
                 text1: 'Verification Failed',
@@ -135,7 +152,9 @@ const PaymentRequestScreen = () => {
           }
         );
       })
-      .catch((error) => {
+      .catch(async (error) => {
+        // Resume timer if payment was cancelled or failed
+        await resume();
         Toast.show({
           type: 'error',
           text1: 'Payment Failed',
@@ -191,15 +210,23 @@ const PaymentRequestScreen = () => {
             style={[
               styles.timerContainer,
               {
-                backgroundColor: isExpired ? theme.red100 : theme.primary100,
-                borderColor: isExpired ? theme.red500 : theme.primary500,
+                backgroundColor: isExpired
+                  ? theme.red100
+                  : isPaused
+                    ? theme.gray100
+                    : theme.primary100,
+                borderColor: isExpired ? theme.red500 : isPaused ? theme.gray500 : theme.primary500,
               },
             ]}>
             <Icon name="Clock" size={20} />
-            <ThemedText variant="titleSmallEmphasized" color={isExpired ? 'red700' : 'primary700'}>
+            <ThemedText
+              variant="titleSmallEmphasized"
+              color={isExpired ? 'red700' : isPaused ? 'gray700' : 'primary700'}>
               {isExpired
                 ? 'Expired'
-                : `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`}
+                : isPaused
+                  ? 'Payment in Progress...'
+                  : `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`}
             </ThemedText>
           </View>
         </View>
@@ -309,14 +336,23 @@ const PaymentRequestScreen = () => {
           {/* Action Buttons */}
           <View style={styles.actionsContainer}>
             <Pressable
-              style={[styles.button, styles.primaryButton, { backgroundColor: theme.primary }]}
-              onPress={handleContinueToPay}>
+              style={[
+                styles.button,
+                styles.primaryButton,
+                { backgroundColor: theme.primary },
+                (isExpired || isPaused || isVerifyingOrder) && styles.disabledButton,
+              ]}
+              onPress={handleContinueToPay}
+              disabled={isExpired || isPaused || isVerifyingOrder}>
               <ThemedText variant="titleSmallEmphasized" color="white">
-                Continue to Pay
+                {isPaused || isVerifyingOrder ? 'Processing...' : 'Continue to Pay'}
               </ThemedText>
             </Pressable>
 
-            <Pressable style={styles.dismissButton} onPress={handleDismiss}>
+            <Pressable
+              style={styles.dismissButton}
+              onPress={handleDismiss}
+              disabled={isPaused || isVerifyingOrder}>
               <ThemedText variant="bodySmallEmphasized" color="primary600">
                 Dismiss
               </ThemedText>
@@ -476,6 +512,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: 12,
     borderWidth: 1,
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
 });
 

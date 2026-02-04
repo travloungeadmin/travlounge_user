@@ -6,6 +6,7 @@ import {
   getActiveSubscriptionsApi,
   getCategoryApi,
   getHomeApi,
+  getLatestNotificationApi,
   getPackagesListApi,
   getSingleServiceApi,
 } from '../api/home';
@@ -58,10 +59,18 @@ const useActiveSubscriptionsQuery = () =>
     queryKey: [QUERIES_KEY.ACTIVE_SUBSCRIPTIONS],
   });
 
+const useGetLatestNotificationQuery = () =>
+  useQuery({
+    enabled: false,
+    queryFn: () => getLatestNotificationApi(),
+    queryKey: ['latest-notification'],
+  });
+
 export {
   getHomeListQuery,
   getPackagesListQuery,
   getSingleServiceQuery,
   useActiveSubscriptionsQuery,
   useGetCategoryQuery,
+  useGetLatestNotificationQuery,
 };

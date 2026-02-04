@@ -4,11 +4,11 @@ import { useLocation } from '@/hooks';
 import { useTheme } from '@/hooks/useTheme';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
-import Loading from '@/old/components/common/Loading';
 import { Feather } from '@expo/vector-icons';
 import NetInfo from '@react-native-community/netinfo';
 import * as Linking from 'expo-linking';
 import * as Updates from 'expo-updates';
+import LottieView from 'lottie-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, {
@@ -36,7 +36,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   isError = false,
   onRetry = () => {},
 }) => {
-  const { isLoading, permissionStatus } = useLocation();
+  const { isLoading, permissionStatus, place } = useLocation();
   const { theme } = useTheme();
 
   const heightValue = useSharedValue(0);
@@ -133,8 +133,26 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
     </View>
   );
 
-  if (isLoading) {
-    return renderContent(<Loading />);
+  if (isLoading && !place) {
+    return renderContent(
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: theme.backgroundPrimary,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <View
+          style={{ alignItems: 'center', justifyContent: 'center', width: '60%', height: '60%' }}>
+          <LottieView
+            source={require('@/assets/lotiee/animation_globe.json')}
+            style={{ width: '100%', height: '100%' }}
+            autoPlay
+            loop
+          />
+        </View>
+      </View>
+    );
   }
 
   if (permissionStatus === 'denied' || permissionStatus === 'unavailable') {

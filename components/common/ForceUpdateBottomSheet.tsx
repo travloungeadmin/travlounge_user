@@ -1,74 +1,73 @@
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
-import React, { useEffect, useMemo, useRef } from 'react';
+import {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Column } from '@/core/column';
 import { Text } from '@/core/text';
 import { useTheme } from '@/hooks/useTheme';
 
-interface UpdateModalProps {
+interface ForceUpdateBottomSheetProps {
   visible: boolean;
-  isForceUpdate: boolean;
   onUpdate: () => void;
-  onLater?: () => void;
 }
 
-export const UpdateModal: React.FC<UpdateModalProps> = ({
+export const ForceUpdateBottomSheet: React.FC<ForceUpdateBottomSheetProps> = ({
   visible,
-  isForceUpdate,
   onUpdate,
-  onLater,
 }) => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  // Define snap points
+  // Define snap points - 60% of screen height
   const snapPoints = useMemo(() => ['60%'], []);
 
-  // Control bottom sheet visibility
+  // Control bottom sheet modal visibility
   useEffect(() => {
+    console.log('🚀 [ForceUpdateBottomSheet] Visibility changed to:', visible);
     if (visible) {
-      // Small delay to ensure the component is mounted
+      // Small delay to ensure the component is fully mounted
       const timer = setTimeout(() => {
-        bottomSheetRef.current?.snapToIndex(0);
-      }, 100);
+        bottomSheetModalRef.current?.present();
+      }, 150);
       return () => clearTimeout(timer);
     } else {
-      bottomSheetRef.current?.close();
+      bottomSheetModalRef.current?.dismiss();
     }
   }, [visible]);
 
-  // Render backdrop - only allow dismiss if not force update
-  const renderBackdrop = useMemo(
-    () => (props: any) => (
+  // Render non-dismissible backdrop
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={0.5}
-        pressBehavior={isForceUpdate ? 'none' : 'close'}
+        opacity={0.6}
+        pressBehavior="none" // Cannot dismiss by tapping backdrop
       />
     ),
-    [isForceUpdate]
-  );
-
-  const handleSheetChanges = useMemo(
-    () => (index: number) => {
-      console.log('Bottom sheet index changed to:', index);
-    },
     []
   );
 
+  // Handle sheet changes for debugging
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('🚀 [ForceUpdateBottomSheet] Index changed to:', index);
+  }, []);
+
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={-1}
+    <BottomSheetModal
+      ref={bottomSheetModalRef}
       snapPoints={snapPoints}
-      enablePanDownToClose={!isForceUpdate}
+      enablePanDownToClose={false} // Cannot swipe down to close
       backdropComponent={renderBackdrop}
       backgroundStyle={styles.bottomSheetBackground}
-      handleIndicatorStyle={isForceUpdate ? styles.hiddenHandle : styles.handleIndicator}
+      handleIndicatorStyle={styles.hiddenHandle} // Hide handle indicator
       onChange={handleSheetChanges}
       enableDynamicSizing={false}>
       <BottomSheetView style={styles.contentContainer}>
@@ -96,7 +95,9 @@ export const UpdateModal: React.FC<UpdateModalProps> = ({
           </Text>
 
           {/* Update Button */}
-          <Pressable style={styles.primaryButton} onPress={onUpdate}>
+          <Pressable
+            style={({ pressed }) => [styles.primaryButton, pressed && styles.primaryButtonPressed]}
+            onPress={onUpdate}>
             <Text preset="POP_16_SB" color={theme.white}>
               Update Now
             </Text>
@@ -108,7 +109,7 @@ export const UpdateModal: React.FC<UpdateModalProps> = ({
           </Text>
         </Column>
       </BottomSheetView>
-    </BottomSheet>
+    </BottomSheetModal>
   );
 };
 
@@ -118,11 +119,6 @@ const createStyles = (theme: any) =>
       backgroundColor: theme.white,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
-    },
-    handleIndicator: {
-      backgroundColor: theme.gray300,
-      width: 40,
-      height: 4,
     },
     hiddenHandle: {
       display: 'none',
@@ -176,6 +172,10 @@ const createStyles = (theme: any) =>
       shadowOpacity: 0.3,
       shadowRadius: 8,
       elevation: 8,
+    },
+    primaryButtonPressed: {
+      opacity: 0.8,
+      transform: [{ scale: 0.98 }],
     },
     safeMessage: {
       textAlign: 'center',

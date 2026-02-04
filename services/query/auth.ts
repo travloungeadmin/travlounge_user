@@ -1,6 +1,12 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { generateOTPApi, refreshAccessApi, registerApi, verifyOTPApi } from "../api/auth";
-import QUERIES_KEY from "./query-keys";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  generateOTPApi,
+  refreshAccessApi,
+  registerApi,
+  updateDeviceTokenApi,
+  verifyOTPApi,
+} from '../api/auth';
+import QUERIES_KEY from './query-keys';
 
 const generateOTPMutation = () =>
   useMutation({
@@ -17,11 +23,22 @@ const userRegisterQuery = () =>
   useMutation({
     mutationFn: registerApi,
   });
-  
-const useRefreshTokenQuery = (data) =>
+
+const useRefreshTokenQuery = (data: any) =>
   useQuery({
     queryFn: () => refreshAccessApi(data),
     queryKey: [QUERIES_KEY.REFRESH_TOKEN],
   });
 
-export { userRegisterQuery,useRefreshTokenQuery, generateOTPMutation, verifyOTPQuery };
+const updateDeviceTokenMutation = () =>
+  useMutation({
+    mutationFn: updateDeviceTokenApi,
+  });
+
+export {
+  generateOTPMutation,
+  updateDeviceTokenMutation,
+  useRefreshTokenQuery,
+  userRegisterQuery,
+  verifyOTPQuery,
+};

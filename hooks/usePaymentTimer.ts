@@ -12,6 +12,9 @@ interface TimeRemaining {
   seconds: number;
   isExpired: boolean;
   totalSeconds: number;
+  pause: () => void;
+  resume: () => void;
+  isPaused: boolean;
 }
 
 const TIMER_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -27,14 +30,46 @@ export const usePaymentTimer = ({
     seconds: 0,
     isExpired: false,
     totalSeconds: 300,
+    pause: () => {},
+    resume: () => {},
+    isPaused: false,
   });
+
+  const [isPaused, setIsPaused] = useState(false);
+  const [pausedTimeRemaining, setPausedTimeRemaining] = useState<number | null>(null);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const storageKey = `${STORAGE_KEY_PREFIX}${requestId}`;
+    const pauseStateKey = `${STORAGE_KEY_PREFIX}${requestId}_paused`;
+    const pausedTimeKey = `${STORAGE_KEY_PREFIX}${requestId}_paused_time`;
 
     const initializeTimer = async () => {
       try {
+        // Check if timer was paused
+        const storedPauseState = await AsyncStorage.getItem(pauseStateKey);
+        const storedPausedTime = await AsyncStorage.getItem(pausedTimeKey);
+
+        if (storedPauseState === 'true' && storedPausedTime) {
+          // Timer was paused, restore the paused state
+          const remainingMs = parseInt(storedPausedTime, 10);
+          const totalSeconds = Math.floor(remainingMs / 1000);
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+
+          setIsPaused(true);
+          setPausedTimeRemaining(remainingMs);
+          setTimeRemaining((prev) => ({
+            ...prev,
+            minutes,
+            seconds,
+            totalSeconds,
+            isExpired: remainingMs <= 0,
+            isPaused: true,
+          }));
+          return;
+        }
+
         // Check if we have a stored expiry time for this request
         const storedExpiryTime = await AsyncStorage.getItem(storageKey);
 
@@ -54,6 +89,8 @@ export const usePaymentTimer = ({
 
         // Calculate remaining time
         const calculateTimeRemaining = () => {
+          if (isPaused) return; // Don't update if paused
+
           const now = Date.now();
           const remaining = Math.max(0, expiryTime - now);
           const totalSeconds = Math.floor(remaining / 1000);
@@ -61,17 +98,19 @@ export const usePaymentTimer = ({
           const seconds = totalSeconds % 60;
           const isExpired = remaining <= 0;
 
-          setTimeRemaining({
+          setTimeRemaining((prev) => ({
+            ...prev,
             minutes,
             seconds,
             isExpired,
             totalSeconds,
-          });
+            isPaused: false,
+          }));
 
           if (isExpired) {
             clearInterval(intervalId);
             // Clean up storage
-            AsyncStorage.removeItem(storageKey);
+            AsyncStorage.multiRemove([storageKey, pauseStateKey, pausedTimeKey]);
             // Call onExpire callback
             onExpire?.();
           }
@@ -95,9 +134,65 @@ export const usePaymentTimer = ({
         clearInterval(intervalId);
       }
     };
-  }, [requestedAt, requestId, onExpire]);
+  }, [requestedAt, requestId, onExpire, isPaused]);
 
-  return timeRemaining;
+  // Pause function
+  const pause = async () => {
+    try {
+      const storageKey = `${STORAGE_KEY_PREFIX}${requestId}`;
+      const pauseStateKey = `${STORAGE_KEY_PREFIX}${requestId}_paused`;
+      const pausedTimeKey = `${STORAGE_KEY_PREFIX}${requestId}_paused_time`;
+
+      // Get current expiry time
+      const storedExpiryTime = await AsyncStorage.getItem(storageKey);
+      if (storedExpiryTime) {
+        const expiryTime = parseInt(storedExpiryTime, 10);
+        const now = Date.now();
+        const remaining = Math.max(0, expiryTime - now);
+
+        // Store paused state and remaining time
+        await AsyncStorage.setItem(pauseStateKey, 'true');
+        await AsyncStorage.setItem(pausedTimeKey, remaining.toString());
+
+        setIsPaused(true);
+        setPausedTimeRemaining(remaining);
+      }
+    } catch (error) {
+      console.error('Error pausing timer:', error);
+    }
+  };
+
+  // Resume function
+  const resume = async () => {
+    try {
+      const storageKey = `${STORAGE_KEY_PREFIX}${requestId}`;
+      const pauseStateKey = `${STORAGE_KEY_PREFIX}${requestId}_paused`;
+      const pausedTimeKey = `${STORAGE_KEY_PREFIX}${requestId}_paused_time`;
+
+      if (pausedTimeRemaining !== null) {
+        // Calculate new expiry time based on paused remaining time
+        const now = Date.now();
+        const newExpiryTime = now + pausedTimeRemaining;
+
+        // Update storage
+        await AsyncStorage.setItem(storageKey, newExpiryTime.toString());
+        await AsyncStorage.multiRemove([pauseStateKey, pausedTimeKey]);
+
+        setIsPaused(false);
+        setPausedTimeRemaining(null);
+      }
+    } catch (error) {
+      console.error('Error resuming timer:', error);
+    }
+  };
+
+  // Update the return value with pause/resume functions
+  return {
+    ...timeRemaining,
+    pause,
+    resume,
+    isPaused,
+  };
 };
 
 // Utility function to clear expired timers

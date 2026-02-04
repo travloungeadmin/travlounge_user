@@ -15,9 +15,10 @@ import { ErrorView } from '@/components/common/ErrorView';
 
 import queryClient from '@/services/query';
 
-import { UpdateModal } from '@/components/common/update-modal';
+import { ForceUpdateBottomSheet } from '@/components/common/ForceUpdateBottomSheet';
 import { useVersionCheck } from '@/hooks/useVersionCheck';
 import { ThemeProvider } from '@/newTheme';
+import Loading from '@/old/components/common/Loading';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';
@@ -63,14 +64,12 @@ export default function RootLayout() {
             <GestureHandlerRootView style={styles.container}>
               <BottomSheetModalProvider>
                 <ErrorBoundary FallbackComponent={ErrorFallback}>
-                  <UpdateModal
-                    visible={!isChecking && (forceUpdate || (needsUpdate && !updateModalDismissed))}
-                    isForceUpdate={forceUpdate}
+                  <ForceUpdateBottomSheet
+                    visible={!isChecking && forceUpdate}
                     onUpdate={openStore}
-                    onLater={forceUpdate ? undefined : () => setUpdateModalDismissed(true)}
                   />
                   <StatusBar translucent />
-                  <Slot />
+                  {loaded ? <Slot /> : <Loading />}
                 </ErrorBoundary>
               </BottomSheetModalProvider>
               <Toast />

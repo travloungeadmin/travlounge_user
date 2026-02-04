@@ -8,6 +8,7 @@ const ENDPOINTS = {
   USED_CARS_FILTER_OPTIONS: 'used-cars/customers/cars/filter-options/',
 
   AUTH,
+  GENERAL: 'general/',
   SERVICE_LIST: 'customer/home_listing/',
   HOME: 'api/v2/customer/home/',
   MAKE_A_TRIP: 'listing/listing-filter/',

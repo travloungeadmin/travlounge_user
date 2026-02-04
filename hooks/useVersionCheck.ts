@@ -39,7 +39,10 @@ export const useVersionCheck = () => {
       }
 
       const shouldRetry = retryCount < maxRetries;
-      setError(err instanceof Error ? err.message : 'Failed to check for updates');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to check for updates';
+      setError(errorMessage);
+
+      console.error('❌ [useVersionCheck] Error:', errorMessage, 'Retry:', shouldRetry);
 
       if (shouldRetry) {
         setRetryCount((prev) => prev + 1);
@@ -54,6 +57,7 @@ export const useVersionCheck = () => {
     } finally {
       if (!isRetry) {
         setIsChecking(false);
+        console.log('✓ [useVersionCheck] Checking complete');
       }
     }
   };

@@ -1,3 +1,5 @@
+import { PaymentRequestResponse } from '@/app/(main)/notification/payment-request';
+
 export type CategoryName =
   | 'Hygeinic Washrooms'
   | 'Sleeping pod'
@@ -79,6 +81,7 @@ export type UserDetails = {
   elite_coin_balance: number;
   elite_coins_worth: number;
   is_welcome_offer_claimed: boolean;
+  is_device_token: boolean | null;
 };
 
 export type HomeApiResponse = {
@@ -87,4 +90,23 @@ export type HomeApiResponse = {
   active_subscriptions: ActiveSubscription[];
   suggested_offers: SuggestedOffer[];
   user_details: UserDetails;
+};
+
+export type PaymentRequestNotification = {
+  id: number;
+  title: string;
+  message: string;
+  service_name: string;
+  notification_type: string;
+  status: string;
+  payload: PaymentRequestResponse;
+  order_id: string;
+  backend_order_id: number;
+  razorpay_order_id: string;
+  amount_inr: number;
+  created_on: string;
+};
+
+export type LatestNotificationResponse = {
+  latest_notification: PaymentRequestNotification | null;
 };

@@ -1,7 +1,7 @@
 import apiClient from '.';
 import ENDPOINTS from '../end-points';
 import { GetCategoryApiResponce } from './types';
-import { HomeApiResponse } from './types/home';
+import { HomeApiResponse, LatestNotificationResponse } from './types/home';
 
 const getHomeApi = async (): Promise<HomeApiResponse> => {
   const response = await apiClient({
@@ -49,10 +49,20 @@ const getActiveSubscriptionsApi = async () => {
   return response.data;
 };
 
+const getLatestNotificationApi = async (): Promise<LatestNotificationResponse> => {
+  const response = await apiClient({
+    baseURL: process.env.EXPO_PUBLIC_API_URL_V2,
+    method: 'get',
+    url: 'api/v2/customer/latest-notification/',
+  });
+  return response.data;
+};
+
 export {
   getActiveSubscriptionsApi,
   getCategoryApi,
   getHomeApi,
+  getLatestNotificationApi,
   getPackagesListApi,
   getSingleServiceApi,
 };

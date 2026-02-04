@@ -1,7 +1,7 @@
 import apiClient from '@/services/api';
 import ENDPOINTS from '@/services/end-points';
 
-const generateOTPApi = async (data: FormData) => {
+const generateOTPApi = async (data: any) => {
   const response = await apiClient({
     method: 'post',
     url: `${ENDPOINTS.AUTH.LOGIN}`,
@@ -13,7 +13,7 @@ const generateOTPApi = async (data: FormData) => {
   return response.data;
 };
 
-const verifyOTPApi = async (data) => {
+const verifyOTPApi = async (data: any) => {
   const response = await apiClient({
     method: 'post',
     url: `${ENDPOINTS.AUTH.VERIFY}`,
@@ -24,7 +24,7 @@ const verifyOTPApi = async (data) => {
   });
   return response.data;
 };
-const registerApi = async (FormData) => {
+const registerApi = async (FormData: any) => {
   const response = await apiClient({
     method: 'put',
     url: 'customer/update-profile/',
@@ -36,7 +36,7 @@ const registerApi = async (FormData) => {
   return response.data;
 };
 
-const refreshAccessApi = async (data) => {
+const refreshAccessApi = async (data: any) => {
   const response = await apiClient({
     method: 'post',
     url: `${ENDPOINTS.AUTH.REFRESH}`,
@@ -48,4 +48,17 @@ const refreshAccessApi = async (data) => {
   return response.data;
 };
 
-export { generateOTPApi, refreshAccessApi, registerApi, verifyOTPApi };
+const updateDeviceTokenApi = async (data: { device_token: string }) => {
+  const response = await apiClient({
+    method: 'patch',
+    baseURL: process.env.EXPO_PUBLIC_API_URL_V2,
+    url: 'api/v2/customer/update-device-token/',
+    data,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
+export { generateOTPApi, refreshAccessApi, registerApi, updateDeviceTokenApi, verifyOTPApi };
