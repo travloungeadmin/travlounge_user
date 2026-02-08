@@ -4,37 +4,34 @@ import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
-  Text as RNText,
   StyleSheet,
   TextInput,
+  TextStyle,
   TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { shadow } from '@/constants';
-import { Box, Device, Text } from '@/core';
 import { usePushNotifications } from '@/core/notification';
+import { useTheme } from '@/hooks/useTheme';
+import { moderateScale } from '@/lib/responsive-dimensions';
 import { showError } from '@/lib/toast';
+import { TYPOGRAPHY } from '@/newConstants/fonts';
+import { SPACING } from '@/newConstants/spacing';
 import { generateOTPMutation } from '@/services/query/auth';
-import { colors } from '@/theme';
-import {
-  ApiError,
-  LoginContainerProps,
-  StyleProps,
-} from '@/types/components/auth/login-container.types';
+import { ApiError, LoginContainerProps } from '@/types/components/auth/login-container.types';
 import { getPhoneValidationError } from '@/utils/validation';
+import { ThemedText } from '../common/ThemedText';
 
 const PHONE_NUMBER_LENGTH = 10;
 const COUNTRY_CODE = '+91-IND';
-const ERROR_COLOR = '#FF3B30'; // Using hardcoded value since colors.error might not be available yet
-const FOCUSED_BORDER_COLOR = '#00205B';
-const UNFOCUSED_BORDER_COLOR = '#8A95BB';
-
 const LoginContainer: React.FC<LoginContainerProps> = ({ setIsLogin, onChangeText, value }) => {
   usePushNotifications();
   const textInputRef = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  const { theme } = useTheme();
   const { isPending, mutate } = generateOTPMutation();
 
   const validateAndHandleLogin = () => {
@@ -61,11 +58,10 @@ const LoginContainer: React.FC<LoginContainerProps> = ({ setIsLogin, onChangeTex
   };
 
   const handlePhoneChange = (text: string) => {
-    // Clear validation error when user starts typing
     if (validationError) {
       setValidationError(null);
     }
-    // Only allow digits
+
     const digitsOnly = text.replace(/[^0-9]/g, '');
     onChangeText(digitsOnly);
   };
@@ -79,61 +75,69 @@ const LoginContainer: React.FC<LoginContainerProps> = ({ setIsLogin, onChangeTex
   };
 
   const renderPrivacyText = () => (
-    <Box style={styles.footer}>
-      <RNText style={[styles.footerText, styles.normalText]}>
+    <View style={styles.footer}>
+      <ThemedText variant="bodySmall" color="gray600" style={styles.footerText}>
         By continuing, you agree to Travlounge's{' '}
-      </RNText>
-      <RNText
+      </ThemedText>
+      <ThemedText
+        variant="bodySmallEmphasized"
         onPress={() => openLink('https://www.travlounge.com/terms.html')}
-        style={[styles.footerText, styles.linkText]}>
+        style={styles.footerText}>
         Terms of use
-      </RNText>
-      <RNText style={[styles.footerText, styles.normalText]}> and </RNText>
-      <RNText
+      </ThemedText>
+      <ThemedText variant="bodySmall" color="gray600" style={styles.footerText}>
+        {' '}
+        and{' '}
+      </ThemedText>
+      <ThemedText
+        variant="bodySmallEmphasized"
         onPress={() => openLink('https://www.travlounge.com/terms.html')}
-        style={[styles.footerText, styles.linkText]}>
+        style={styles.footerText}>
         Privacy Policy
-      </RNText>
-    </Box>
+      </ThemedText>
+    </View>
   );
 
   return (
-    <Box style={{ alignSelf: 'flex-end' }}>
-      <Box style={styles.container}>
-        <Box style={[styles.gradientContainer, shadow]}>
-          <Text color={colors.textPrimary} preset="POP_28_B" style={styles.headerText}>
+    <View style={{ alignSelf: 'flex-end' }}>
+      <View style={styles.container}>
+        <View style={[styles.gradientContainer, { backgroundColor: theme.backgroundCard }, shadow]}>
+          <ThemedText color={'gray900'} variant="headlineEmphasized" style={styles.headerText}>
             Login
-          </Text>
-          <Text
-            preset="POP_14_M"
-            color={colors.textPrimaryDescription}
-            style={styles.subHeaderText}>
+          </ThemedText>
+          <ThemedText color={'gray600'} variant="labelLarge" style={styles.subHeaderText}>
             for the best experience
-          </Text>
+          </ThemedText>
 
-          <Box style={styles.inputContainer}>
-            <Box style={[styles.countryCodeContainer, shadow]}>
-              <Text color={colors.textSecondary} preset="ROB_14_M">
+          <View style={styles.inputContainer}>
+            <View
+              style={[
+                styles.countryCodeContainer,
+                { backgroundColor: theme.backgroundPrimary },
+                shadow,
+              ]}>
+              <ThemedText color="primary" variant="labelLarge">
                 {COUNTRY_CODE}
-              </Text>
-              <Entypo name="chevron-down" size={18} color={colors.iconSecondary} />
-            </Box>
+              </ThemedText>
+              <Entypo name="chevron-down" size={18} color={theme.gray500} />
+            </View>
 
             <TextInput
               ref={textInputRef}
               placeholder="Phone number"
-              placeholderTextColor={colors.textPrimaryDescription}
+              placeholderTextColor={theme.gray600}
               value={value}
               onChangeText={handlePhoneChange}
               maxLength={PHONE_NUMBER_LENGTH}
               style={[
                 styles.phoneNumberInput,
                 {
+                  color: theme.primary,
                   borderColor: validationError
-                    ? ERROR_COLOR
+                    ? theme.errorSystem
                     : isFocused
-                      ? FOCUSED_BORDER_COLOR
-                      : UNFOCUSED_BORDER_COLOR,
+                      ? theme.primaryDeep
+                      : theme.grayBlue,
                   borderWidth: isFocused ? 2 : 1,
                 },
               ]}
@@ -141,91 +145,85 @@ const LoginContainer: React.FC<LoginContainerProps> = ({ setIsLogin, onChangeTex
               onBlur={() => setIsFocused(false)}
               keyboardType="number-pad"
             />
-          </Box>
+          </View>
 
           <TouchableOpacity
-            style={[styles.button, isPending && styles.buttonDisabled]}
+            style={[
+              styles.button,
+              { backgroundColor: theme.primary },
+              isPending && styles.buttonDisabled,
+            ]}
             onPress={validateAndHandleLogin}
             activeOpacity={0.7}
             disabled={isPending}>
             {isPending ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text preset="POP_16_M" color={colors.textTertiary}>
+              <ThemedText variant="bodyLargeEmphasized" color="white">
                 Continue
-              </Text>
+              </ThemedText>
             )}
           </TouchableOpacity>
-        </Box>
+        </View>
         {renderPrivacyText()}
-      </Box>
-    </Box>
+      </View>
+    </View>
   );
 };
 
-const styles = StyleSheet.create<StyleProps>({
+const styles = StyleSheet.create({
   container: {
-    gap: 20,
-    paddingHorizontal: 20,
-    width: Device.width,
+    gap: moderateScale(20),
+    paddingHorizontal: moderateScale(20),
+    width: SPACING.screenWidth,
   },
   shadow: {
     width: '100%',
   },
   gradientContainer: {
-    backgroundColor: colors.cardBackgroundPrimary,
-    borderRadius: 21,
-    paddingTop: 30,
-    paddingHorizontal: 30,
-    paddingBottom: 30,
+    borderRadius: moderateScale(21),
+    paddingTop: moderateScale(30),
+    paddingHorizontal: moderateScale(30),
+    paddingBottom: moderateScale(30),
   },
-  headerText: {
-    width: '100%',
-    alignSelf: 'flex-start',
-    lineHeight: 38,
-  },
+  headerText: {},
   subHeaderText: {
-    alignSelf: 'flex-start',
-    paddingBottom: 34,
+    paddingBottom: moderateScale(24),
   },
   inputContainer: {
     flexDirection: 'row',
-    marginBottom: 20,
+    marginBottom: moderateScale(20),
   },
   countryCodeContainer: {
-    backgroundColor: colors.backgroundPrimary,
-    width: 95,
-    borderRadius: 5,
+    width: moderateScale(95),
+    borderRadius: moderateScale(5),
     borderColor: '#F3F7FA',
     borderWidth: 1,
-    paddingHorizontal: 8,
-    height: 47,
+    paddingHorizontal: moderateScale(8),
+    height: moderateScale(47),
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
   },
   phoneNumberInput: {
-    borderRadius: 5,
+    borderRadius: moderateScale(5),
     flex: 1,
-    marginLeft: 10,
-    paddingHorizontal: 8,
-    color: colors.textSecondary,
+    marginLeft: moderateScale(10),
+    paddingHorizontal: moderateScale(8),
     fontFamily: 'Roboto',
-    fontWeight: '500',
-    fontSize: 14,
-    height: 47,
-    paddingLeft: 15,
+    ...(TYPOGRAPHY.labelLarge as TextStyle),
+    height: moderateScale(47),
+    paddingLeft: moderateScale(15),
   },
   buttonShadow: {
     width: '100%',
-    marginBottom: 30,
-    borderRadius: 10,
+    marginBottom: moderateScale(30),
+    borderRadius: moderateScale(10),
     overflow: 'hidden',
   },
   button: {
-    backgroundColor: colors.buttonBackgroundPrimary,
-    borderRadius: 10,
-    height: 48,
+    borderRadius: moderateScale(10),
+    height: moderateScale(48),
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -240,26 +238,14 @@ const styles = StyleSheet.create<StyleProps>({
   },
   footerText: {
     zIndex: 1,
-    marginTop: Platform.OS === 'android' ? 3 : 0,
+    marginTop: Platform.OS === 'android' ? moderateScale(3) : 0,
     alignSelf: 'flex-start',
     flexWrap: 'wrap',
   },
-  normalText: {
-    color: colors.textPrimaryDescription,
-    fontFamily: 'Poppins',
-    fontSize: 12,
-    fontWeight: '400',
-  },
-  linkText: {
-    color: colors.textSecondary,
-    fontFamily: 'Poppins',
-    fontSize: 12,
-    fontWeight: '500',
-  },
   errorText: {
-    marginTop: -16,
-    marginBottom: 16,
-    paddingHorizontal: 4,
+    marginTop: -moderateScale(16),
+    marginBottom: moderateScale(16),
+    paddingHorizontal: moderateScale(4),
   },
 });
 

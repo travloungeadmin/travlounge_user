@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Box, Row, Text } from '@/core';
+import { Box, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
+import { ThemedText } from '../common/ThemedText';
 
 type propsType = {
   priceData: {
@@ -14,64 +16,74 @@ type propsType = {
     tax: number;
     total_price: number;
     total_base_price: number;
+    discount_amount?: number;
+    discount_percentage?: number;
+    add_ons?: {
+      quantity: number;
+      price_per_unit: number;
+      total_price: number;
+    }[];
+    payable_amount?: number;
+    subtotal?: number;
   };
   isGst?: boolean;
 };
 
 const PriceDistribution = (props: propsType) => {
   const { priceData, isGst } = props;
+  const { theme } = useTheme();
 
   return (
     <Box gap={8}>
       {priceData?.available_pods.map((item, index) => (
         <Row key={index} style={styles.row}>
-          <Text color="#333333" preset="POP_14_R">
+          <ThemedText color="gray900" variant="bodySmall">
             {item.pod_type}
-          </Text>
-          <Text color="#333333" preset="POP_14_R">
+          </ThemedText>
+          <ThemedText color="gray900" variant="bodySmall">
             {item.price} X {item.number_of_pods} = {item.price * item.number_of_pods}
-          </Text>
+          </ThemedText>
         </Row>
       ))}
-      {priceData?.discount_amount > 0 ? (
+      {(priceData?.discount_amount ?? 0) > 0 ? (
         <Row style={styles.row}>
-          <Text color="#333333" preset="POP_14_R">
+          <ThemedText color="gray900" variant="bodySmall">
             Discount
-          </Text>
-          <Text color="#333333" preset="POP_14_R">
+          </ThemedText>
+          <ThemedText color="gray900" variant="bodySmall">
             -{priceData?.discount_percentage}% = -{priceData?.discount_amount}
-          </Text>
+          </ThemedText>
         </Row>
       ) : null}
       {isGst && (
         <Row style={styles.row}>
-          <Text color="#333333" preset="POP_14_R">
+          <ThemedText color="gray900" variant="bodySmall">
             Gst
-          </Text>
-          <Text color="#333333" preset="POP_14_R">
+          </ThemedText>
+          <ThemedText color="gray900" variant="bodySmall">
             {priceData?.tax_rate * 100}% ={priceData?.tax}
-          </Text>
+          </ThemedText>
         </Row>
       )}
-      {priceData?.add_ons?.length > 0 &&
+      {(priceData?.add_ons?.length ?? 0) > 0 &&
         priceData?.add_ons?.map((item) => (
-          <Row style={styles.row}>
-            <Text color="#333333" preset="POP_14_R">
+          <Row key={item.quantity /* or other unique key if available */} style={styles.row}>
+            <ThemedText color="gray900" variant="bodySmall">
               {item?.quantity} Add On Bath
-            </Text>
-            <Text color="#333333" preset="POP_14_R">
+            </ThemedText>
+            <ThemedText color="gray900" variant="bodySmall">
               {item?.price_per_unit}X{item?.quantity} ={item?.total_price}
-            </Text>
+            </ThemedText>
           </Row>
         ))}
 
       <Row style={[styles.row, styles.totalRow]}>
-        <Text color="#333333" preset="POP_16_SB">
+        <ThemedText color="gray900" variant="bodySmallEmphasized">
           Total
-        </Text>
-        <Text color="#333333" preset="POP_16_SB">
+        </ThemedText>
+        <ThemedText color="gray900" variant="bodySmallEmphasized">
           {isGst ? priceData?.payable_amount : priceData?.subtotal}
-        </Text>
+        </ThemedText>
       </Row>
     </Box>
   );

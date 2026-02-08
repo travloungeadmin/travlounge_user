@@ -145,6 +145,36 @@ export const createTypography = () => ({
     fontWeight: '500',
     letterSpacing: moderateScale(0),
   },
+  large: {
+    fontSize: moderateScale(36),
+    lineHeight: moderateScale(40),
+    fontWeight: '700',
+    letterSpacing: moderateScale(0),
+  },
+  boldHighlightText: {
+    fontSize: moderateScale(32),
+    lineHeight: moderateScale(40),
+    fontWeight: '700',
+    letterSpacing: moderateScale(0),
+  },
+  boldHighlightTextS: {
+    fontSize: moderateScale(22),
+    lineHeight: moderateScale(26),
+    fontWeight: '700',
+    letterSpacing: moderateScale(0),
+  },
+  boldHighlightTextSx: {
+    fontSize: moderateScale(18),
+    lineHeight: moderateScale(26),
+    fontWeight: '700',
+    letterSpacing: moderateScale(0),
+  },
+  boldHighlightTextXxs: {
+    fontSize: moderateScale(14),
+    lineHeight: moderateScale(22),
+    fontWeight: '700',
+    letterSpacing: moderateScale(0),
+  },
 });
 
 export const TYPOGRAPHY = createTypography();

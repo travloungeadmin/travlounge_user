@@ -46,9 +46,29 @@ export const THEME_COLORS = {
     secondary200: '#FFF287',
     secondary100: '#FFFAC2',
     secondary50: '#FEFCE8',
-    secondary400: '#FFCC02',
+    secondary: '#FFCC02',
     secondary300: '#FFE343',
+    red50: 'rgba(255, 229, 229, 1)',
+    red100: 'rgba(255, 204, 204, 1)',
+    red200: 'rgba(255, 153, 153, 1)',
+    red300: 'rgba(255, 102, 102, 1)',
+    red400: 'rgba(255, 51, 51, 1)',
+    red500: 'rgba(255, 0, 0, 1)',
+    red600: 'rgba(204, 0, 0, 1)',
+    red700: 'rgba(153, 0, 0, 1)',
+    red800: 'rgba(102, 0, 0, 1)',
+    red900: 'rgba(51, 0, 0, 1)',
+    red950: 'rgba(36, 0, 0, 1)',
     error: '#FF0000',
+    errorSystem: '#FF3B30', // [NEW]
+    primaryDeep: '#00205B', // [NEW]
+    grayBlue: '#8A95BB', // [NEW]
+    goldStroke: [
+      'rgba(212, 160, 65, 1)',
+      'rgba(247, 209, 78, 1)',
+      'rgba(251, 230, 123, 1)',
+      'rgba(157, 111, 27, 1)',
+    ],
   },
   dark: {
     backgroundTop: '#F2F4F7',
@@ -97,9 +117,29 @@ export const THEME_COLORS = {
     secondary200: '#FFF287',
     secondary100: '#FFFAC2',
     secondary50: '#FEFCE8',
-    secondary400: '#FFCC02',
+    secondary: '#FFCC02',
     secondary300: '#FFE343',
+    red50: 'rgba(255, 229, 229, 1)',
+    red100: 'rgba(255, 204, 204, 1)',
+    red200: 'rgba(255, 153, 153, 1)',
+    red300: 'rgba(255, 102, 102, 1)',
+    red400: 'rgba(255, 51, 51, 1)',
+    red500: 'rgba(255, 0, 0, 1)',
+    red600: 'rgba(204, 0, 0, 1)',
+    red700: 'rgba(153, 0, 0, 1)',
+    red800: 'rgba(102, 0, 0, 1)',
+    red900: 'rgba(51, 0, 0, 1)',
+    red950: 'rgba(36, 0, 0, 1)',
     error: '#FF0000',
+    errorSystem: '#FF3B30', // [NEW]
+    primaryDeep: '#00205B', // [NEW]
+    grayBlue: '#8A95BB', // [NEW]
+    goldStroke: [
+      'rgba(212, 160, 65, 1)',
+      'rgba(247, 209, 78, 1)',
+      'rgba(251, 230, 123, 1)',
+      'rgba(157, 111, 27, 1)',
+    ],
   },
 } as const;
 

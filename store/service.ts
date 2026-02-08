@@ -7,7 +7,6 @@ type serviceType = {
   id: number;
   title: string;
   icon: string;
-  mapIcon: string;
 };
 
 type State = {

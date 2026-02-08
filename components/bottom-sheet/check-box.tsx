@@ -1,7 +1,8 @@
+import { useTheme } from '@/hooks/useTheme';
 import { moderateScale } from '@/lib/responsive-dimensions';
-import { colors } from '@/theme';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ThemedText } from '../common/ThemedText';
 import Icon from '../ui/icon';
 
 const capitalizeFirstLetter = (string: string) =>
@@ -33,6 +34,7 @@ const CheckBox = (props: PropsType) => {
     selectedIndex = null,
     selectedValue = null,
   } = props;
+  const { theme } = useTheme();
 
   const isSelected = enableMultiSelect
     ? selectedIndex?.includes(index) || selectedId?.includes(id)
@@ -40,11 +42,11 @@ const CheckBox = (props: PropsType) => {
 
   const selectedStyle = isSelected
     ? {
-        backgroundColor: enableMultiSelect ? '#0057C0' : 'transparent',
-        borderColor: '#0057C0',
+        backgroundColor: enableMultiSelect ? theme.primary : 'transparent',
+        borderColor: theme.primary,
         borderWidth: moderateScale(6),
       }
-    : { borderColor: '#48484A', borderWidth: 2 };
+    : { borderColor: theme.gray700, borderWidth: 2 };
 
   const borderWidth = !borderDisabled && {
     borderTopWidth: index === 0 ? 0 : 1,
@@ -59,8 +61,14 @@ const CheckBox = (props: PropsType) => {
         )}
       </View>
       <View style={[styles.viewWithBorder, borderWidth]}>
-        <Text style={[styles.text, description]}>{capitalizeFirstLetter(label)}</Text>
-        {description && <Text style={styles.description}>{description}</Text>}
+        <ThemedText style={description ? undefined : styles.text} variant="body" color="gray900">
+          {capitalizeFirstLetter(label)}
+        </ThemedText>
+        {description && (
+          <ThemedText style={styles.description} variant="bodySmall" color="gray600">
+            {description}
+          </ThemedText>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -70,13 +78,11 @@ export default CheckBox;
 
 const styles = StyleSheet.create({
   description: {
-    color: '#585858',
     fontSize: moderateScale(15),
     fontWeight: '400',
     lineHeight: moderateScale(20),
   },
   text: {
-    color: colors.textPrimary,
     fontSize: moderateScale(15),
     fontWeight: '400',
     lineHeight: moderateScale(20),

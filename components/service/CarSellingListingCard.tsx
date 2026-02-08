@@ -1,7 +1,7 @@
+import { useTheme } from '@/hooks/useTheme';
 import { Image } from '@/lib/Image';
 import { moderateScale } from '@/lib/responsive-dimensions';
 import { SPACING } from '@/newConstants/spacing';
-import { useTheme } from '@/newTheme';
 import { EvilIcons, FontAwesome } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -27,6 +27,7 @@ interface CarSellingListingCardProps {
   onComparePress?: () => void;
   isCompareSelected?: boolean;
   onPressFavorite?: () => void;
+  offers?: any[];
 }
 
 const CarSellingListingCard = ({
@@ -45,6 +46,9 @@ const CarSellingListingCard = ({
   sellerPlace,
   images,
   onPress,
+
+  offers,
+
   onComparePress,
   onPressFavorite,
   isCompareSelected = false,
@@ -66,16 +70,22 @@ const CarSellingListingCard = ({
               </BlurView>
             </Pressable>
 
-            {/* <View style={[styles.subscriptionBadge, { backgroundColor: theme.primary }]}>
-              <ThemedText variant="titleSmall" color="white">
-                ₹12999 worth Travlounge subscription
-              </ThemedText>
-            </View> */}
+            {offers && offers.length > 0 && (
+              <View style={[styles.subscriptionBadge, { backgroundColor: theme.primary }]}>
+                <ThemedText variant="titleSmall" color="white">
+                  {offers.length === 1
+                    ? `₹${offers.reduce((sum: number, item: any) => sum + Number(item.amount), 0)} worth Travlounge subscription`
+                    : `₹${offers.reduce(
+                        (sum: number, item: any) => sum + Number(item.amount),
+                        0
+                      )} worth ${offers?.length} Travlounge subscriptions`}
+                </ThemedText>
+              </View>
+            )}
           </Image>
         </View>
 
         <View style={styles.contentContainer}>
-          {/* Title Row */}
           <View style={styles.titleRow}>
             <ThemedText variant="titleEmphasized" color="gray900">
               {year} {make} {model}
@@ -111,16 +121,6 @@ const CarSellingListingCard = ({
             <ThemedText variant="titleEmphasized" color="gray900">
               ₹ {price}
             </ThemedText>
-            {/* <Pressable onPress={onComparePress} style={styles.compareContainer}>
-              <MaterialIcons
-                name={isCompareSelected ? 'check-box' : 'check-box-outline-blank'}
-                size={moderateScale(24)}
-                color={theme.gray400}
-              />
-              <ThemedText variant="body" color="gray600">
-                Compare
-              </ThemedText>
-            </Pressable> */}
           </View>
 
           <View style={styles.sellerRow}>

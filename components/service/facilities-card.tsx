@@ -1,29 +1,33 @@
-import { Box, Row, Text } from '@/core';
-import { colors } from '@/theme';
+import { Box, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { ThemedText } from '../common/ThemedText';
 import Icon from '../ui/icon';
 
 interface FacilityItemProps {
   name: string;
-  icon: string;
+  icon: any;
 }
 
-const FacilityItem: React.FC<FacilityItemProps> = ({ name, icon }) => (
-  <Box gap={8} style={styles.facilityItem}>
-    <Icon name={icon} size={32} />
-    <Text style={{ textAlign: 'center' }} color="#232323" preset="POP_12_R">
-      {name}
-    </Text>
-  </Box>
-);
+const FacilityItem: React.FC<FacilityItemProps> = ({ name, icon }) => {
+  const { theme } = useTheme();
+  return (
+    <Box gap={8} style={[styles.facilityItem, { backgroundColor: theme.backgroundCard }]}>
+      <Icon name={icon} size={32} />
+      <ThemedText style={{ textAlign: 'center' }} color="gray900" variant="label">
+        {name}
+      </ThemedText>
+    </Box>
+  );
+};
 
 const FacilitiesCard = () => {
   return (
     <Box gap={16} style={styles.container}>
-      <Text color="#232323" preset="POP_16_SB">
+      <ThemedText color="gray900" variant="bodyEmphasized">
         Facilities
-      </Text>
+      </ThemedText>
       <Row style={styles.row}>
         <FacilityItem name="Bath Towel" icon="BathTowel" />
         <FacilityItem name="Dental Kit" icon="DentalKit" />
@@ -45,7 +49,6 @@ const styles = StyleSheet.create({
   },
   facilityItem: {
     width: '23%',
-    backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 16,
     paddingHorizontal: 10,
     paddingVertical: 16,

@@ -6,10 +6,11 @@ import Icon from '../ui/icon';
 import PodSelectView from './pod-selection-view';
 import SelectionCard from './selection-card';
 
-import { Box, Row, Text } from '@/core';
+import { ThemedText } from '@/components/common/ThemedText';
+import { Box, Row } from '@/core';
 import BottomSheet from '@/core/bottom-sheet';
+import { useTheme } from '@/hooks/useTheme';
 import useSleepingPodCart from '@/modules/sleeping-pod';
-import { colors } from '@/theme';
 import { capitalizeFirstLetter } from '@/utils/string';
 
 interface PodSelection {
@@ -32,6 +33,7 @@ const PodSelectContainer = () => {
   const { list_of_pods, updatePods } = useSleepingPodCart();
   const podTypeRef = React.useRef<BottomSheetModal>(null);
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
+  const { theme } = useTheme();
 
   const handlePod = ({
     type,
@@ -71,13 +73,6 @@ const PodSelectContainer = () => {
   const handleAddNewPod = () => {
     setSelectedIndex(list_of_pods.length);
     podTypeRef.current?.present();
-    // const newPod: PodSelection = {
-    //   type: null,
-    //   number_of_pods: 1,
-    //   is_bath: false,
-    //   is_restroom: false,
-    // };
-    // updatePods([...list_of_pods, newPod]);
   };
 
   const renderPodSelection = (item: PodSelection, index: number) => {
@@ -101,7 +96,7 @@ const PodSelectContainer = () => {
         {index !== 0 && (
           <Pressable
             onPress={() => updatePods(list_of_pods.filter((_, i) => i !== index))}
-            style={styles.deleteButton}>
+            style={[styles.deleteButton, { backgroundColor: theme.backgroundCard }]}>
             <Icon name="Delete" size={24} />
           </Pressable>
         )}
@@ -113,9 +108,11 @@ const PodSelectContainer = () => {
     <Box gap={20}>
       {list_of_pods.map(renderPodSelection)}
       <Pressable onPress={handleAddNewPod}>
-        <Text preset="POP_16_SB" style={styles.addPodText}>
+        <ThemedText
+          variant="bodySmallEmphasized"
+          style={[styles.addPodText, { color: theme.primary }]}>
           Add New Pod
-        </Text>
+        </ThemedText>
       </Pressable>
       <BottomSheet ref={podTypeRef} enableDynamicSizing>
         <PodSelectView
@@ -135,13 +132,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     height: 45,
     width: 45,
-    backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
   },
   addPodText: {
-    color: colors.textSecondary,
     textAlign: 'right',
   },
 });

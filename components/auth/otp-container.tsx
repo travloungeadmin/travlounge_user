@@ -1,8 +1,9 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Pressable, StyleSheet, TextInput } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
-import { Box, Text } from '@/core';
-import { colors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
+import { moderateScale } from '@/lib/responsive-dimensions';
+import { ThemedText } from '../common/ThemedText';
 
 interface OtpContainerProps {
   value: string;
@@ -10,10 +11,9 @@ interface OtpContainerProps {
 }
 
 const OTP_LENGTH = 4;
-const BORDER_COLOR = '#8A95BB'; // Using direct color value since it's not in theme
-const FOCUS_COLOR = '#00205B'; // Using direct color value since it's not in theme
 
 const OtpContainer: React.FC<OtpContainerProps> = ({ value, setValue }) => {
+  const { theme } = useTheme();
   const otpRef = useRef<TextInput>(null);
   const [isContainerFocused, setIsContainerFocused] = useState(false);
   const codeDigitArray = new Array(OTP_LENGTH).fill(0);
@@ -39,17 +39,17 @@ const OtpContainer: React.FC<OtpContainerProps> = ({ value, setValue }) => {
           style={[
             styles.digitContainer,
             {
-              borderColor: isFocused ? FOCUS_COLOR : BORDER_COLOR,
-              borderWidth: isFocused ? 2 : 1,
+              borderColor: isFocused ? theme.primaryDeep : theme.grayBlue,
+              borderWidth: isFocused ? moderateScale(2) : moderateScale(1),
             },
           ]}>
-          <Text preset="ROB_14_M" color={colors.textSecondary}>
+          <ThemedText variant="labelLarge" color="primary">
             {digit}
-          </Text>
+          </ThemedText>
         </Pressable>
       );
     },
-    [value, isContainerFocused, handleOnPress]
+    [value, isContainerFocused, handleOnPress, theme]
   );
 
   const handleChangeText = useCallback(
@@ -64,7 +64,7 @@ const OtpContainer: React.FC<OtpContainerProps> = ({ value, setValue }) => {
   );
 
   return (
-    <Box style={styles.container}>
+    <View style={styles.container}>
       {codeDigitArray.map(toCodeDigitInput)}
       <TextInput
         ref={otpRef}
@@ -79,7 +79,7 @@ const OtpContainer: React.FC<OtpContainerProps> = ({ value, setValue }) => {
         textContentType="oneTimeCode"
         autoComplete="sms-otp"
       />
-    </Box>
+    </View>
   );
 };
 
@@ -91,9 +91,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   digitContainer: {
-    height: 47,
-    width: 55,
-    borderRadius: 5,
+    height: moderateScale(47),
+    width: moderateScale(55),
+    borderRadius: moderateScale(5),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',

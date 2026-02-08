@@ -11,9 +11,9 @@ import Settings from '@/assets/svgs/icons/settings.svg';
 import SleepingPod from '@/assets/svgs/icons/sleeping-pod.svg';
 import Toloo from '@/assets/svgs/icons/toloo.svg';
 import User from '@/assets/svgs/icons/user.svg';
+import { View } from 'react-native';
 
 import ArrowDown from '@/assets/svgs/icons/arrow-down.svg';
-import BathTowel from '@/assets/svgs/icons/bath_towel.svg';
 import Buffet from '@/assets/svgs/icons/buffet.svg';
 import Calendar from '@/assets/svgs/icons/calendar.svg';
 import CarWash from '@/assets/svgs/icons/car-wash.svg';
@@ -27,8 +27,13 @@ import DentalKit from '@/assets/svgs/icons/dental_kit.svg';
 import DoublePod from '@/assets/svgs/icons/double-pod.svg';
 import DurationIcon from '@/assets/svgs/icons/duration-icon.svg';
 import EditProfile from '@/assets/svgs/icons/edit-profile.svg';
+import EliteCardIcon from '@/assets/svgs/icons/elite-card/elite-card-icon.svg';
+import PercentageIcon from '@/assets/svgs/icons/elite-card/percentage-icon.svg';
+import Empty from '@/assets/svgs/icons/empty.svg';
+import Error from '@/assets/svgs/icons/error.svg';
 import Fillomart from '@/assets/svgs/icons/fillomart.svg';
 import TravloungeIcon from '@/assets/svgs/icons/icon.svg';
+import Insurance from '@/assets/svgs/icons/insurance.svg';
 import LocationPermission from '@/assets/svgs/icons/location_permission.svg';
 import Logout from '@/assets/svgs/icons/logout.svg';
 import Mechanic from '@/assets/svgs/icons/mechanic.svg';
@@ -49,18 +54,15 @@ import Star from '@/assets/svgs/icons/star.svg';
 import Stars from '@/assets/svgs/icons/stars.svg';
 import Support from '@/assets/svgs/icons/support.svg';
 import Surprice from '@/assets/svgs/icons/surprice.svg';
-import CafeMap from '@/assets/svgs/map/cafe.svg';
-import CarWashMap from '@/assets/svgs/map/car-wash.svg';
-import FillomartMap from '@/assets/svgs/map/fillomart.svg';
-import MechanicMap from '@/assets/svgs/map/mechanic.svg';
-import PetrolPumpMap from '@/assets/svgs/map/petrol-pumb.svg';
-import ResortMap from '@/assets/svgs/map/resort.svg';
-import RestaurantMap from '@/assets/svgs/map/restorent.svg';
-import SleepingPodMap from '@/assets/svgs/map/sleeping-pod.svg';
-import TolooMap from '@/assets/svgs/map/toloo.svg';
+import SubscriptionBg from '@/assets/svgs/subscriptions/bg-lines.svg';
+import { moderateScale } from '@/lib/responsive-dimensions';
+
 const icons = {
+  Insurance,
   SendIcon,
   SellCar,
+  Empty,
+  Error,
   Support,
   EditProfile,
   RoundPlus,
@@ -68,26 +70,16 @@ const icons = {
   Delete,
   LocationPermission,
   DurationIcon,
-  SleepingPodMap,
   Clock,
-  CafeMap,
   Check,
   Bookings,
   PartnerIcon,
-  RestaurantMap,
   ArrowDown,
   PodTypeIcon,
   DoublePod,
-  PetrolPumpMap,
   SinglePod,
-  CarWashMap,
   Search,
-  FillomartMap,
   Calendar,
-  ResortMap,
-  BathTowel,
-  MechanicMap,
-  TolooMap,
   Stars,
   Send,
   Car,
@@ -118,26 +110,34 @@ const icons = {
   ShowerKit,
   DeleteProfile,
   Logout,
+  EliteCardIcon,
+  PercentageIcon,
+  SubscriptionBg,
 };
 
+export type IconName = keyof typeof icons;
+
 interface PropsType {
-  name: keyof typeof icons;
+  name: IconName;
   size?: number;
   stroke?: string;
   fill?: string;
+  width?: number;
+  height?: number;
 }
 
 const Icon = (props: PropsType): React.JSX.Element => {
-  const { stroke, name, size, fill } = props;
+  const { stroke, name, size, fill, width, height } = props;
 
   const IconName = icons[name];
+  if (!IconName) return <View />;
 
   return (
     <IconName
       fill={fill ?? 'none'}
-      height={size ?? 24}
+      height={height ?? size ?? moderateScale(24)}
       stroke={stroke ?? 'none'}
-      width={size ?? 24}
+      width={width ?? size ?? moderateScale(24)}
     />
   );
 };

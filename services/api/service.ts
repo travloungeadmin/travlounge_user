@@ -1,32 +1,18 @@
 import apiClient from '.';
 import ENDPOINTS from '../end-points';
+import { GetServiceListApiProps, ServiceListApiResponse } from './types/listings';
 
-export const getServiceListApi = async (props) => {
-  const { latitude, longitude, category, page, is_travlounge, isPartner } = props;
-  console.log({
-    category,
-    longitude,
-    latitude,
-    page,
-    is_travlounge,
-    is_partner: isPartner,
-  });
-
+export const getServiceListApi = async (
+  props: GetServiceListApiProps
+): Promise<ServiceListApiResponse> => {
   const response = await apiClient({
     method: 'get',
     url: `${ENDPOINTS.SERVICE_LIST}`,
-    params: {
-      category,
-      longitude,
-      latitude,
-      page,
-      is_travlounge,
-      is_partner: isPartner,
-    },
+    params: props,
   });
-
   return response.data;
 };
+
 export const getServiceDetailApi = async (props) => {
   const { id, longitude, latitude } = props;
   const response = await apiClient({
@@ -192,5 +178,43 @@ export const verifySleepingPodOrderApi = async (props: verifySleepingPodOrderApi
     },
   });
 
+  return response.data;
+};
+
+type CreateCoinOrderPayload =
+  | { offer_id: number; coins_amount?: never }
+  | { coins_amount: number; offer_id?: 0 };
+
+export const createCoinOrderApi = async (payload: CreateCoinOrderPayload) => {
+  const data =
+    payload.offer_id && payload.offer_id !== 0
+      ? { offer_id: payload.offer_id }
+      : { coins_amount: payload.coins_amount };
+  const response = await apiClient.post(ENDPOINTS.CREATE_COIN_ORDER, data);
+  return response.data;
+};
+export const verifyCoinOrderApi = async (data: {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}) => {
+  const response = await apiClient({
+    method: 'put',
+    url: ENDPOINTS.VERIFY_COIN_ORDER,
+    data,
+  });
+  return response.data;
+};
+export const verifyPaymentRequestApi = async (data: {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  order_id: string;
+}) => {
+  const response = await apiClient({
+    method: 'put',
+    url: ENDPOINTS.VERIFY_PAYMENT_REQUEST,
+    data,
+  });
   return response.data;
 };

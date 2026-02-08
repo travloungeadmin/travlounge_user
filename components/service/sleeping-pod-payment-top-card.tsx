@@ -1,6 +1,7 @@
+import { ThemedText } from '@/components/common/ThemedText';
 import { shadow } from '@/constants';
-import { Box, Image, Row, Text } from '@/core';
-import { colors } from '@/theme';
+import { Box, Image, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { convertTimeTo12Hour, formatDateToDMY } from '@/utils/string';
 import { StyleSheet } from 'react-native';
 
@@ -18,9 +19,10 @@ type propsType = {
 
 const SleepingPodPaymentTopCard = (props: propsType) => {
   const { id, image, name, location, date, time, duration, isToloo, service_name } = props;
+  const { theme } = useTheme();
 
   return (
-    <Box style={[styles.topCard, shadow]}>
+    <Box style={[styles.topCard, shadow, { backgroundColor: theme.backgroundCard }]}>
       <Row gap={20}>
         <Image
           source={{
@@ -29,44 +31,44 @@ const SleepingPodPaymentTopCard = (props: propsType) => {
           style={styles.image}
         />
         <Box style={styles.centeredBox} gap={4}>
-          <Text preset="POP_16_SB" color="#333333">
+          <ThemedText variant="bodySmallEmphasized" color="gray800">
             {name}
-          </Text>
+          </ThemedText>
           {location && (
-            <Text preset="POP_12_R" color="rgba(51, 51, 51, 1)">
+            <ThemedText variant="label" color="gray800">
               {location}
-            </Text>
+            </ThemedText>
           )}
         </Box>
       </Row>
       {!isToloo && (
         <>
-          <Box style={styles.divider} />
+          <Box style={[styles.divider, { backgroundColor: 'rgba(37, 61, 143, 0.3)' }]} />
           <Row style={styles.spaceBetween}>
             <Box gap={4}>
-              <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+              <ThemedText variant="label" color="gray600">
                 {service_name === 'car_wash' ? 'Booked Date' : 'Check-in Date'}
-              </Text>
-              <Text preset="POP_14_M" color="#333333">
+              </ThemedText>
+              <ThemedText variant="label" color="gray800">
                 {date ? formatDateToDMY(date) : ''}
-              </Text>
+              </ThemedText>
             </Box>
             <Box gap={4}>
-              <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+              <ThemedText variant="label" color="gray600">
                 Arrival Time
-              </Text>
-              <Text preset="POP_14_M" color="#333333">
+              </ThemedText>
+              <ThemedText variant="label" color="gray800">
                 {time ? convertTimeTo12Hour(time) : ''}
-              </Text>
+              </ThemedText>
             </Box>
             {duration > 0 && (
               <Box gap={4}>
-                <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+                <ThemedText variant="label" color="gray600">
                   Duration
-                </Text>
-                <Text preset="POP_14_M" color="#333333">
+                </ThemedText>
+                <ThemedText variant="label" color="gray800">
                   {duration} Hours
-                </Text>
+                </ThemedText>
               </Box>
             )}
           </Row>
@@ -81,12 +83,10 @@ export default SleepingPodPaymentTopCard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundPrimary,
   },
   topCard: {
     padding: 16,
     margin: 16,
-    backgroundColor: colors.cardBackgroundPrimary,
     borderRadius: 8,
     gap: 16,
   },
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: 'rgba(37, 61, 143, 0.3)',
   },
   spaceBetween: {
     justifyContent: 'space-between',

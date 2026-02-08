@@ -1,6 +1,6 @@
 export type MakeATripChatSuggestionsResponse = {
   count: number;
-  last_updated: string; // ISO 8601 timestamp
+  last_updated: string;
   suggestions: string[];
 };
 export type Category = {

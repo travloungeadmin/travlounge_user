@@ -1,14 +1,15 @@
 import apiClient from '.';
 import ENDPOINTS from '../end-points';
+import { QrCheckResponse, ServiceListResponse, WalletDetailsResponse } from './types/qr';
 
-const getServiceListApi = async () => {
+const getServiceListApi = async (): Promise<ServiceListResponse> => {
   const response = await apiClient({
     method: 'get',
     url: `${ENDPOINTS.SERVICES}`,
   });
   return response.data;
 };
-const qrCheckApi = async (formData) => {
+const qrCheckApi = async (formData: any): Promise<QrCheckResponse> => {
   const response = await apiClient({
     method: 'post',
     url: `${ENDPOINTS.QR_CHECK}`,
@@ -16,11 +17,14 @@ const qrCheckApi = async (formData) => {
   });
   return response.data;
 };
-const getwalletDetailsApi = async (formData) => {
+
+const getwalletDetailsApi = async (): Promise<WalletDetailsResponse> => {
   const response = await apiClient({
     method: 'get',
+    baseURL: process.env.EXPO_PUBLIC_API_URL_V2,
     url: `${ENDPOINTS.QR_WALLET_DETAILS}`,
   });
+
   return response.data;
 };
 

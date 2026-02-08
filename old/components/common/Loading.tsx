@@ -1,14 +1,16 @@
-import { colors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 import LottieView from 'lottie-react-native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const Loading = () => {
+  const { theme } = useTheme();
+
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: colors.backgroundPrimary,
+        backgroundColor: theme.backgroundPrimary,
         justifyContent: 'center',
         alignItems: 'center',
       }}>

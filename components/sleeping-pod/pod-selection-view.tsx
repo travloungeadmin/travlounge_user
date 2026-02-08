@@ -5,11 +5,13 @@ import { SelectList } from 'react-native-dropdown-select-list';
 
 import Icon from '../ui/icon';
 
-import { Box, Row, Text, useSafeAreaInsets } from '@/core';
+import { Box, Row, useSafeAreaInsets } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
 import useSleepingPodCart from '@/modules/sleeping-pod';
+import { ThemedText } from '../common/ThemedText';
 
-const PodSelectView = ({ onPress, item, index }) => {
+const PodSelectView = ({ onPress, item, index }: any) => {
   const { duration } = useSleepingPodCart();
   const { bottomHeight } = useSafeAreaInsets();
   const [selectedPod, setSelectedPod] = React.useState(item?.type || 'Single');
@@ -17,6 +19,7 @@ const PodSelectView = ({ onPress, item, index }) => {
   const [is_bath, setIsBath] = React.useState(item?.is_bath || duration >= 12);
   const [is_restroom, setIsRestroom] = React.useState(item?.is_restroom || true);
   const [noOfExtraBaths, setNoOfExtraBaths] = React.useState(item?.noOfExtraBaths || 0);
+  const { theme } = useTheme();
 
   const data = [
     { key: 'single', value: 'Single' },
@@ -25,47 +28,53 @@ const PodSelectView = ({ onPress, item, index }) => {
 
   return (
     <BottomSheetView style={styles.bottomSheetContent}>
-      <Text style={styles.bottomSheetTitle}>Select Sleeping Pod Type</Text>
+      <ThemedText variant="headline" style={{ color: theme.primary }}>
+        Select Sleeping Pod Type
+      </ThemedText>
       <Box gap={10}>
-        <Text preset="POP_12_M" color="rgba(34, 49, 63, 0.8)">
+        <ThemedText variant="label" color="gray600">
           Sleeping pod
-        </Text>
+        </ThemedText>
         <SelectList
           placeholder={selectedPod || 'Select'}
           search={false}
-          setSelected={(val) => setSelectedPod(val)}
+          setSelected={(val: any) => setSelectedPod(val)}
           data={data}
         />
       </Box>
       <Box gap={10}>
-        <Text preset="POP_12_M" style={[styles.label]}>
+        <ThemedText variant="label" style={styles.label}>
           Number Of Pods
-        </Text>
-        <Row style={styles.counterRow}>
+        </ThemedText>
+        <Row
+          style={[
+            styles.counterRow,
+            { backgroundColor: theme.backgroundTop, borderColor: theme.gray200 },
+          ]}>
           <Pressable
             onPress={() => {
               if (SelectedNoOfPods > 1) {
                 setSelectedNoOfPods(SelectedNoOfPods - 1);
               }
             }}>
-            <Icon name="RoundMinus" size={20} />
+            <Icon name="RoundMinus" size={20} stroke={theme.icon} />
           </Pressable>
-          <Text preset="POP_14_M" style={styles.counterText}>
+          <ThemedText variant="bodySmall" color="gray900">
             {SelectedNoOfPods}
-          </Text>
+          </ThemedText>
           <Pressable
             onPress={() => {
               setSelectedNoOfPods(SelectedNoOfPods + 1);
             }}>
-            <Icon name="RoundPlus" size={20} />
+            <Icon name="RoundPlus" size={20} stroke={theme.icon} />
           </Pressable>
         </Row>
         {duration > 3 && (
           <Box style={{ marginTop: 20 }} gap={15}>
             <View style={{ gap: 10 }}>
-              <Text preset="POP_12_M" style={styles.label}>
+              <ThemedText variant="label" style={styles.label}>
                 Sleeping Pod with
-              </Text>
+              </ThemedText>
               <Row style={{ justifyContent: 'space-between' }}>
                 <Pressable
                   disabled
@@ -77,19 +86,17 @@ const PodSelectView = ({ onPress, item, index }) => {
                     <Box
                       style={{
                         borderWidth: 1,
-                        borderColor: 'rgba(230, 232, 233, 1)',
+                        borderColor: theme.gray200,
                         height: 20,
                         width: 20,
                         borderRadius: 4,
-                        backgroundColor: is_restroom
-                          ? 'rgba(37, 61, 143, 1)'
-                          : 'rgba(245, 246, 246, 1)',
+                        backgroundColor: is_restroom ? theme.primary : theme.backgroundTop,
                       }}
                     />
 
-                    <Text color="rgba(34, 49, 63, 1)" preset="POP_14_M">
+                    <ThemedText color="gray900" variant="bodySmall">
                       Restroom
-                    </Text>
+                    </ThemedText>
                   </Row>
                 </Pressable>
                 <Pressable
@@ -107,19 +114,17 @@ const PodSelectView = ({ onPress, item, index }) => {
                     <Box
                       style={{
                         borderWidth: 1,
-                        borderColor: 'rgba(230, 232, 233, 1)',
+                        borderColor: theme.gray200,
                         height: 20,
                         width: 20,
                         borderRadius: 4,
-                        backgroundColor: is_bath
-                          ? 'rgba(37, 61, 143, 1)'
-                          : 'rgba(245, 246, 246, 1)',
+                        backgroundColor: is_bath ? theme.primary : theme.backgroundTop,
                       }}
                     />
 
-                    <Text color="rgba(34, 49, 63, 1)" preset="POP_14_M">
+                    <ThemedText color="gray900" variant="bodySmall">
                       Bath
-                    </Text>
+                    </ThemedText>
                   </Row>
                 </Pressable>
               </Row>
@@ -133,7 +138,7 @@ const PodSelectView = ({ onPress, item, index }) => {
                 style={{ marginTop: 10 }}>
                 <View
                   style={{
-                    backgroundColor: '#EBF1F5',
+                    backgroundColor: theme.primary50,
                     borderRadius: 8,
                     justifyContent: 'center',
                     paddingHorizontal: 16,
@@ -145,23 +150,23 @@ const PodSelectView = ({ onPress, item, index }) => {
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                    <Text preset="POP_16_SB" style={{ color: 'rgba(37, 61, 143, 1)' }}>
+                    <ThemedText variant="bodySmallEmphasized" style={{ color: theme.primary }}>
                       Add Extra Bath
-                    </Text>
+                    </ThemedText>
                     {noOfExtraBaths > 1 && (
                       <Pressable
                         onPress={() => {
                           setNoOfExtraBaths(1);
                         }}
-                        style={{ backgroundColor: '#FFFFFF', padding: 8, borderRadius: 8 }}>
-                        <Icon name="Delete" size={24} />
+                        style={{ backgroundColor: theme.white, padding: 8, borderRadius: 8 }}>
+                        <Icon name="Delete" size={24} stroke={theme.error} />
                       </Pressable>
                     )}
                   </View>
                   {noOfExtraBaths > 1 && (
                     <>
-                      <Text
-                        preset="POP_12_M"
+                      <ThemedText
+                        variant="label"
                         style={[
                           styles.label,
                           {
@@ -169,24 +174,28 @@ const PodSelectView = ({ onPress, item, index }) => {
                           },
                         ]}>
                         Select Number of Bath
-                      </Text>
-                      <Row style={styles.counterRow}>
+                      </ThemedText>
+                      <Row
+                        style={[
+                          styles.counterRow,
+                          { backgroundColor: theme.backgroundTop, borderColor: theme.gray200 },
+                        ]}>
                         <Pressable
                           onPress={() => {
                             if (noOfExtraBaths > 2) {
-                              setNoOfExtraBaths((prev) => prev - 1);
+                              setNoOfExtraBaths((prev: number) => prev - 1);
                             }
                           }}>
-                          <Icon name="RoundMinus" size={20} />
+                          <Icon name="RoundMinus" size={20} stroke={theme.gray900} />
                         </Pressable>
-                        <Text preset="POP_14_M" style={styles.counterText}>
+                        <ThemedText variant="bodySmall" color="gray900">
                           {noOfExtraBaths - 1}
-                        </Text>
+                        </ThemedText>
                         <Pressable
                           onPress={() => {
-                            setNoOfExtraBaths((prev) => prev + 1);
+                            setNoOfExtraBaths((prev: any) => prev + 1);
                           }}>
-                          <Icon name="RoundPlus" size={20} />
+                          <Icon name="RoundPlus" size={20} stroke={theme.gray900} />
                         </Pressable>
                       </Row>
                     </>
@@ -202,7 +211,7 @@ const PodSelectView = ({ onPress, item, index }) => {
         // disabled={!selectedPod || !SelectedNoOfPods}
         style={{
           marginBottom: bottomHeight,
-          backgroundColor: '#253D8F',
+          backgroundColor: theme.primary,
           borderRadius: 24,
           height: 45,
           justifyContent: 'center',
@@ -248,9 +257,9 @@ const PodSelectView = ({ onPress, item, index }) => {
             });
           }
         }}>
-        <Text preset="POP_16_M" color="#fff">
+        <ThemedText variant="bodySmallEmphasized" color="white">
           Done
-        </Text>
+        </ThemedText>
       </Pressable>
     </BottomSheetView>
   );
@@ -265,7 +274,6 @@ const styles = StyleSheet.create({
     gap: 30,
   },
   bottomSheetTitle: {
-    color: '#253D8F',
     fontSize: 20,
     lineHeight: 30,
     fontWeight: '600',
@@ -277,24 +285,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  podTypeText: {
-    color: '#253D8F',
-  },
+  podTypeText: {},
   label: {
     color: 'rgba(34, 49, 63, 0.8)',
   },
   counterRow: {
     gap: 10,
     alignItems: 'center',
-    backgroundColor: '#F5F6F6',
     borderWidth: 1,
-    borderColor: '#E6E8E9',
     height: 45,
     paddingHorizontal: 20,
     borderRadius: 12,
     justifyContent: 'space-between',
   },
-  counterText: {
-    color: '#22313F',
-  },
+  counterText: {},
 });

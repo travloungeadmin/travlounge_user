@@ -1,16 +1,16 @@
-import React from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
-import { Text } from '@/core';
 import Icon from '@/components/ui/icon';
 import { shadow } from '@/constants';
+import { Text } from '@/core';
 import { useLocation } from '@/hooks/useLocation';
+import React from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 interface LocationPermissionViewProps {
   onPermissionGranted?: () => void;
 }
 
-export const LocationPermissionView: React.FC<LocationPermissionViewProps> = ({ 
-  onPermissionGranted 
+export const LocationPermissionView: React.FC<LocationPermissionViewProps> = ({
+  onPermissionGranted,
 }) => {
   const { permissionState, requestPermission, getCurrentLocation } = useLocation();
 
@@ -27,13 +27,12 @@ export const LocationPermissionView: React.FC<LocationPermissionViewProps> = ({
   }
 
   return (
-    <Pressable 
-      onPress={handlePermissionRequest} 
+    <Pressable
+      onPress={handlePermissionRequest}
       style={[styles.container, shadow]}
       accessibilityRole="button"
       accessibilityLabel="Request location permission"
-      accessibilityHint="Enables location services for better accuracy"
-    >
+      accessibilityHint="Enables location services for better accuracy">
       <Icon name="LocationPermission" size={34} />
       <View>
         <Text color="#000" preset="POP_14_SB">

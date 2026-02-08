@@ -3,22 +3,23 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
-  Text as RNText,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 
+import { ThemedText } from '../common/ThemedText';
 import OtpContainer from './otp-container';
 import ResentOtpContainer from './resent-otp-container';
 
 import { shadow } from '@/constants';
-import { Box, Device, Text } from '@/core';
 import { usePushNotifications } from '@/core/notification';
+import { useTheme } from '@/hooks/useTheme';
 import { showError } from '@/lib/toast';
-import { setRefresh, setSession } from '@/modules/user';
+import { setLoggedIn, setRefresh, setSession } from '@/modules/user';
+import { SPACING } from '@/newConstants/spacing';
 import { verifyOTPQuery } from '@/services/query/auth';
-import { colors } from '@/theme';
 
 interface VerifyContainerProps {
   number: string;
@@ -33,6 +34,7 @@ const VerifyContainer: React.FC<VerifyContainerProps> = ({
   isLogin,
   onPressEdit,
 }) => {
+  const { theme } = useTheme();
   const { mutate, isPending } = verifyOTPQuery();
   const { expoPushToken } = usePushNotifications();
   const [value, setValue] = useState('');
@@ -75,9 +77,14 @@ const VerifyContainer: React.FC<VerifyContainerProps> = ({
 
     mutate(formData, {
       onSuccess: (res) => {
-        setSession(res.access_token);
-        setRefresh(res.refresh_token);
-        router.replace('/(root)/(main)/(tab)');
+        if (res?.access_token) {
+          setSession(res.access_token);
+          setRefresh(res.refresh_token);
+          setLoggedIn(true);
+          router.replace('/(main)/(tab)');
+        } else {
+          showError('Error', 'Invalid response from server');
+        }
       },
       onError: () => {
         setError('Invalid OTP');
@@ -87,56 +94,50 @@ const VerifyContainer: React.FC<VerifyContainerProps> = ({
   };
 
   return (
-    <Box style={styles.container}>
-      <Box style={[styles.innerContainer, shadow]}>
-        <Text color={colors.textPrimary} preset="POP_14_M" style={styles.text1}>
+    <View style={styles.container}>
+      <View style={[styles.innerContainer, { backgroundColor: theme.backgroundCard }, shadow]}>
+        <ThemedText color="gray900" variant="labelLarge" style={styles.text1}>
           Verification
-        </Text>
+        </ThemedText>
 
-        <RNText
-          style={[
-            styles.text2,
-            {
-              flexDirection: 'row',
-              fontFamily: 'Poppins',
-              fontSize: 14,
-              fontWeight: '400',
-              color: colors.textPrimaryDescription,
-            },
-          ]}>
+        <ThemedText variant="body" color="gray600" style={[styles.text2, { flexDirection: 'row' }]}>
           Please enter the verification code we've sent you on {number}
           <TouchableWithoutFeedback onPress={onPressEdit}>
-            <RNText
+            <ThemedText
+              color="primary"
               style={{
                 fontFamily: 'Poppins',
                 fontSize: 14,
                 fontWeight: '700',
-                color: colors.buttonBackgroundPrimary,
               }}>
               {' '}
               Edit
-            </RNText>
+            </ThemedText>
           </TouchableWithoutFeedback>
-        </RNText>
+        </ThemedText>
 
         <OtpContainer value={value} setValue={setValue} />
 
         <TouchableOpacity
-          style={[styles.button, isPending && styles.disabledButton]}
+          style={[
+            styles.button,
+            { backgroundColor: theme.primary },
+            isPending && styles.disabledButton,
+          ]}
           onPress={continueHandler}
           disabled={isPending}
           activeOpacity={0.7}>
           {isPending ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text preset="POP_16_M" color={colors.textTertiary}>
+            <ThemedText variant="bodyLargeEmphasized" color="white">
               Continue
-            </Text>
+            </ThemedText>
           )}
         </TouchableOpacity>
-      </Box>
+      </View>
       <ResentOtpContainer isLogin={isLogin} number={number} />
-    </Box>
+    </View>
   );
 };
 
@@ -149,8 +150,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     paddingBottom: 30,
-    backgroundColor: colors.cardBackgroundPrimary,
-    width: Device.width - 40,
+    width: SPACING.screenWidth - 40,
     borderRadius: 21,
     paddingTop: 30,
     paddingHorizontal: 20,
@@ -175,7 +175,6 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.buttonBackgroundPrimary,
     width: '100%',
   },
   disabledButton: {

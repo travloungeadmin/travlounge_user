@@ -2,8 +2,9 @@ import { format } from 'date-fns';
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { Box, Row, Text } from '@/core';
-import { colors } from '@/theme';
+import { ThemedText } from '@/components/common/ThemedText';
+import { Box, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 
 interface BookingFooterProps {
   isUnavailable?: boolean;
@@ -22,29 +23,31 @@ export const BookingFooter: React.FC<BookingFooterProps> = ({
   bottomHeight,
   onBook,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <Row
       style={[
         {
           paddingBottom: bottomHeight || 20,
-          backgroundColor: isUnavailable ? 'rgba(255, 190, 157, 1)' : colors.cardBackgroundPrimary,
+          backgroundColor: isUnavailable ? 'rgba(255, 190, 157, 1)' : theme.backgroundCard,
         },
         styles.container,
       ]}>
       {isUnavailable ? (
-        <Text style={styles.unavailable} preset="POP_14_SB" color="#333333">
+        <ThemedText style={styles.unavailable} variant="bodySmallEmphasized" color="gray800">
           {!price
             ? 'Please select a date and pod for booking'
             : 'This sleeping Pod is not available on this date'}
-        </Text>
+        </ThemedText>
       ) : (
         <Box gap={8}>
-          <Text preset="POP_18_SB" color="#333333">
+          <ThemedText variant="headline" color="gray800">
             ₹ {price}
-          </Text>
-          <Text preset="POP_14_R" color="#333333">
+          </ThemedText>
+          <ThemedText variant="bodySmall" color="gray800">
             {noOfPods} Pods - {date && format(new Date(date), 'dd/MM/yyyy')}
-          </Text>
+          </ThemedText>
         </Box>
       )}
       {price ? (
@@ -53,13 +56,13 @@ export const BookingFooter: React.FC<BookingFooterProps> = ({
           onPress={onBook}
           style={[
             {
-              backgroundColor: !price || isUnavailable ? 'rgba(143, 37, 37, 1)' : '#253D8F',
+              backgroundColor: !price || isUnavailable ? 'rgba(143, 37, 37, 1)' : theme.primary,
             },
             styles.button,
           ]}>
-          <Text preset="POP_16_SB" color="#FFF">
+          <ThemedText variant="bodyEmphasized" color="white">
             {isUnavailable ? 'Rearrange' : 'Book Now'}
-          </Text>
+          </ThemedText>
         </Pressable>
       ) : null}
     </Row>

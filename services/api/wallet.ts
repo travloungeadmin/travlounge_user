@@ -1,10 +1,28 @@
 import apiClient from '@/services/api';
+import { EliteDashboardResponse, TransactionHistoryParams } from '@/services/api/types/wallet';
 import ENDPOINTS from '@/services/end-points';
 
 const getWalletApi = async () => {
   const response = await apiClient({
     method: 'get',
     url: ENDPOINTS.WALLET,
+  });
+  return response.data;
+};
+
+const getEliteWalletDashboardApi = async (): Promise<EliteDashboardResponse> => {
+  const response = await apiClient({
+    method: 'get',
+    url: ENDPOINTS.ELITE_DASHBOARD,
+  });
+  return response.data;
+};
+
+const getWalletTransactionHistoryApi = async (params?: TransactionHistoryParams) => {
+  const response = await apiClient({
+    method: 'get',
+    url: ENDPOINTS.ELITE_TRANSACTION_HISTORY,
+    params,
   });
   return response.data;
 };
@@ -20,7 +38,7 @@ const addMoneyApi = async (data: FormData) => {
   });
   return response.data;
 };
-const updateAddMoneyApi = async (props) => {
+const updateAddMoneyApi = async (props: any) => {
   const { id, amount, requested_by, pk } = props;
 
   const response = await apiClient({
@@ -36,4 +54,10 @@ const updateAddMoneyApi = async (props) => {
   return response.data;
 };
 
-export { addMoneyApi, getWalletApi, updateAddMoneyApi };
+export {
+  addMoneyApi,
+  getEliteWalletDashboardApi,
+  getWalletApi,
+  getWalletTransactionHistoryApi,
+  updateAddMoneyApi,
+};

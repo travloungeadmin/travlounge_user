@@ -1,6 +1,6 @@
 import { shadow } from '@/constants';
 import { Box, Device, Row, Text } from '@/core';
-import { colors } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -9,12 +9,10 @@ interface BalanceInfoProps {
   requiredAmount: string;
 }
 
-export const BalanceInfo: React.FC<BalanceInfoProps> = ({
-  currentBalance,
-  requiredAmount,
-}) => {
+export const BalanceInfo: React.FC<BalanceInfoProps> = ({ currentBalance, requiredAmount }) => {
+  const { theme } = useTheme();
   return (
-    <Row style={[styles.container, shadow]}>
+    <Row style={[styles.container, { backgroundColor: theme.backgroundCard }, shadow]}>
       <Box gap={5}>
         <Text color="rgba(34, 49, 63, 0.8)" preset="POP_14_M">
           Current Balance
@@ -37,7 +35,6 @@ export const BalanceInfo: React.FC<BalanceInfoProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.cardBackgroundPrimary,
     padding: 20,
     margin: 20,
     borderRadius: 8,

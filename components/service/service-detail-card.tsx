@@ -1,12 +1,16 @@
-import { Box, Device, Row, Text } from '@/core';
+import { Box, Device, Row } from '@/core';
+import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Extrapolation, interpolate, useSharedValue } from 'react-native-reanimated';
 import Carousel, { Pagination } from 'react-native-reanimated-carousel';
+import { ThemedText } from '../common/ThemedText';
 
 import { shadow } from '@/constants';
-import { colors } from '@/theme';
-import { Image } from 'expo-image';
+import { SPACING } from '@/newConstants/spacing';
+import { getHomeListQuery } from '@/services/query/home';
+import useServiceStore from '@/store/service';
+import { Image, ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 
 type propsType = {
@@ -16,13 +20,27 @@ type propsType = {
   rating: number;
   images: string[];
   offerPercentage?: number;
+  categoryId?: number;
 };
 
 const ServiceDetailCard = (props: propsType) => {
-  const { description, location, name, rating = 5, images, offerPercentage } = props;
+  const {
+    description,
+    location,
+    name,
+    rating = 5,
+    images,
+    offerPercentage,
+    categoryId,
+    isCoinAccept,
+  } = props;
+  const { data } = getHomeListQuery();
+  const eliteCoin = data?.user_details?.elite_coin_balance || 0;
   const scrollOffsetValue = useSharedValue(0);
   const progress = useSharedValue<number>(0);
-
+  const { services } = useServiceStore();
+  const CategoryName = services?.find((item) => item.id === categoryId)?.title;
+  const { theme } = useTheme();
   const imageWidth = Device.width - 32;
   const imageHeight = 332;
   return (
@@ -33,7 +51,7 @@ const ServiceDetailCard = (props: propsType) => {
           // overflow: "hidden",
           margin: 16,
           marginBottom: 20,
-          backgroundColor: colors.cardBackgroundPrimary,
+          backgroundColor: theme.backgroundCard,
         },
 
         shadow,
@@ -68,7 +86,7 @@ const ServiceDetailCard = (props: propsType) => {
         {images?.length > 1 && (
           <Box
             style={{
-              backgroundColor: colors.cardBackgroundPrimary,
+              backgroundColor: theme.backgroundCard,
               paddingHorizontal: 5,
               paddingVertical: 5,
               borderRadius: 8,
@@ -83,14 +101,14 @@ const ServiceDetailCard = (props: propsType) => {
               size={4}
               dotStyle={{
                 borderRadius: 16,
-                backgroundColor: colors.textSecondaryDisable,
+                backgroundColor: theme.gray300,
               }}
               activeDotStyle={{
                 borderRadius: 8,
                 width: 6,
                 height: 6,
                 overflow: 'hidden',
-                backgroundColor: colors.textSecondary,
+                backgroundColor: theme.gray500,
               }}
               containerStyle={{
                 justifyContent: 'center',
@@ -115,7 +133,7 @@ const ServiceDetailCard = (props: propsType) => {
               renderItem={() => (
                 <Box
                   style={{
-                    backgroundColor: colors.textPrimary,
+                    backgroundColor: theme.gray900,
                     flex: 1,
                   }}
                 />
@@ -125,13 +143,13 @@ const ServiceDetailCard = (props: propsType) => {
         )}
       </Box>
       <Box style={{ padding: 16, paddingTop: 20 }}>
-        <Text preset="POP_16_SB" color={colors.textPrimary}>
+        <ThemedText variant="bodySmallEmphasized" color="gray900">
           {name}
-        </Text>
+        </ThemedText>
         <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text color={colors.textPrimary} preset="POP_14_M">
+          <ThemedText color="gray900" variant="bodySmall">
             {location}
-          </Text>
+          </ThemedText>
           {/* <Row style={{ alignItems: "center", gap: 5 }}>
             <Icon name="Star" size={12} fill={colors.iconPrimary} />
             <Text color={colors.textPrimary} preset="POP_14_R">
@@ -139,33 +157,69 @@ const ServiceDetailCard = (props: propsType) => {
             </Text>
           </Row> */}
         </Row>
-        <Text preset="POP_12_R" color={colors.textPrimaryDescription} style={{ paddingTop: 16 }}>
+        <ThemedText variant="label" color="gray500" style={{ paddingTop: 16 }}>
           {description}
-        </Text>
+        </ThemedText>
 
         {!!offerPercentage ? (
-          <LinearGradient
-            colors={['#2D60E3', '#253D8F']}
-            style={{
-              marginTop: 14,
-              borderRadius: 4,
-              padding: 10,
-              flexDirection: 'row',
-              gap: 8,
-              alignItems: 'center',
-            }}>
-            <View style={{ gap: 8, flex: 1 }}>
-              <Text preset="POP_14_SB" color="#FFFFFF">
-                Get up to {offerPercentage}% OFF
-              </Text>
-              <Text preset="POP_12_R" color="#FFFFFF">
-                Exclusive car wash offers available for you. Limited-time offer!
-              </Text>
-            </View>
-            <Text preset="POP_32_SB" color="#FFCC02">
-              {offerPercentage}%
-            </Text>
-          </LinearGradient>
+          isCoinAccept ? (
+            <ImageBackground
+              style={{
+                marginTop: 16,
+                width: SPACING.contentWidth - 32,
+                height: 84,
+                borderRadius: 8,
+                overflow: 'hidden',
+                alignItems: 'center',
+                paddingHorizontal: 16,
+                gap: 8,
+                flexDirection: 'row',
+              }}
+              source={require('@/assets/images/elite-card/add-coin-bg.png')}>
+              <Image
+                source={require('@/assets/images/elite-card/elite-coin.png')}
+                style={{
+                  width: 44,
+                  height: 44,
+                }}
+              />
+              <View style={{ gap: 0, flex: 1 }}>
+                <ThemedText variant="labelLargeEmphasized" color="white">
+                  Elite card points
+                </ThemedText>
+                <ThemedText numberOfLines={1} variant="boldHighlightTextS" color="white">
+                  {eliteCoin.toFixed(1)} Pts
+                </ThemedText>
+              </View>
+              <ThemedText variant="labelLargeEmphasized" color="white">
+                Pay with Points{`\n`}Earn {offerPercentage}% back
+              </ThemedText>
+            </ImageBackground>
+          ) : (
+            <LinearGradient
+              colors={['#2D60E3', '#253D8F']}
+              style={{
+                marginTop: 14,
+                borderRadius: 4,
+                padding: 10,
+                flexDirection: 'row',
+                gap: 8,
+                alignItems: 'center',
+              }}>
+              <View style={{ gap: 8, flex: 1 }}>
+                <ThemedText variant="bodySmallEmphasized" color="white">
+                  Get up to {offerPercentage}% OFF
+                </ThemedText>
+                <ThemedText variant="label" color="white">
+                  Exclusive {CategoryName?.toLowerCase()} offers available for you. Limited-time
+                  offer!
+                </ThemedText>
+              </View>
+              <ThemedText variant="headline" style={{ color: '#FFCC02' }}>
+                {offerPercentage}%
+              </ThemedText>
+            </LinearGradient>
+          )
         ) : null}
       </Box>
     </Box>

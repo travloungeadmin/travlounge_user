@@ -2,15 +2,15 @@
   "expo": {
     "name": "Travlounge",
     "slug": "travlounge",
-    "version": "4.1.47",
-    "runtimeVersion": "4.1.47",
+    "version": "4.1.49",
+    "runtimeVersion": "4.1.49",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "buildNumber": "4001047",
+      "buildNumber": "4001049",
       "config": {
         "googleMapsApiKey": "AIzaSyAfaCR43T4eEiSNhrAs6XgeeYkM49ZwhlA"
       },
@@ -26,7 +26,7 @@
       }
     },
     "android": {
-      "versionCode": 4001047,
+      "versionCode": 4001049,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAfaCR43T4eEiSNhrAs6XgeeYkM49ZwhlA"

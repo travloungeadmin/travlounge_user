@@ -42,3 +42,26 @@ export interface GetUsedCarsResponse {
   total_pages: number;
   results: UsedCarItem[];
 }
+
+export interface CarMake {
+  make: string;
+  count: number;
+}
+
+export interface MinMaxRange {
+  min: number;
+  max: number;
+}
+
+export interface CarFilterOptionsResponse {
+  car_makes: CarMake[];
+  colours: string[];
+  fuel_types: string[];
+  kms_range: MinMaxRange;
+  ownership_types: string[];
+  places: string[];
+  price_range: MinMaxRange;
+  seats: number[];
+  transmission_types: Array<'Automatic' | 'Manual'> | string[];
+  year_range: MinMaxRange;
+}

@@ -84,60 +84,43 @@
 
 // export default TabBar;
 
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import React from "react";
-import { Shadow } from "react-native-shadow-2";
-import { router } from "expo-router";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
-import { MaterialIcons } from "@expo/vector-icons";
-import { colors } from "@/theme";
-import { shadow } from "@/constants";
+import { shadow } from '@/constants';
+import { useTheme } from '@/hooks/useTheme';
+import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import React from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const window = Dimensions.get("window");
+const window = Dimensions.get('window');
 
 const TabBar = ({ state, descriptors, navigation }) => {
+  const { theme } = useTheme();
   const focusIndex = state.index;
   const insets = useSafeAreaInsets();
   const routeName = state.routeNames[focusIndex];
 
   return (
     <SafeAreaView
-      edges={["bottom"]}
+      edges={['bottom']}
       style={{
-        backgroundColor: colors.cardBackgroundPrimary,
+        backgroundColor: theme.backgroundCard,
         height: 50 + insets.bottom,
-        alignItems: "center",
-        justifyContent: "space-evenly",
-        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        flexDirection: 'row',
         // alignItems: "center",
-      }}
-    >
+      }}>
       <TouchableOpacity
         style={{
-
-          height: "100%",
+          height: '100%',
           flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-        onPress={() => router.navigate("/")}
-      >
-        <Text
-          style={
-            routeName === "index" ? styles.selectedText : styles.unselectedText
-          }
-        >
+        onPress={() => router.navigate('/')}>
+        <Text style={routeName === 'index' ? styles.selectedText : styles.unselectedText}>
           Travlounge
         </Text>
       </TouchableOpacity>
@@ -147,55 +130,46 @@ const TabBar = ({ state, descriptors, navigation }) => {
           {
             marginBottom: 20,
             flex: 0.5,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
           },
         ]}
-        onPress={() => router.navigate("/qr")}
-      >
+        onPress={() => router.navigate('/qr')}>
         <LinearGradient
           angle={0}
-          colors={["#0029C9", "#7E98FF"]}
+          colors={['#0029C9', '#7E98FF']}
           style={[
             shadow,
             {
-              height: routeName === "qr" ? 70 : 60,
-              width: routeName === "qr" ? 70 : 60,
+              height: routeName === 'qr' ? 70 : 60,
+              width: routeName === 'qr' ? 70 : 60,
               // backgroundColor: "red",
               borderRadius: 40,
               borderWidth: 1,
-              borderColor: "#FFFFFF",
-              justifyContent: "center",
-              alignItems: "center",
-              shadowColor: "#0029C9",
+              borderColor: '#FFFFFF',
+              justifyContent: 'center',
+              alignItems: 'center',
+              shadowColor: '#0029C9',
               shadowOpacity: 1,
             },
-          ]}
-        >
+          ]}>
           <MaterialIcons
             name="qr-code-scanner"
-            size={routeName === "qr" ? 38 : 30}
-            color={"white"}
+            size={routeName === 'qr' ? 38 : 30}
+            color={'white'}
           />
         </LinearGradient>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={{
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
           flex: 1,
         }}
-        onPress={() => router.navigate("/make-a-trip")}
-      >
-        <Text
-          style={
-            routeName === "make-a-trip"
-              ? styles.selectedText
-              : styles.unselectedText
-          }
-        >
+        onPress={() => router.navigate('/make-a-trip')}>
+        <Text style={routeName === 'make-a-trip' ? styles.selectedText : styles.unselectedText}>
           Make a trip
         </Text>
       </TouchableOpacity>
@@ -206,11 +180,11 @@ const TabBar = ({ state, descriptors, navigation }) => {
 export default TabBar;
 
 const styles = StyleSheet.create({
-  selectedText: { fontWeight: "bold", fontSize: 14, color: "#00205B" },
+  selectedText: { fontWeight: 'bold', fontSize: 14, color: '#00205B' },
   unselectedText: {
-    fontWeight: "semibold",
+    fontWeight: 'semibold',
     fontSize: 13,
-    color: "#919ABE",
-    textAlign: "center",
+    color: '#919ABE',
+    textAlign: 'center',
   },
 });

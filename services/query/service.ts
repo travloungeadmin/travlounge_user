@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 import {
   addReviewApi,
+  createCoinOrderApi,
   createSleepingPodOrderApi,
   getAvailabilitySleepingPodApi,
   getCouponApi,
@@ -9,20 +10,17 @@ import {
   getServiceListApi,
   getSleepingPodDetailApi,
   getSleepingPodListsApi,
+  verifyCoinOrderApi,
+  verifyPaymentRequestApi,
   verifySleepingPodOrderApi,
 } from '../api/service';
+
+import { GetServiceListApiProps } from '../api/types/listings';
 import QUERIES_KEY from './query-keys';
 
-export const getServiceListQuery = ({
-  latitude,
-  longitude,
-  category,
-  is_travlounge,
-  isPartner,
-  isAvailable,
-}) => {
+export const getServiceListQuery = (props: GetServiceListApiProps) => {
   return useInfiniteQuery({
-    enabled: !!latitude && !!longitude && isAvailable,
+    enabled: !!props.latitude && !!props.longitude && !!props.category,
     getNextPageParam: (lastPage: any, pages) => {
       if (lastPage.next) {
         return lastPage.count + 1;
@@ -31,25 +29,13 @@ export const getServiceListQuery = ({
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       getServiceListApi({
-        latitude,
-        longitude,
-        category,
+        ...props,
         page: pageParam,
-        is_travlounge,
-        isPartner,
       }),
-    queryKey: [
-      QUERIES_KEY.SERVICE_LIST,
-      { latitude, longitude, category, is_travlounge, isPartner },
-    ],
+    queryKey: [QUERIES_KEY.SERVICE_LIST, { ...props }],
     select: (data) => data?.pages.flatMap((page) => page.results),
   });
 };
-// useQuery({
-//   enabled: !!latitude && !!longitude && !!category,
-//   queryFn: () => getServiceListApi({ latitude, longitude, category }),
-//   queryKey: [QUERIES_KEY.SERVICE_LIST, { latitude, longitude, category }],
-// });
 
 export const getServiceDetailsQuery = ({ id, longitude, latitude }) =>
   useQuery({
@@ -108,4 +94,18 @@ export const createSleepingPodOrder = () =>
 export const verifySleepingPodOrder = () =>
   useMutation({
     mutationFn: verifySleepingPodOrderApi,
+  });
+
+export const useCreateCoinOrder = () =>
+  useMutation({
+    mutationFn: createCoinOrderApi,
+  });
+
+export const useVerifyCoinOrder = () =>
+  useMutation({
+    mutationFn: verifyCoinOrderApi,
+  });
+export const useVerifyPaymentRequest = () =>
+  useMutation({
+    mutationFn: verifyPaymentRequestApi,
   });

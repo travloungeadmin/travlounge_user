@@ -1,17 +1,17 @@
-import { Platform, Pressable, StyleSheet, View } from "react-native";
-import React from "react";
-import { useTheme } from "@/old/lib/theme";
-import Icon from "../ui/icon";
+import { useTheme } from '@/old/lib/theme';
+import React from 'react';
+import { Platform, Pressable, StyleSheet } from 'react-native';
+import Icon from '../ui/icon';
 
-import { router } from "expo-router";
-import { Box, Text } from "@/core";
-import { shadow } from "@/old/constants";
+import { Box, Text } from '@/core';
+import { shadow } from '@/old/constants';
+import { router } from 'expo-router';
 
 const TravloungeCard = () => {
   const { theme } = useTheme();
   return (
     <Pressable
-      onPress={() => router.navigate("/(root)/(main)/old/travlounge/home")}
+      onPress={() => router.navigate('/(main)/old/travlounge/home')}
       style={[
         styles.shadowView,
         shadow,
@@ -19,26 +19,10 @@ const TravloungeCard = () => {
           backgroundColor: theme.backgroundTeritary,
           shadowColor: theme.backgroundTeritary,
         },
-      ]}
-    >
-      <Box
-        style={[
-          styles.outerCircle,
-          { backgroundColor: theme.iconBackgroundTeritary },
-        ]}
-      >
-        <Box
-          style={[
-            styles.middleCircle,
-            { backgroundColor: theme.iconBackgroundSecondary },
-          ]}
-        >
-          <Box
-            style={[
-              styles.innerCircle,
-              { backgroundColor: theme.iconBackgroundPrimary },
-            ]}
-          >
+      ]}>
+      <Box style={[styles.outerCircle, { backgroundColor: theme.iconBackgroundTeritary }]}>
+        <Box style={[styles.middleCircle, { backgroundColor: theme.iconBackgroundSecondary }]}>
+          <Box style={[styles.innerCircle, { backgroundColor: theme.iconBackgroundPrimary }]}>
             <Icon size={51} name="TravloungeIcon" />
           </Box>
         </Box>
@@ -66,8 +50,8 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     height: 76,
     borderRadius: 8,
-    flexDirection: "row",
-    overflow: "hidden",
+    flexDirection: 'row',
+    overflow: 'hidden',
   },
   outerCircle: {
     borderRadius: 120,
@@ -89,16 +73,16 @@ const styles = StyleSheet.create({
     width: 76,
     marginLeft: 35,
     marginTop: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textContainer: {
-    gap: Platform.OS === "ios" ? 5 : 0,
-    justifyContent: "center",
+    gap: Platform.OS === 'ios' ? 5 : 0,
+    justifyContent: 'center',
     marginLeft: 16,
     flex: 1,
   },
   iconContainer: {
-    justifyContent: "center",
+    justifyContent: 'center',
   },
 });
